@@ -1,0 +1,53 @@
+{
+    "description": "Compute host running on Atmosphere.",
+    "environment": null,
+    "executionType": "CLI",
+    "id": "%USERNAME-%HOSTNAME-compute",
+    "login": {
+        "auth": {
+            "username": "%USERNAME",
+            "password": "%PASSWORD",
+            "credential": "",
+            "type": "PASSWORD"
+        },
+        "host": "%HOST_IP",
+        "port": 22,
+        "protocol": "SSH"
+    },
+    "maxSystemJobs": 100,
+    "maxSystemJobsPerUser": 10,
+    "name": "Atmosphere Host %HOSTNAME",
+    "public": false,
+    "queues": [
+        {
+            "name": "default",
+            "default": true,
+            "maxJobs": 10,
+            "maxUserJobs": 10,
+            "maxNodes": 1,
+            "maxProcessorsPerNode": 1,
+            "maxMemoryPerNode": "2GB",
+            "maxRequestedTime": "72:00:00"
+        }
+    ],
+    "scheduler": "FORK",
+    "scratchDir": "/home/%USERNAME",
+    "site": "atmo.iplantcollaborative.org",
+    "startupScript": null,
+    "status": "UP",
+    "storage": {
+        "host": "%HOST_IP",
+        "port": 22,
+        "protocol": "SFTP",
+        "rootDir": "/",
+        "homeDir": "/home/%USERNAME",
+        "auth": {
+            "username": "%USERNAME",
+            "password": "%PASSWORD",
+            "credential": "",
+            "type": "PASSWORD"
+        }
+    },
+    "type": "EXECUTION",
+    "workDir": ""
+}

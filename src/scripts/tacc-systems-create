@@ -1,0 +1,119 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Test for agave cli in $PATH
+AGAVE_CANARY=$(which auth-check)
+if [ -z "${AGAVE_CANARY}" ]; then echo "The Agave CLI is not in your PATH. Please ensure that it is and re-run this script."; exit 1; fi
+
+# Test to see if we're on Mac OS X as it has
+# a very clunky old version of sed installed
+darwin=false;
+case "`uname`" in
+  Darwin*) darwin=true ;;
+esac
+
+if $darwin; then
+  sedi="sed -i ''"
+else
+  sedi="sed -i"
+fi
+
+cat << EOF
+
+ _____  _    ____ ____
+|_   _|/ \  / ___/ ___|
+  | | / _ \| |  | |
+  | |/ ___ \ |__| |___
+  |_/_/   \_\____\____|
+
+*Cyverse API Enrollment*
+
+This script will register personal copies of TACC
+systems that can be used build and validate Agave
+apps. The following steps assume you have created
+an Agave Oauth2 client using 'client-create'.
+
+The following 'auth-tokens-create' command will
+create and store a temporary access token. To refresh
+it after it expires, use 'auth-tokens-refresh -S'.
+
+*Create an OAuth2 token*
+EOF
+
+auth-tokens-create -q -S
+
+# Pause briefly... race conditions are frustrating
+sleep 2
+
+# Verify token via auth-check before proceeding...
+auth-check -v | grep "iplantc" > /dev/null
+if [ $? -ne 0 ]; then echo "Error with OAuth2 configuration. Exiting."; exit 1; fi
+
+# Collect TACC info
+cat << EOF
+
+*Connect Agave to TACC HPC*
+
+The following information will be gathered in order to
+configure TACC-managed HPC systems for
+use with the Agave API:
+  TACC username
+  TACC password
+  TACC project name (default: iPlant-Collabs)
+  The path to your \$WORK directory at TACC
+
+EOF
+
+default="Yes"
+read -p "Do you have these values at the ready? [$default]: " READY
+READY=${READY:-$default}
+if [ "$READY" != "Yes" ]; then exit 1; fi
+
+echo "OK. Let's begin..."
+
+default=""
+read -p "Enter your TACC user account [$default]: " USERNAME
+USERNAME=${USERNAME:-$default}
+echo "Confirmed: $USERNAME"
+
+default=""
+read -s -p "Enter your TACC account password [$default]: " PASSWORD
+PASSWORD=${PASSWORD:-$default}
+echo "\n"
+
+default="iPlant-Collabs"
+read -p "Enter a TACC project associated with this system [$default]: " PROJECT
+PROJECT=${PROJECT:-$default}
+echo "Confirmed: $PROJECT"
+
+default=""
+read -p "Enter your TACC work directory [$default]: " WORKD
+WORKD=${WORKD:-$default}
+echo "Confirmed: $WORK"
+
+# Create a date stamp (we don't use anymore in system descriptions)
+DATESTAMP=$(date +%m%d%Y-%0k%M)
+
+# Register with Agave API
+echo -e "*Registering systems with Agave API*\n"
+
+for F in $DIR/../templates/tacc*
+do
+  echo "Processing template ${BN}..."
+  BN=$(basename $F .jsonx)
+
+  sed -e "s|\${USERNAME}|${USERNAME}|g" \
+      -e "s|\${PROJECT}|${PROJECT}|g" \
+      -e "s|\${PASSWORD}|${PASSWORD}|g" \
+      -e "s|\${DATESTAMP}|${DATESTAMP}|g" \
+      -e "s|\${WORKD}|${WORKD}|g" \
+      ${F} > "$TMPDIR/$BN.json"
+
+  systems-addupdate -q -F "${TMPDIR}/${BN}.json" \
+      && rm -rf "${TMPDIR}/${BN}.json"
+
+done
+
+echo "Here is a listing of your private systems:"
+systems-list -Q -l 50

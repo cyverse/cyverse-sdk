@@ -1,0 +1,20 @@
+# Set up inputs...
+# Since we don't check these when constructing the
+# command line later, these will be marked as required
+inputBam=${inputBam}
+# and parameters
+outputPrefix="sorted"
+
+# Unpack the bin.tgz file containing samtools binaries
+tar -xvf bin.tgz
+# Set the PATH to include binaries in bin
+export PATH=$PATH:"$PWD/bin"
+
+# Build up ARGS string for the program using Agave's new parameter passing function
+ARGS="${maxMemSort} ${nameSort}"
+  
+# Run the actual program
+samtools sort ${ARGS} $inputBam ${outputPrefix}
+
+# Now, delete the bin/ directory
+rm -rf bin

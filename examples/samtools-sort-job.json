@@ -1,0 +1,18 @@
+{
+    "jobName": "samtools-sort-01",
+    "softwareName": "samtools-sort-0.1.19",
+    "processorsPerNode": 16,
+    "requestedTime": "01:00:00",
+    "memoryPerNode": 32,
+    "nodeCount": 1,
+    "batchQueue": "serial",
+    "archive": false,
+    "archivePath": "",
+    "inputs": {
+        "inputBam": "agave://data.iplantcollaborative.org/shared/iplantcollaborative/example_data/Samtools_mpileup/ex1.bam"
+    },
+    "parameters":{
+    	"maxMemSort":800000000,
+    	"nameSort":true
+    }
+}

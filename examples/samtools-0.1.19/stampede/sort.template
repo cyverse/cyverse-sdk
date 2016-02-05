@@ -1,0 +1,33 @@
+# Set up inputs...
+# Since we don't check these when constructing the
+# command line later, these will be marked as required
+inputBam=${inputBam}
+# and parameters
+outputPrefix="sorted"
+# Maximum memory for sort, in bytes
+# Be careful, Neither Agave nor scheduler will
+# check that this is a reasonable value. In production
+# you might want to code min/max for this value
+maxMemSort=${maxMemSort}
+# Boolean: Sort by name instead of coordinate
+nameSort=${nameSort}
+
+# Unpack the bin.tgz file containing samtools binaries
+tar -xvf bin.tgz
+# Set the PATH to include binaries in bin
+export PATH=$PATH:"$PWD/bin"
+ 
+# Build up an ARGS string for the program
+# Start with empty ARGS...
+ARGS=""
+# Add -m flag if maxMemSort was specified
+if [ ${maxMemSort} > 0 ]; then ARGS="${ARGS} -m $maxMemSort"; fi
+ARGS="-m $maxMemSort"
+# Boolean handler for -named sort
+if [ ${nameSort} == 1 ]; then ARGS="${ARGS} -n "; fi
+ 
+# Run the actual program
+samtools sort ${ARGS} $inputBam ${outputPrefix}
+
+# Now, delete the bin/ directory
+rm -rf bin

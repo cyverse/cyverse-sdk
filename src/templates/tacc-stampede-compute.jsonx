@@ -1,0 +1,151 @@
+{
+    "description": "Stampede is intended primarily for parallel applications scalable to tens of thousands of cores. Normal batch queues will enable users to run simulations up to 48 hours. Jobs requiring run times and more cores than allowed by the normal queues will be run in a special queue after approval of TACC staff. Serial and development queues will also be configured. In addition, users will be able to run jobs using thousands of the Intel Xeon Phi coprocessors via the same queues to support massively parallel workflows.",
+    "environment": null,
+    "executionType": "HPC",
+    "id": "tacc-stampede-${USERNAME}",
+    "login": {
+        "auth": {
+            "username": "${USERNAME}",
+            "password": "${PASSWORD}",
+            "type": "PASSWORD"
+        },
+        "host": "stampede.tacc.utexas.edu",
+        "port": 22,
+        "protocol": "SSH"
+    },
+    "maxSystemJobs": 2147483647,
+    "maxSystemJobsPerUser": 2147483647,
+    "name": "TACC Stampede [${USERNAME}]",
+    "public": false,
+    "queues": [
+        {
+            "name": "development",
+            "default": true,
+            "maxJobs": 1,
+            "maxUserJobs": 1,
+            "maxNodes": 16,
+            "maxProcessorsPerNode": 16,
+            "maxMemoryPerNode": "32GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "02:00:00"
+        },
+        {
+            "name": "gpu-dev",
+            "default": false,
+            "maxJobs": 6,
+            "maxUserJobs": 1,
+            "maxNodes": 4,
+            "maxProcessorsPerNode": 16,
+            "maxMemoryPerNode": "32GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "04:00:00"
+        },
+        {
+            "name": "gpu",
+            "default": false,
+            "maxJobs": 12,
+            "maxUserJobs": 4,
+            "maxNodes": 32,
+            "maxProcessorsPerNode": 16,
+            "maxMemoryPerNode": "32GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "24:00:00"
+        },
+        {
+            "name": "normal",
+            "default": false,
+            "maxJobs": 12,
+            "maxUserJobs": 4,
+            "maxNodes": 256,
+            "maxProcessorsPerNode": 16,
+            "maxMemoryPerNode": "32GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "48:00:00"
+        },
+        {
+            "name": "serial",
+            "default": false,
+            "maxJobs": 16,
+            "maxUserJobs": 4,
+            "maxNodes": 1,
+            "maxProcessorsPerNode": 16,
+            "maxMemoryPerNode": "32GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "12:00:00"
+        },
+        {
+            "name": "normal-mic",
+            "default": false,
+            "maxJobs": 12,
+            "maxUserJobs": 4,
+            "maxNodes": 256,
+            "maxProcessorsPerNode": 16,
+            "maxMemoryPerNode": "32GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "48:00:00"
+        },
+        {
+            "name": "serial",
+            "default": false,
+            "maxJobs": 16,
+            "maxUserJobs": 4,
+            "maxNodes": 1,
+            "maxProcessorsPerNode": 16,
+            "maxMemoryPerNode": "32GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "12:00:00"
+        },
+        {
+            "name": "normal-2mic",
+            "default": false,
+            "maxJobs": 12,
+            "maxUserJobs": 4,
+            "maxNodes": 256,
+            "maxProcessorsPerNode": 16,
+            "maxMemoryPerNode": "32GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "48:00:00"
+        },
+        {
+            "name": "serial",
+            "default": false,
+            "maxJobs": 16,
+            "maxUserJobs": 4,
+            "maxNodes": 1,
+            "maxProcessorsPerNode": 16,
+            "maxMemoryPerNode": "32GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "12:00:00"
+        },
+        {
+            "name": "largemem",
+            "maxRequestedTime": "48:00:00",
+            "default": false,
+            "maxJobs": 4,
+            "maxUserJobs": 2,
+            "maxNodes": 2,
+            "maxProcessorsPerNode": 32,
+            "maxMemoryPerNode": "1000GB",
+            "customDirectives": "-A ${PROJECT}"
+        }
+    ],
+    "scheduler": "SLURM",
+    "scratchDir": "",
+    "site": "tacc.utexas.edu",
+    "startupScript": "./bashrc",
+    "status": "UP",
+    "storage": {
+        "host": "stampede.tacc.utexas.edu",
+        "port": 22,
+        "protocol": "SFTP",
+        "rootDir": "/compute",
+        "homeDir": "${WORKD}",
+        "auth": {
+            "username": "${USERNAME}",
+            "password": "${PASSWORD}",
+            "type": "PASSWORD"
+        }
+    },
+    "type": "EXECUTION",
+    "workDir": ""
+}

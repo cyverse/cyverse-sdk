@@ -1,0 +1,88 @@
+{"available":true,
+ "checkpointable":false,
+ "defaultMemoryPerNode":32,
+ "defaultProcessorsPerNode":16,
+ "defaultMaxRunTime":"08:00:00",
+ "defaultNodeCount":1,
+ "defaultQueue":"serial",
+ "deploymentPath":"vaughn/applications/samtools-0.1.19/stampede",
+ "deploymentSystem":"data.iplantcollaborative.org",
+ "executionSystem":"stampede-04012014-1718-vaughn",
+ "executionType":"HPC",
+ "helpURI":"http://samtools.sourceforge.net/samtools.shtml",
+ "label": "SAMtools sort",
+ "longDescription":"",
+ "modules":[],
+ "name":"samtools-sort-param",
+ "ontology":["http://sswapmeet.sswap.info/agave/apps/Application"],
+ "parallelism":"SERIAL",
+ "shortDescription":"Sort a BAM file by name or coordinate",
+ "tags":["aligner","NGS","SAM"],
+ "templatePath":"sort-param.template",
+ "testPath":"sort.template",
+ "version":"0.1.19",
+ "inputs":[
+    {"id":"inputBam",
+     "value":
+        {"default":"",
+         "order":0,
+         "required":true,
+         "validator":".bam$",
+         "visible":true},
+     "semantics":
+        {"ontology":["http://sswapmeet.sswap.info/mime/application/X-bam"],
+         "minCardinality":1,
+         "fileTypes":["raw-0"]},
+     "details":
+        {"description":"",
+         "label":"The BAM file to sort",
+         "argument":null,
+         "showArgument":false}}],
+ "parameters":[
+    {"id":"maxMemSort",
+     "value":
+        {"default":"500000000",
+         "order":1,
+         "required":true,
+         "type":"number",
+         "validator":"",
+         "visible":true},
+     "semantics":
+        {"ontology":["xs:integer"]},
+     "details":
+        {"description":null,
+         "label":"Maxiumum memory in bytes, used for sorting",
+         "argument":"-m ",
+         "showArgument":true}},
+    {"id":"nameSort",
+     "value":
+        {"default":false,
+         "order":1,
+         "required":false,
+         "type":"flag",
+         "validator":"",
+         "visible":true},
+     "semantics":
+        {"ontology":["xs:boolean"]},
+     "details":
+        {"description":null,
+         "label":"Sort by name rather than coordinate",
+         "argument":"-n ",
+         "showArgument":true}}],
+ "outputs":[
+    {"id":"bam",
+     "value":
+        {"default":"sorted.bam",
+         "order":0,
+         "required":false,
+         "validator":".sorted.bam$",
+         "visible":true},
+     "semantics":
+        {"ontology":["http://sswapmeet.sswap.info/mime/application/X-bam"],
+         "minCardinality":1,
+         "fileTypes":["raw-0"]},
+     "details":
+        {"description":"",
+         "label":"Sorted BAM file",
+         "argument":null,
+         "showArgument":false}}]}

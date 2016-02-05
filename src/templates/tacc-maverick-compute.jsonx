@@ -1,0 +1,63 @@
+{
+    "description": "Maverick, an HP/NVIDIA Interactive Visualization and Data Analytics System, is TACC's latest addition to its suite of advanced computing systems, and combines capacities for interactive advanced visualization and large-scale data analytics withtraditional high performance computing. Maverick debuts the new NVIDIA K40 GPU for remote visualization and GPU computing to the national community.",
+    "environment": null,
+    "executionType": "HPC",
+    "id": "tacc-maverick-${USERNAME}",
+    "login": {
+        "auth": {
+            "username": "${USERNAME}",
+            "password": "${PASSWORD}",
+            "type": "PASSWORD"
+        },
+        "host": "maverick.tacc.utexas.edu",
+        "port": 22,
+        "protocol": "SSH"
+    },
+    "maxSystemJobs": 2147483647,
+    "maxSystemJobsPerUser": 2147483647,
+    "name": "TACC Maverick [${USERNAME}]",
+    "public": false,
+    "queues": [
+        {
+            "name": "gpu-dev",
+            "default": true,
+            "maxJobs": 6,
+            "maxUserJobs": 1,
+            "maxNodes": 4,
+            "maxProcessorsPerNode": 20,
+            "maxMemoryPerNode": "128GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "01:00:00"
+        },
+        {
+            "name": "gpu",
+            "default": false,
+            "maxJobs": 6,
+            "maxUserJobs": 3,
+            "maxNodes": 32,
+            "maxProcessorsPerNode": 20,
+            "maxMemoryPerNode": "128GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "12:00:00"
+        }
+    ],
+    "scheduler": "SLURM",
+    "scratchDir": "",
+    "site": "tacc.utexas.edu",
+    "startupScript": "./bashrc",
+    "status": "UP",
+    "storage": {
+        "host": "maverick.tacc.utexas.edu",
+        "port": 22,
+        "protocol": "SFTP",
+        "rootDir": "/compute",
+        "homeDir": "${WORKD}",
+        "auth": {
+            "username": "${USERNAME}",
+            "password": "${PASSWORD}",
+            "type": "PASSWORD"
+        }
+    },
+    "type": "EXECUTION",
+    "workDir": ""
+}
