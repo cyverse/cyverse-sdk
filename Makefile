@@ -85,6 +85,9 @@ docker: docker-test customize
 
 docker-release: docker
 	docker push iplantc/$(OBJ):$(sdk_version)
+
+docker-clean:
+	docker rmi iplantc/$(OBJ):$(sdk_version)
 	
 # Github release
 .SILENT: dist

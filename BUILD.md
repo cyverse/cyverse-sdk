@@ -26,10 +26,9 @@ make dist
 git commit -a -m "Building release ${_VERSION}"
 git tag -a "v${_VERSION}" -m "version ${_VERSION}"
 git push origin "v${_VERSION}"
-# Optional: update master as well
-# git push origin master
+git push origin master
 
-docker build -t iplantc/cyverse-cli .
-docker tag iplantc/cyverse-cli iplantc/cyverse-cli:${_VERSION}
-docker push iplantc/cyverse-cli:${_VERSION}
+# Docker
+make docker
+make docker-release
 ```

@@ -12,7 +12,7 @@
 ######################################################
 
 FROM alpine
-MAINTAINER Matthew Vaughn <vaughn@tacc.utexas.edu>
+MAINTAINER Matthew Vaughn <vaughn@cyverse.org>
 RUN apk add --no-cache git \
                        curl \
                        bash \
@@ -21,7 +21,8 @@ RUN apk add --no-cache git \
                        sed \
                        man \
                        wget \
-                       grep
+                       grep \
+                       python
 
 RUN curl -L -sk -o /usr/local/bin/jq "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" \
     && chmod a+x /usr/local/bin/jq
