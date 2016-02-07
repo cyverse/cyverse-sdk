@@ -22,7 +22,7 @@ foundation-cli: git-test
 	if [ ! -d "$(OBJ)" ]; then \
 		git clone -q https://bitbucket.org/taccaci/foundation-cli ;\
 		rm -rf foundation-cli/.git ;\
-		mv foundation-cli $(OBJ); \
+		cp -R foundation-cli $(OBJ); \
 	fi
 
 .SILENT: customize
@@ -46,7 +46,7 @@ test:
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJ)
+	rm -rf $(OBJ) foundation-cli
 
 .SILENT: install
 install: $(OBJ)
@@ -80,7 +80,12 @@ docker-test:
 	docker info
 
 # Docker image
+docker: docker-test customize 
+	docker build --rm=true -t iplantc/$(OBJ):$(sdk_version) .
 
+docker-release: docker
+	docker push iplantc/$(OBJ):$(sdk_version)
+	
 # Github release
 .SILENT: dist
 dist: all
