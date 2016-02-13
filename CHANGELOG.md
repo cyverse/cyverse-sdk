@@ -1,6 +1,19 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.0.5 - 02/13/2016
+### Added
+* Nothing
+
+### Changed
+* Added check for empty values in tacc-systems-create
+* Added check for BSD vs Linux sed in Makefile
+* Renamed cyverse-cli-info to cyverse-sdk-info
+* Fixed an issue where TMPDIR was not defined in tacc-systems-create
+
+### Removed
+* Nothing
+
 ## Version 1.0.4 - 02/07/2016
 ### Added
 * docker-clean make target in Makefile

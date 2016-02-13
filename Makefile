@@ -13,6 +13,7 @@ OBJ = cyverse-cli
 SOURCES = customize
 
 # Local installation
+SED = '-i'
 
 all: $(SOURCES)
 
@@ -30,19 +31,19 @@ customize: foundation-cli
 	echo "Customizing..."
 	cp -fr src/templates $(OBJ)/
 	cp -fr src/scripts/* $(OBJ)/bin/
-	sed -i '' -e 's|$${TENANT_NAME}|$(TENANT_NAME)|g' \
+	sed $(SED) -e 's|$${TENANT_NAME}|$(TENANT_NAME)|g' \
 		-e 's|$${TENANT_KEY}|$(TENANT_KEY)|g' \
 		-e 's|$${api_version}|$(api_version)|g' \
 		-e 's|$${api_release}|$(api_release)|g' \
 		-e 's|$${sdk_version}|$(sdk_version)|g' \
-		$(OBJ)/bin/cyverse-cli-info
+		$(OBJ)/bin/cyverse-sdk-info
 	find $(OBJ)/bin -type f ! -name '*.sh' -exec chmod a+rx {} \;
 
 
 .SILENT: test
 test:
-	echo "You should see a report from the cyverse-cli-info command now...\n"
-	$(OBJ)/bin/cyverse-cli-info
+	echo "You should see a report from the cyverse-sdk-info command now...\n"
+	$(OBJ)/bin/cyverse-sdk-info
 
 .PHONY: clean
 clean:
@@ -65,6 +66,10 @@ update: clean git-test
 	if [ $$? -eq 0 ] ; then echo "Now, run make && make install."; exit 0; fi
 
 # Application tests
+.SILENT: sed-test
+sed-test:
+	if [[ "$(uname)" =~ "Darwin" ]]; then SED = "-i ''"; fi
+
 .SILENT: git-test
 git-test:
 	echo "Verifying that git is installed..."
@@ -80,7 +85,7 @@ docker-test:
 	docker info
 
 # Docker image
-docker: docker-test customize 
+docker: docker-test customize
 	docker build --rm=true -t iplantc/$(OBJ):$(sdk_version) .
 
 docker-release: docker
@@ -88,7 +93,7 @@ docker-release: docker
 
 docker-clean:
 	docker rmi iplantc/$(OBJ):$(sdk_version)
-	
+
 # Github release
 .SILENT: dist
 dist: all

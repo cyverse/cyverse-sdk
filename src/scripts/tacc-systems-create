@@ -58,10 +58,11 @@ cat << EOF
 The following information will be gathered in order to
 configure TACC-managed HPC systems for
 use with the Agave API:
+
   TACC username
   TACC password
   TACC project name (default: iPlant-Collabs)
-  The path to your \$WORK directory at TACC
+  The path to your TACC \$WORK directory
 
 EOF
 
@@ -70,33 +71,40 @@ read -p "Do you have these values at the ready? [$default]: " READY
 READY=${READY:-$default}
 if [ "$READY" != "Yes" ]; then exit 1; fi
 
-echo "OK. Let's begin..."
+echo -e "\nOK. Let's begin...\n"
 
 default=""
 read -p "Enter your TACC user account [$default]: " USERNAME
 USERNAME=${USERNAME:-$default}
+if [ -z "$USERNAME" ]; then echo "Error: TACC username can't be empty."; exit 1; fi
 echo "Confirmed: $USERNAME"
 
 default=""
 read -s -p "Enter your TACC account password [$default]: " PASSWORD
 PASSWORD=${PASSWORD:-$default}
+if [ -z "$PASSWORD" ]; then echo "Error: Password can't be empty."; exit 1; fi
 echo "\n"
 
 default="iPlant-Collabs"
 read -p "Enter a TACC project associated with this system [$default]: " PROJECT
 PROJECT=${PROJECT:-$default}
+if [ -z "$PROJECT" ]; then echo "Error: TACC project name can't be empty."; exit 1; fi
 echo "Confirmed: $PROJECT"
 
 default=""
 read -p "Enter your TACC work directory [$default]: " WORKD
 WORKD=${WORKD:-$default}
+if [ -z "$WORKD" ]; then echo "Error: TACC work directory can't be empty."; exit 1; fi
 echo "Confirmed: $WORK"
 
 # Create a date stamp (we don't use anymore in system descriptions)
 DATESTAMP=$(date +%m%d%Y-%0k%M)
 
 # Register with Agave API
-echo -e "*Registering systems with Agave API*\n"
+echo -e "\n*Registering systems with Agave API*\n"
+
+TMPDIR="${HOME}/tmp"
+mkdir -p "${TMPDIR}"
 
 for F in $DIR/../templates/tacc*
 do
@@ -115,5 +123,10 @@ do
 
 done
 
-echo "Here is a listing of your private systems:"
-systems-list -Q -l 50
+CYVERSE_USERNAME=$(curl -sk -H "Content-Type: application/json" -X POST --data-binary "$(profiles-list -v me)" "http://agaveapi.co/json-mirror?q=username")
+temp="${CYVERSE_USERNAME%\"}"
+temp="${temp#\"}"
+CYVERSE_USERNAME=$temp
+
+echo -e "\nHere are up to 10 recently registered private systems owned by $CYVERSE_USERNAME:"
+systems-search "owner=$CYVERSE_USERNAME" "private=true" "limit=10"
