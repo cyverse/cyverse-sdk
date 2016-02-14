@@ -13,7 +13,7 @@ OBJ = cyverse-cli
 SOURCES = customize
 
 # Local installation
-SED = '-i'
+SED = ''
 
 all: $(SOURCES)
 
@@ -31,7 +31,7 @@ customize: sed-test foundation-cli
 	echo "Customizing..."
 	cp -fr src/templates $(OBJ)/
 	cp -fr src/scripts/* $(OBJ)/bin/
-	sed $$SED -e 's|$${TENANT_NAME}|$(TENANT_NAME)|g' \
+	sed -i ${SED} -e 's|$${TENANT_NAME}|$(TENANT_NAME)|g' \
 		-e 's|$${TENANT_KEY}|$(TENANT_KEY)|g' \
 		-e 's|$${api_version}|$(api_version)|g' \
 		-e 's|$${api_release}|$(api_release)|g' \
@@ -69,7 +69,7 @@ update: clean git-test
 .SILENT: sed-test
 sed-test:
 	echo "Checking for BSD sed..."
-	if [[ "`uname`" =~ "Darwin" ]]; then SED="-i ''"; echo "Detected: Changing -i behavior."; fi
+	if [[ "`uname`" =~ "Darwin" ]]; then SED = " ''"; echo "Detected: Changing -i behavior."; fi
 
 .SILENT: git-test
 git-test:
