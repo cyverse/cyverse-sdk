@@ -27,11 +27,11 @@ foundation-cli: git-test
 	fi
 
 .SILENT: customize
-customize: foundation-cli
+customize: sed-test foundation-cli
 	echo "Customizing..."
 	cp -fr src/templates $(OBJ)/
 	cp -fr src/scripts/* $(OBJ)/bin/
-	sed $(SED) -e 's|$${TENANT_NAME}|$(TENANT_NAME)|g' \
+	sed $$SED -e 's|$${TENANT_NAME}|$(TENANT_NAME)|g' \
 		-e 's|$${TENANT_KEY}|$(TENANT_KEY)|g' \
 		-e 's|$${api_version}|$(api_version)|g' \
 		-e 's|$${api_release}|$(api_release)|g' \
@@ -68,7 +68,8 @@ update: clean git-test
 # Application tests
 .SILENT: sed-test
 sed-test:
-	if [[ "$(uname)" =~ "Darwin" ]]; then SED = "-i ''"; fi
+	echo "Checking for BSD sed..."
+	if [[ "`uname`" =~ "Darwin" ]]; then SED="-i ''"; echo "Detected: Changing -i behavior."; fi
 
 .SILENT: git-test
 git-test:
@@ -99,6 +100,7 @@ docker-clean:
 dist: all
 	tar -czf "$(OBJ).tgz" $(OBJ)
 	rm -rf $(OBJ)
+	rm -rf foundation-cli
 	echo "Ready for release. "
 
 .SILENT: release
