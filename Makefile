@@ -31,19 +31,20 @@ customize: sed-test foundation-cli
 	echo "Customizing..."
 	cp -fr src/templates $(OBJ)/
 	cp -fr src/scripts/* $(OBJ)/bin/
-	sed -i ${SED} -e 's|$${TENANT_NAME}|$(TENANT_NAME)|g' \
-		-e 's|$${TENANT_KEY}|$(TENANT_KEY)|g' \
-		-e 's|$${api_version}|$(api_version)|g' \
-		-e 's|$${api_release}|$(api_release)|g' \
-		-e 's|$${sdk_version}|$(sdk_version)|g' \
-		$(OBJ)/bin/cyverse-sdk-info
+#	sed -i ${SED} -e 's|$${TENANT_NAME}|$(TENANT_NAME)|g' \
+#		-e 's|$${TENANT_KEY}|$(TENANT_KEY)|g' \
+#		-e 's|$${api_version}|$(api_version)|g' \
+#		-e 's|$${api_release}|$(api_release)|g' \
+#		-e 's|$${sdk_version}|$(sdk_version)|g' \
+#		$(OBJ)/bin/cyverse-sdk-info
 	find $(OBJ)/bin -type f ! -name '*.sh' -exec chmod a+rx {} \;
 
 
 .SILENT: test
 test:
-	echo "You should see a report from the cyverse-sdk-info command now...\n"
-	$(OBJ)/bin/cyverse-sdk-info
+	#echo "You should see a report from the cyverse-sdk-info command now...\n"
+	#$(OBJ)/bin/cyverse-sdk-info
+	echo "Not implemented"
 
 .PHONY: clean
 clean:
