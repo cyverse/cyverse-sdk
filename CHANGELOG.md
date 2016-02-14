@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.0.6 - 02/14/2016
+### Added
+* Nothing
+
+### Changed
+* Removed support for cyverse-sdk-info in Makefile
+
+### Removed
+* cyverse-sdk-info (for now)
+
+
 ## Version 1.0.5 - 02/13/2016
 ### Added
 * Nothing
