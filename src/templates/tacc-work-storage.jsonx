@@ -1,9 +1,9 @@
 {
 	"id": "tacc-globalfs-${USERNAME}",
-	"name": "TACC Global Filesystem [${USERNAME}]",
+	"name": "TACC Global Work Filesystem [${USERNAME}]",
 	"status": "UP",
 	"type": "STORAGE",
-	"description": "Storage on 1TB quota TACC global filesystem",
+	"description": "Storage (1TB quota) on TACC global filesystem",
 	"site": "tacc.utexas.edu",
 	"storage": {
 		"host": "stampede.tacc.utexas.edu",
