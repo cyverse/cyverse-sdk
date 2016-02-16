@@ -25,7 +25,7 @@
             "maxUserJobs": 1,
             "maxNodes": 11,
             "maxProcessorsPerNode": 264,
-            "maxMemoryPerNode": "32GB",
+            "maxMemoryPerNode": "64GB",
             "customDirectives": "-A ${PROJECT}",
             "maxRequestedTime": "02:00:00"
         },{
@@ -35,7 +35,7 @@
             "maxUserJobs": 50,
             "maxNodes": 171,
             "maxProcessorsPerNode": 4104,
-            "maxMemoryPerNode": "32GB",
+            "maxMemoryPerNode": "64GB",
             "customDirectives": "-A ${PROJECT}",
             "maxRequestedTime": "48:00:00"
         }
