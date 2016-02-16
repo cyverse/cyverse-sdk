@@ -13,8 +13,8 @@
         "port": 22,
         "protocol": "SSH"
     },
-    "maxSystemJobs": 2147483647,
-    "maxSystemJobsPerUser": 2147483647,
+    "maxSystemJobs": 50,
+    "maxSystemJobsPerUser": 50,
     "name": "TACC Stampede [${USERNAME}]",
     "public": false,
     "queues": [
@@ -24,18 +24,18 @@
             "maxJobs": 1,
             "maxUserJobs": 1,
             "maxNodes": 16,
-            "maxProcessorsPerNode": 16,
+            "maxProcessorsPerNode": 256,
             "maxMemoryPerNode": "32GB",
             "customDirectives": "-A ${PROJECT}",
-            "maxRequestedTime": "02:00:00"
+            "maxRequestedTime": "01:00:00"
         },
         {
-            "name": "gpu-dev",
+            "name": "gpudev",
             "default": false,
-            "maxJobs": 6,
-            "maxUserJobs": 1,
+            "maxJobs": 5,
+            "maxUserJobs": 5,
             "maxNodes": 4,
-            "maxProcessorsPerNode": 16,
+            "maxProcessorsPerNode": 54,
             "maxMemoryPerNode": "32GB",
             "customDirectives": "-A ${PROJECT}",
             "maxRequestedTime": "04:00:00"
@@ -43,10 +43,10 @@
         {
             "name": "gpu",
             "default": false,
-            "maxJobs": 12,
-            "maxUserJobs": 4,
+            "maxJobs": 50,
+            "maxUserJobs": 50,
             "maxNodes": 32,
-            "maxProcessorsPerNode": 16,
+            "maxProcessorsPerNode": 512,
             "maxMemoryPerNode": "32GB",
             "customDirectives": "-A ${PROJECT}",
             "maxRequestedTime": "24:00:00"
@@ -54,32 +54,21 @@
         {
             "name": "normal",
             "default": false,
-            "maxJobs": 12,
-            "maxUserJobs": 4,
+            "maxJobs": 50,
+            "maxUserJobs": 50,
             "maxNodes": 256,
-            "maxProcessorsPerNode": 16,
+            "maxProcessorsPerNode": 4096,
             "maxMemoryPerNode": "32GB",
             "customDirectives": "-A ${PROJECT}",
             "maxRequestedTime": "48:00:00"
-        },
-        {
-            "name": "serial",
-            "default": false,
-            "maxJobs": 16,
-            "maxUserJobs": 4,
-            "maxNodes": 1,
-            "maxProcessorsPerNode": 16,
-            "maxMemoryPerNode": "32GB",
-            "customDirectives": "-A ${PROJECT}",
-            "maxRequestedTime": "12:00:00"
         },
         {
             "name": "normal-mic",
             "default": false,
-            "maxJobs": 12,
-            "maxUserJobs": 4,
+            "maxJobs": 50,
+            "maxUserJobs": 50,
             "maxNodes": 256,
-            "maxProcessorsPerNode": 16,
+            "maxProcessorsPerNode": 4086,
             "maxMemoryPerNode": "32GB",
             "customDirectives": "-A ${PROJECT}",
             "maxRequestedTime": "48:00:00"
@@ -87,30 +76,8 @@
         {
             "name": "serial",
             "default": false,
-            "maxJobs": 16,
-            "maxUserJobs": 4,
-            "maxNodes": 1,
-            "maxProcessorsPerNode": 16,
-            "maxMemoryPerNode": "32GB",
-            "customDirectives": "-A ${PROJECT}",
-            "maxRequestedTime": "12:00:00"
-        },
-        {
-            "name": "normal-2mic",
-            "default": false,
-            "maxJobs": 12,
-            "maxUserJobs": 4,
-            "maxNodes": 256,
-            "maxProcessorsPerNode": 16,
-            "maxMemoryPerNode": "32GB",
-            "customDirectives": "-A ${PROJECT}",
-            "maxRequestedTime": "48:00:00"
-        },
-        {
-            "name": "serial",
-            "default": false,
-            "maxJobs": 16,
-            "maxUserJobs": 4,
+            "maxJobs": 8,
+            "maxUserJobs": 8,
             "maxNodes": 1,
             "maxProcessorsPerNode": 16,
             "maxMemoryPerNode": "32GB",
@@ -121,9 +88,9 @@
             "name": "largemem",
             "maxRequestedTime": "48:00:00",
             "default": false,
-            "maxJobs": 4,
+            "maxJobs": 2,
             "maxUserJobs": 2,
-            "maxNodes": 2,
+            "maxNodes": 1,
             "maxProcessorsPerNode": 32,
             "maxMemoryPerNode": "1000GB",
             "customDirectives": "-A ${PROJECT}"

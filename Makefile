@@ -27,7 +27,7 @@ foundation-cli: git-test
 	fi
 
 .SILENT: customize
-customize: sed-test foundation-cli
+customize: foundation-cli
 	echo "Customizing..."
 	cp -fr src/templates $(OBJ)/
 	cp -fr src/scripts/* $(OBJ)/bin/

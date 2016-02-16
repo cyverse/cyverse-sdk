@@ -13,18 +13,18 @@
         "port": 22,
         "protocol": "SSH"
     },
-    "maxSystemJobs": 2147483647,
-    "maxSystemJobsPerUser": 2147483647,
+    "maxSystemJobs": 50,
+    "maxSystemJobsPerUser": 50,
     "name": "TACC Maverick [${USERNAME}]",
     "public": false,
     "queues": [
         {
             "name": "gpu-dev",
             "default": true,
-            "maxJobs": 6,
-            "maxUserJobs": 1,
+            "maxJobs": 5,
+            "maxUserJobs": 5,
             "maxNodes": 4,
-            "maxProcessorsPerNode": 20,
+            "maxProcessorsPerNode": 80,
             "maxMemoryPerNode": "128GB",
             "customDirectives": "-A ${PROJECT}",
             "maxRequestedTime": "01:00:00"
@@ -32,10 +32,10 @@
         {
             "name": "gpu",
             "default": false,
-            "maxJobs": 6,
-            "maxUserJobs": 3,
+            "maxJobs": 5,
+            "maxUserJobs": 5,
             "maxNodes": 32,
-            "maxProcessorsPerNode": 20,
+            "maxProcessorsPerNode": 640,
             "maxMemoryPerNode": "128GB",
             "customDirectives": "-A ${PROJECT}",
             "maxRequestedTime": "12:00:00"

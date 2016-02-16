@@ -13,8 +13,8 @@
         "port": 22,
         "protocol": "SSH"
     },
-    "maxSystemJobs": 2147483647,
-    "maxSystemJobsPerUser": 2147483647,
+    "maxSystemJobs": 50,
+    "maxSystemJobsPerUser": 50,
     "name": "TACC Lonestar5 [${USERNAME}]",
     "public": false,
     "queues": [
