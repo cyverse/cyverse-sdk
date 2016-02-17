@@ -19,17 +19,6 @@
     "public": false,
     "queues": [
         {
-            "name": "gpu-dev",
-            "default": true,
-            "maxJobs": 5,
-            "maxUserJobs": 5,
-            "maxNodes": 4,
-            "maxProcessorsPerNode": 80,
-            "maxMemoryPerNode": "128GB",
-            "customDirectives": "-A ${PROJECT}",
-            "maxRequestedTime": "01:00:00"
-        },
-        {
             "name": "gpu",
             "default": false,
             "maxJobs": 5,
