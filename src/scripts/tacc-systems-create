@@ -95,7 +95,7 @@ default=""
 read -p "Enter your TACC work directory [$default]: " WORKD
 WORKD=${WORKD:-$default}
 if [ -z "$WORKD" ]; then echo "Error: TACC work directory can't be empty."; exit 1; fi
-echo "Confirmed: $WORK"
+echo "Confirmed: $WORKD"
 
 # Create a date stamp (we don't use anymore in system descriptions)
 DATESTAMP=$(date +%m%d%Y-%0k%M)
