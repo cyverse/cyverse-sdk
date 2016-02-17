@@ -29,7 +29,7 @@ echo "PATH=\$PATH:\$HOME/cyverse-cli/bin" >> ~/.bashrc
 
 5. Verify that the CLI is available
 
-Typing ```cyverse-cli-info``` should return a response resembling this:
+Typing ```cyverse-sdk-info``` should return a response resembling this:
 
 ```
 Cyverse CLI v1.0.1
