@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Test for agave cli in $PATH
 AGAVE_CANARY=$(which auth-check)
-if [ -z "${AGAVE_CANARY}" ]; then echo "The Agave CLI is not in your PATH. Please ensure that it is and re-run this script."; exit 1; fi
+if [ -z "${AGAVE_CANARY}" ]; then echo "The Cyverse CLI is not in your PATH. Please ensure that it is and re-run this script."; exit 1; fi
 
 # Test to see if we're on Mac OS X as it has
 # a very clunky old version of sed installed
