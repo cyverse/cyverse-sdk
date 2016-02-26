@@ -1,12 +1,12 @@
-Creating an iPlant application for TACC Stampede
+Creating an CyVerse application for TACC Stampede
 ================================================
 
-We will now go through the process of building and deploying an Agave application to provide 'samtools sort' functionality on TACC's Stampede system. The following tutorial assumes you have properly installed and configured the iPlant SDK on Stampede. They assume you have defined an environment variable IPLANTUSERNAME as your iPlant username. For example:
-export IPLANTUSERNAME=<youriplantusername>
+We will now go through the process of building and deploying an Agave application to provide 'samtools sort' functionality on TACC's Stampede system. The following tutorial assumes you have properly installed and configured the CyVerse SDK on Stampede. They assume you have defined an environment variable CYVERSEUSERNAME as your CyVerse username. For example:
+export CYVERSEUSERNAME=<your_cyverse_username>
 
 Agave application packaging
 ---------------------------
-Agave API apps have a generalized structure that allows them to carry dependencies around with them. In the case below, _package-name-version.dot.dot_ is a folder that you build on your local system, then store in the iPlant Data Store in a designated location (we recommend /iplant/home/IPLANTUSERNAME/applications/APPFOLDER). It contains binaries, support scripts, test data, etc. all in one package. Agave basically uses a very rough form of containerized applications (more on this later). We suggest you set your apps up to look something like the following:
+Agave API apps have a generalized structure that allows them to carry dependencies around with them. In the case below, _package-name-version.dot.dot_ is a folder that you build on your local system, then store in the CyVerse Data Store in a designated location (we recommend /iplant/home/CYVERSEUSERNAME/applications/APPFOLDER). It contains binaries, support scripts, test data, etc. all in one package. Agave basically uses a very rough form of containerized applications (more on this later). We suggest you set your apps up to look something like the following:
 
 ```sh
 package-name-version.dot.dot
@@ -46,14 +46,14 @@ module unload samtools
 cd $WORK
 
 # Set up a project directory
-mkdir iPlant
-mkdir iPlant/src
-mkdir -p iPlant/samtools-0.1.19/stampede/bin
-mkdir -p iPlant/samtools-0.1.19/stampede/test
+mkdir cyverse
+mkdir cyverse/src
+mkdir -p cyverse/samtools-0.1.19/stampede/bin
+mkdir -p cyverse/samtools-0.1.19/stampede/test
 
 # Build samtools using the Intel C Compiler
 # If you don't have icc, gcc will work but icc usually gives more efficient binaries
-cd iPlant/src
+cd cyverse/src
 wget "http://downloads.sourceforge.net/project/samtools/samtools/0.1.19/samtools-0.1.19.tar.bz2"
 tar -jxvf samtools-0.1.19.tar.bz2
 cd samtools-0.1.19
@@ -176,8 +176,8 @@ In order for Agave to know how to run an instance of the application, we need to
 
 Rather than have you write a description for "samtools sort" from scratch, let's systematically dissect an existing file provided with the SDK. Go ahead and copy the file into place and open it in your text editor of choice. If you don't have the SDK installed, you can [grab it here](../examples/samtools-0.1.19/stampede/samtools-sort.json).
 ```sh
-cd $WORK/iPlant/samtools-0.1.19/stampede/
-cp $IPLANT_SDK_HOME/examples/samtools-0.1.19/stampede/samtools-sort.json .
+cd $WORK/cyverse/samtools-0.1.19/stampede/
+cp $HOME/cyverse-sdk/examples/samtools-0.1.19/stampede/samtools-sort.json .
 ```
 Open up samtools-sort.json in a text editor or [in your web browser](../examples/samtools-0.1.19/stampede/samtools-sort.json) and follow along below.
 
@@ -188,8 +188,8 @@ Your file *samtools-sort.json* is written in [JSON](http://www.json.org/), and c
 To make this file work for you, you will be, at a minimum, editting:
 
 1. Its *executionSystem* to match your private instance of Stampede.
-2. Its *deploymentPath* to match your iPlant applications path
-3. The *name* of the app to something besides "samtools-sort". We recommend "$IPLANTUSERNAME-samtools-sort". 
+2. Its *deploymentPath* to match your CyVerse applications path
+3. The *name* of the app to something besides "samtools-sort". We recommend "$CYVERSEUSERNAME-samtools-sort". 
 
 Instructions for making these changes will follow.
 
@@ -418,18 +418,18 @@ Each time you (or another user) requests an instance of samtools sort, Agave cop
 *Note* If you've never deployed an Agave-based app, you may not have an applications directory in your home folder. Since this is where we recommend you store the apps, create one.
 ```sh
 # Check to see if you have an applications directory
-files-list -S data.iplantcollaborative.org $IPLANTUSERNAME/applications
+files-list -S data.iplantcollaborative.org $CYVERSEUSERNAME/applications
 # If you see: File/folder does not exist
 # then you need to create an applications directory
-files-mkdir -S data.iplantcollaborative.org -N "applications" $IPLANTUSERNAME/
+files-mkdir -S data.iplantcollaborative.org -N "applications" $CYVERSEUSERNAME/
 ```
 
 Now, go ahead with the upload:
 ```sh
 # cd out of the bundle
-cd $WORK/iPlant
+cd $WORK/cyverse
 # Upload using files-upload
-files-upload -S data.iplantcollaborative.org -F samtools-0.1.19 $IPLANTUSERNAME/applications
+files-upload -S data.iplantcollaborative.org -F samtools-0.1.19 $CYVERSEUSERNAME/applications
 ```
 
 Post the app description to Agave
@@ -437,8 +437,8 @@ Post the app description to Agave
 
 As mentioned in the overview, several personalizations to samtools-sort.json are required.  Specifically, edit the samtools-sort.json file to change:
 * the *executionSystem* to your private Stampede system, 
-* the *deploymentPath* to your own iPlant applications directory for samtools
-* the *name* to *$IPLANTUSERNAME-samtools-sort*
+* the *deploymentPath* to your own CyVerse applications directory for samtools
+* the *name* to *$CYVERSEUSERNAME-samtools-sort*
 
 Post the JSON file to Agave's app service.
 ```sh
@@ -452,10 +452,10 @@ apps-addupdate -F samtools-0.1.19/stampede/samtools-sort.json
 Any time you need to update the metadata description of your non-public application, you can just make the changes locally to the JSON file and and re-post it. The next time Agave creates a job using this application, it will use the new description.
 
 ```sh
-apps-addupdate -F samtools-0.1.19/stampede/samtools-sort.json $IPLANTUSERNAME-samtools-sort-0.1.19
+apps-addupdate -F samtools-0.1.19/stampede/samtools-sort.json $CYVERSEUSERNAME-samtools-sort-0.1.19
 ```
 
-The field *$IPLANTUSERNAME-samtools-sort-0.1.19* at the end is the appid you're updating. Agave tries to guess from the JSON file but to remove uncertainty, we recommend always specifying it explicitly. 
+The field *$CYVERSEUSERNAME-samtools-sort-0.1.19* at the end is the appid you're updating. Agave tries to guess from the JSON file but to remove uncertainty, we recommend always specifying it explicitly. 
 
 Any time you need to update the binaries, libraries, templates, etc. in your non-public application, you can just make the changes locally and re-upload the bundle. The next time Agave creates a job using this application, it will stage the updated version of the application bundle into place on the executionSystem and it to complete your task. It's a little more complicated to deal with fully public apps, and so we'll cover that in a separate document. 
 
