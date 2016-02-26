@@ -36,5 +36,5 @@ Over time, we'll address more use cases, such as working with cloud systems such
 * [Advanced app authoring with Launcher]
 
 ### Reporting errors and getting help
-* Visit the *[Ask Cyverse](http://ask.iplantcollaborative.org/questions/)* forums for in-depth help. Make sure to mark your questions with the ```Agave_API``` tag so that the API team doesn't miss your questions.
+* Visit the *[Ask Cyverse](http://ask.cyverse.org/)* forums for in-depth help. Make sure to mark your questions with the ```Agave_API``` tag so that the API team doesn't miss your questions.
 * Find more in-depth technical detail at the [Agave Science-as-a-Service API](http://agaveapi.co/) home page
