@@ -12,7 +12,7 @@ Run the following command(s)
 
 ```make && make install```
 
-2. Ensure the ```cyverse-cli/bin``` are in your PATH.  See [INSTALL INSTRUCTIONS](../INSTALL.md) for how to do this. 
+Ensure that ```cyverse-cli/bin``` is in your PATH.  See [INSTALL INSTRUCTIONS](../INSTALL.md) for how to do this. 
 
 BUILDING A RELEASE
 ------------------
