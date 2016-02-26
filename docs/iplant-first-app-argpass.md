@@ -4,7 +4,7 @@ Agave now supports limited forms of automatic command line generation. We will d
 
 Background
 ----------
-One great challenge in wrapping command line programs in abstraction layers is the incredible diversity in the way they are parameterized. Some use --long flags, some use Java-style KEY=VALUE pairs, some use config.files, and so on. iPlant's Discovery Environment provides a sophisticated, fully-automated command line builder, while previous releases of Agave required that you painstakingly handle every command flag in your template script. The former approach is great when it works, and leads to rapid application development, but is a challenge for a solid 40% of applications. The latter approach provides perfect flexibility at the price of requiring the app developer to write a lot of (often repetitive) conditional shell script code. Agave V2 includes new features to help streamline this process. To use them, you need to make subtle changes to your template script and modify your input, parameter, and output definitions a bit. 
+One great challenge in wrapping command line programs in abstraction layers is the incredible diversity in the way they are parameterized. Some use --long flags, some use Java-style KEY=VALUE pairs, some use config.files, and so on. CyVerse's Discovery Environment provides a sophisticated, fully-automated command line builder, while previous releases of Agave required that you painstakingly handle every command flag in your template script. The former approach is great when it works, and leads to rapid application development, but is a challenge for a solid 40% of applications. The latter approach provides perfect flexibility at the price of requiring the app developer to write a lot of (often repetitive) conditional shell script code. Agave V2 includes new features to help streamline this process. To use them, you need to make subtle changes to your template script and modify your input, parameter, and output definitions a bit. 
 
 Technical Details
 -----------------
@@ -282,12 +282,12 @@ samtools sort  -m 800000000 -n  ex1.bam -f ex1_sorted.bam
 
 ### CLI utilized
 
-As a reminder, the sequence of command line calls used in this example is shown below.  Be sure to substitute your own iPlant username below, as well as in the above scripts as appropriate.
+As a reminder, the sequence of command line calls used in this example is shown below.  Be sure to substitute your own CyVerse username below, as well as in the above scripts as appropriate.
 ```sh
-IPLANTUSERNAME=jcarson
+CYVERSEUSERNAME=jcarson
 auth-tokens-create -S -v
-files-upload -S data.iplantcollaborative.org -F samtools-0.1.19/stampede/sort.template $IPLANTUSERNAME/applications/samtools-0.1.19/stampede/
-files-upload -S data.iplantcollaborative.org -F samtools-0.1.19/stampede/samtools-sort.json $IPLANTUSERNAME/applications/samtools-0.1.19/stampede/
+files-upload -S data.iplantcollaborative.org -F samtools-0.1.19/stampede/sort.template $CYVERSEUSERNAME/applications/samtools-0.1.19/stampede/
+files-upload -S data.iplantcollaborative.org -F samtools-0.1.19/stampede/samtools-sort.json $CYVERSEUSERNAME/applications/samtools-0.1.19/stampede/
 apps-addupdate -F samtools-0.1.19/stampede/samtools-sort.json
 jobs-submit -F jobs/samtools-sort-02-job.json
 ```
