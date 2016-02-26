@@ -26,4 +26,4 @@ More information on this step is available at [Authentication Token Management](
 
 *This completes the section on obtaining an OAuth2 authentication token.*
 
-[Back to READ ME](../README.md) | [Next: Setting up iPlant development systems](iplant-systems.md)
+[Back to READ ME](../README.md) | [Next: Setting up CyVerse development systems](iplant-systems.md)
