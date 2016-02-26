@@ -4,7 +4,7 @@ Running a job with Agave
 Agave is a RESTFUL API, and as such, is meant to be interacted with via web applications or software libraries. However, you can easily run jobs by posting a properly configured JSON to the apps service. We will now go through the details of running an instance of the samtools-sort-0.1.19 app registered in the development tutorial. Go ahead and copy the example samtools-sort job to a local directory. You will need edit this file to change the *softwareName* from *samtools-sort-0.1.19* to the APP_ID you created when you registered your own samtools-sort app. 
 
 ```sh
-cp $IPLANT_SDK_HOME/examples/samtools-sort-job.json .
+cp $HOME/cyverse-sdk/examples/samtools-sort-job.json .
 ```
 
 Follow along in the file as we dissect the elements of an Agave job specification:
@@ -55,7 +55,7 @@ RUNNING
 
 ### Helpful notes
 1. State progression for Agave V2 jobs is: PENDING, STAGING_INPUTS, CLEANING_UP, ARCHIVING, STAGING_JOB, FINISHED, KILLED, FAILED, STOPPED, RUNNING, PAUSED, QUEUED, SUBMITTING, STAGED, PROCESSING_INPUTS, ARCHIVING_FINISHED, ARCHIVING_FAILED
-2. If you set archive=true, your results will be staged to the iPlant Data Store, but successful scratch directories are deleted after job completion. While you are debugging your application, it's best to keep it set to false. This way, your scratch directories all remain on the executionSystem. On TACC systems, if you have followed our templates for creating a private executionSystem, the scratch files will be found in $WORK/$TACCUSERNAME. Folders will be named job-$JOBID-$JOBNAME. If you have login access to the executionSystem you can SSH into it and watch the job run through to completion (or error) inside this folder. 
+2. If you set archive=true, your results will be staged to the CyVerse Data Store, but successful scratch directories are deleted after job completion. While you are debugging your application, it's best to keep it set to false. This way, your scratch directories all remain on the executionSystem. On TACC systems, if you have followed our templates for creating a private executionSystem, the scratch files will be found in $WORK/$TACCUSERNAME. Folders will be named job-$JOBID-$JOBNAME. If you have login access to the executionSystem you can SSH into it and watch the job run through to completion (or error) inside this folder. 
 
 ### Post-mortem analysis and debugging jobs
 
