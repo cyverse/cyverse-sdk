@@ -5,7 +5,7 @@ The Agave API comes bundled with a set of command line scripts. Using these scri
 
 Using a terminal interface, *ssh* into the system you will be working with (e.g. Stampede, Lonestar, etc)
 
-```ssh ls5.tacc.utexas.edu```
+```ssh stampede.tacc.utexas.edu```
 
 Load an updated git module by typing:
 
