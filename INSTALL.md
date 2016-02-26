@@ -3,19 +3,19 @@ INSTALLATION INSTRUCTIONS
 
 If you checked out the cyverse-sdk project from Github, cd into it now. If you downloaded the versioned release file, uncompress it and cd into the resulting directory. Then...
 
-1. Uncompress the cyverse-cli.tgz file
+Uncompress the cyverse-cli.tgz file
 
 ```
 tar xf cyverse-cli.tgz
 ```
 
-2. Move the cyverse-cli directory to your preferred installation location. Here, we are using your HOME directory.
+Move the cyverse-cli directory to your preferred installation location. Here, we are using your HOME directory. (Note that if you already have a cyverse-cli directory in your installation location, you'll have to remove it before performing the move command).
 
 ```
 mv cyverse-cli $HOME
 ```
 
-3. Edit ```~/.bashrc``` to add ```cyverse-cli/bin``` to your ```$PATH```
+Edit ```~/.bashrc``` to add ```cyverse-cli/bin``` to your ```$PATH```
 
 Example:
 
@@ -23,11 +23,11 @@ Example:
 echo "PATH=\$PATH:\$HOME/cyverse-cli/bin" >> ~/.bashrc
 ```
 
-4. Reload your ```.bashrc```
+Reload your ```.bashrc```
 
 ```source ~/.bashrc```
 
-5. Verify that the CLI is available
+Verify that the CLI is available
 
 Typing ```cyverse-sdk-info``` should return a response resembling this:
 
