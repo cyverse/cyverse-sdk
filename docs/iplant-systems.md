@@ -74,8 +74,8 @@ tacc-stampede-myusername
 The systems with your username are private systems that you can use to develop and run Agave apps. We will cover how to share these with your colleagues and eventually make them fully public elsewhere in our tutorial materials.
 
 Now, verify that you can access your private systems (the ones containing your username) as follows:
-*files-list -S tacc-stampede-myusername* where -S specifies one of your private systems. This should display a listing of your $WORK directory on the specified TACC computer. 
+```files-list -S tacc-stampede-myusername``` where -S specifies one of your private systems. This should display a listing of your $WORK directory on the specified TACC computer. 
 
 *This completes the section on setting up private CyVerse execution systems.*
 
-[Back to READ ME](../README.md) | [Next: Creating an CyVerse application for TACC Stampede](iplant-first-app.md)
+[Back to READ ME](../README.md) | [Next: Creating a CyVerse application for TACC Stampede](iplant-first-app.md)
