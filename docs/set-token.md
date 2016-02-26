@@ -7,8 +7,8 @@ auth-tokens-create -S -v
 ```
 * You will first be prompted to enter your *Consumer Secret*. Copy your consumerSecret from before, when you created a client application, and paste it in your terminal interface where prompted.
 * You will next be prompted to enter your *Consumer Key*. Copy your *consumerKey *and paste this in your terminal interface where prompted.
-* You will then be prompted to enter your *Agave tenant username*. Type your iPlant username.
-* You will then be prompted to enter your *Agave tenant password*. Type your iPlant password.
+* You will then be prompted to enter your *Agave tenant username*. Type your CyVerse username.
+* You will then be prompted to enter your *Agave tenant password*. Type your CyVerse password.
 * At this point, you should receive an affirmation of success in your terminal that resembles this one:
 ```
 Token successfully refreshed and cached for 14400 seconds
@@ -20,7 +20,7 @@ Token successfully refreshed and cached for 14400 seconds
 }
 ```
 
-If your token at some point in time expires, simply re-run the *auth-tokens-create -S* command. You'll only need to enter your iPlant password, as the other values will be automatically remembered. You will need to configure the iPlant API SDK on each system you plan to develop on. To do so, clone the repo from GitHub, update your environment variables as above, then run *auth-tokens-create -S* using the consumerSecret and consumerKey for your Oauth2 client.
+If your token at some point in time expires, simply re-run the *auth-tokens-create -S* command. You'll only need to enter your CyVerse password, as the other values will be automatically remembered. You will need to configure the CyVerse API SDK on each system you plan to develop on. To do so, clone the repo from GitHub, update your environment variables as above, then run *auth-tokens-create -S* using the consumerSecret and consumerKey for your Oauth2 client.
 
 More information on this step is available at [Authentication Token Management](http://agaveapi.co/authentication-token-management/) in the Agave live docs
 
