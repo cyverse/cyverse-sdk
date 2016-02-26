@@ -15,7 +15,7 @@ Move the cyverse-cli directory to your preferred installation location. Here, we
 mv cyverse-cli $HOME
 ```
 
-Edit ```~/.bashrc``` to add ```cyverse-cli/bin``` to your ```$PATH```
+Edit ```~/.bashrc``` to add ```cyverse-cli/bin``` to your ```$PATH``` by adding a line like ```PATH=$PATH:$HOME/cyverse-cli/bin```
 
 Example:
 
