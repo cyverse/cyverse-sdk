@@ -4,13 +4,15 @@ BUILD INSTRUCTIONS
 LOCAL INSTALLATION
 ------------------
 
-1. Run the following command(s)
-
 By default, the CLI will be installed under ```$HOME```. To change this, edit ```PREFIX``` in Makefile.
+
+Run the following command(s)
+
+```module load git```
 
 ```make && make install```
 
-2. Ensure the ```cyverse-cli/bin``` are in your PATH
+2. Ensure the ```cyverse-cli/bin``` are in your PATH.  See [INSTALL INSTRUCTIONS](../INSTALL.md) for how to do this. 
 
 BUILDING A RELEASE
 ------------------
