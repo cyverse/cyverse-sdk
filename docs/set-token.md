@@ -1,6 +1,6 @@
 Obtaining an OAuth 2 authentication token
 =========================================
-In order to interact with iPlant Science API services, you will need to acquire a authentication token, which is tied to the client application you have created. The command for accomplishing this is:
+In order to interact with CyVerse Science API services, you will need to acquire a authentication token, which is tied to the client application you have created. The command for accomplishing this is:
 ```sh
 # From your terminal interface, type:
 auth-tokens-create -S -v
