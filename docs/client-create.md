@@ -8,7 +8,7 @@ clients-create -S -v -N my_client -D "Client used for app development"
 
 *Note:* The -N flag allows you to specify a machine-readable name for your application; -D provides the description, and -S option stores your API keys for future use, so you will not need to manually enter them when you authenticate later.
 
-After being prompted for your iPlant username and password, you should get a response from clients-create that looks similar to this:
+After being prompted for your CyVerse username and password, you should get a response from clients-create that looks similar to this:
 ```json
 {
     "_links": {
@@ -30,7 +30,7 @@ After being prompted for your iPlant username and password, you should get a res
     "tier": "Unlimited"
 }
 ```
-Although much of the process of interacting with the Agave API is automated, you may need access to the consumerKey and consumerSecret for other types of OAuth2-based interaction. If you ever need to retrieve the API keys for a particular client application, you can always do so at https://agave.iplantc.org/store/site/pages/subscriptions.jag using your iPlant credentials
+Although much of the process of interacting with the Agave API is automated, you may need access to the consumerKey and consumerSecret for other types of OAuth2-based interaction. If you ever need to retrieve the API keys for a particular client application, you can always do so at https://agave.iplantc.org/store/site/pages/subscriptions.jag using your CyVerse credentials
 
 *This completes the section on obtaining a set of API keys.*
 
