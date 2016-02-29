@@ -1,9 +1,11 @@
 Installing the CyVerse software development kit
-==================================================
+===============================================
 
-The Agave API comes bundled with a set of command line scripts. Using these scripts is generally easier than hand-crafting cURL commands, but if you prefer that route, consult [Getting Started with the Agave API](http://agaveapi.co/getting-started-with-the-agave-api/). We include these scripts in our SDK, and supplement them with additional support scripts, example files, and documents. 
+The Agave API comes bundled with a set of command line scripts. Using these scripts is generally easier than hand-crafting cURL commands, but if you prefer that route, consult [Getting Started with the Agave API](http://agaveapi.co/getting-started-with-the-agave-api/). We include these scripts in our SDK and supplement them with additional support scripts, example files, and documents.
 
-Using a terminal interface, *ssh* into the system you will be working with (e.g. Stampede, Lonestar, etc)
+If you are installing and working with the Cyverse SDK on your own personal computer, skip ahead to _Change to the directory where you wish to install the SDK_:
+
+Using your Terminal program, *ssh* into the system you will be working with (e.g. Stampede, Lonestar5, etc)
 
 ```ssh stampede.tacc.utexas.edu```
 
@@ -11,9 +13,13 @@ Load an updated git module by typing:
 
 ```module load git```
 
-Clone the SDK repository (note the --recursive flag):
+Change to the directory where you wish to install the SDK
 
-```git clone https://github.com/iPlantCollaborativeOpenSource/cyverse-sdk.git --recursive```
+```cd $HOME```
+
+Clone the SDK repository:
+
+```git clone https://github.com/iPlantCollaborativeOpenSource/cyverse-sdk.git```
 
 Uncompress the cyverse-cli.tgz file
 
@@ -54,7 +60,7 @@ All rights reserved.
 ...
 ```
 
-Now initialize the command line tools for use with iPlant
+Now initialize the command line tools for use with Cyverse
 
 ```tenants-init -t iplantc.org```
 

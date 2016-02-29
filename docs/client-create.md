@@ -30,7 +30,7 @@ After being prompted for your CyVerse username and password, you should get a re
     "tier": "Unlimited"
 }
 ```
-Although much of the process of interacting with the Agave API is automated, you may need access to the consumerKey and consumerSecret for other types of OAuth2-based interaction. If you ever need to retrieve the API keys for a particular client application, you can always do so at https://agave.iplantc.org/store/site/pages/subscriptions.jag using your CyVerse credentials
+Although much of the process of interacting with the Agave API is automated, you may need access to the ```consumerKey``` and ```consumerSecret``` for other types of OAuth2-based interaction so please record them. If you lose them, you can create new copy of them for the same client by deleting the old client and creating it again. You can also have multiple OAuth2 clients - we are simply demonstrating use of one.
 
 *This completes the section on obtaining a set of API keys.*
 

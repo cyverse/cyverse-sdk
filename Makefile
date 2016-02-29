@@ -31,12 +31,13 @@ customize: foundation-cli
 	echo "Customizing..."
 	cp -fr src/templates $(OBJ)/
 	cp -fr src/scripts/* $(OBJ)/bin/
-#	sed -i ${SED} -e 's|$${TENANT_NAME}|$(TENANT_NAME)|g' \
-#		-e 's|$${TENANT_KEY}|$(TENANT_KEY)|g' \
-#		-e 's|$${api_version}|$(api_version)|g' \
-#		-e 's|$${api_release}|$(api_release)|g' \
-#		-e 's|$${sdk_version}|$(sdk_version)|g' \
-#		$(OBJ)/bin/cyverse-sdk-info
+	sed -e 's|$${TENANT_NAME}|$(TENANT_NAME)|g' \
+		-e 's|$${TENANT_KEY}|$(TENANT_KEY)|g' \
+		-e 's|$${api_version}|$(api_version)|g' \
+		-e 's|$${api_release}|$(api_release)|g' \
+		-e 's|$${sdk_version}|$(sdk_version)|g' \
+		$(OBJ)/bin/cyverse-sdk-info > $(OBJ)/bin/cyverse-sdk-info.edited
+	mv $(OBJ)/bin/cyverse-sdk-info.edited $(OBJ)/bin/cyverse-sdk-info
 	find $(OBJ)/bin -type f ! -name '*.sh' -exec chmod a+rx {} \;
 
 
@@ -90,7 +91,7 @@ docker-test:
 docker: docker-test customize
 	docker build --rm=true -t iplantc/$(OBJ):$(sdk_version) .
 
-docker-release: docker
+docker-dist: docker
 	docker push iplantc/$(OBJ):$(sdk_version)
 
 docker-clean:

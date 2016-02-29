@@ -1,14 +1,15 @@
 Obtaining an OAuth 2 authentication token
 =========================================
-In order to interact with CyVerse Science API services, you will need to acquire a authentication token, which is tied to the client application you have created. The command for accomplishing this is:
+
+Tokens are a form of short-lived, temporary authenticiation and authorization used in place of your username and password. To interact with CyVerse APIs, you will need to acquire one. Your Cyverse token will expire 4 hours, but can easily be refreshed.
+
+The command to accomplish this is:
+
 ```sh
 # From your terminal interface, type:
 auth-tokens-create -S -v
 ```
-* You will first be prompted to enter your *Consumer Secret*. Copy your consumerSecret from before, when you created a client application, and paste it in your terminal interface where prompted.
-* You will next be prompted to enter your *Consumer Key*. Copy your *consumerKey *and paste this in your terminal interface where prompted.
-* You will then be prompted to enter your *Agave tenant username*. Type your CyVerse username.
-* You will then be prompted to enter your *Agave tenant password*. Type your CyVerse password.
+* You will then be prompted to enter your *API password*. Type your CyVerse password.
 * At this point, you should receive an affirmation of success in your terminal that resembles this one:
 ```
 Token successfully refreshed and cached for 14400 seconds
@@ -20,9 +21,23 @@ Token successfully refreshed and cached for 14400 seconds
 }
 ```
 
-If your token at some point in time expires, simply re-run the *auth-tokens-create -S* command. You'll only need to enter your CyVerse password, as the other values will be automatically remembered. You will need to configure the CyVerse API SDK on each system you plan to develop on. To do so, clone the repo from GitHub, update your environment variables as above, then run *auth-tokens-create -S* using the consumerSecret and consumerKey for your Oauth2 client.
+## Refreshing your token
 
-More information on this step is available at [Authentication Token Management](http://agaveapi.co/authentication-token-management/) in the Agave live docs
+When your token expires in 4 hours, you may refresh it:
+
+```sh
+auth-tokens-refresh -S -v
+Token for iplantc.org:vaughn successfully refreshed and cached for 3600 seconds
+{
+    "access_token": "3baebe5418ffce0da7fbdcb193d0ef",
+    "expires_in": 3600,
+    "refresh_token": "4a51a7524638e9d7ed0c3adcd3e99d5",
+    "scope": "default",
+    "token_type": "bearer"
+}
+```
+
+This topic is covered in great detail at [Authentication Token Management](http://agaveapi.co/authentication-token-management/) in the Agave live docs
 
 *This completes the section on obtaining an OAuth2 authentication token.*
 

@@ -1,10 +1,10 @@
 Crafting applications using Agave argument passing
 ==================================================
-Agave now supports limited forms of automatic command line generation. We will demonstrate how to take advantage of it.
+Agave supports a limited form of automatic command line generation. We will demonstrate how to take advantage of it.
 
 Background
 ----------
-One great challenge in wrapping command line programs in abstraction layers is the incredible diversity in the way they are parameterized. Some use --long flags, some use Java-style KEY=VALUE pairs, some use config.files, and so on. CyVerse's Discovery Environment provides a sophisticated, fully-automated command line builder, while previous releases of Agave required that you painstakingly handle every command flag in your template script. The former approach is great when it works, and leads to rapid application development, but is a challenge for a solid 40% of applications. The latter approach provides perfect flexibility at the price of requiring the app developer to write a lot of (often repetitive) conditional shell script code. Agave V2 includes new features to help streamline this process. To use them, you need to make subtle changes to your template script and modify your input, parameter, and output definitions a bit. 
+One great challenge in wrapping command line programs in abstraction layers is the incredible diversity in the way they are parameterized. Some use --long flags, some use Java-style KEY=VALUE pairs, some use config.files, and so on. CyVerse's Discovery Environment provides a sophisticated, fully-automated command line builder, while previous releases of Agave required that you painstakingly handle every command flag in your template script. The former approach is great when it works, and leads to rapid application development, but is a challenge for a solid 40% of applications. The latter approach provides perfect flexibility at the price of requiring the app developer to write a lot of (often repetitive) conditional shell script code. Agave V2 includes new features to help streamline this process. To use them, you need to make subtle changes to your template script and modify your input, parameter, and output definitions a bit.
 
 Technical Details
 -----------------
@@ -100,7 +100,7 @@ a.out --input foobaz.txt ${ARGS} > stdout.txt
 ```
 
 ### Explanatory notes
-1. Use of the "flag" type for flagParam: If the value at run time is true, the argument value is passed in and used for authoring the execution script, otherwise it is not. 
+1. Use of the "flag" type for flagParam: If the value at run time is true, the argument value is passed in and used for authoring the execution script, otherwise it is not.
 2. Static ARGS: We always want to run a.out in Beast Mode. This could be modeled as an immutable, invisible parameter, but can also just be hard-coded into the ARGS string.
 3. Mixing passed-arguments with manually-handled parameters: This use case is illustrated by the handling of our "dragonball" parameter.
 4. Note the trailing spaces on arguments for inputFile and keyvalParam. Agave concatenates argument and value without automatically adding any whitespace. This allows you to construct arguments that look like --ion_cannon=low-orbit
@@ -108,7 +108,7 @@ a.out --input foobaz.txt ${ARGS} > stdout.txt
 Implementation: "samtools sort" using argument passing
 -------------------------------------------------------
 
-Here we show the updated files for "samtools sort" using argument passing.  The two files updated are samtools-sort.json and sort.template.  The job file, samtools-sort-02-job.json, did not need to be modified but is shown for completeness.  
+Here we show the updated files for "samtools sort" using argument passing.  The two files updated are samtools-sort.json and sort.template.  The job file, samtools-sort-02-job.json, did not need to be modified but is shown for completeness.
 
 ### samtools-sort.json
 
