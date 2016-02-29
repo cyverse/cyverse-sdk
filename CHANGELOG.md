@@ -1,6 +1,18 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.0.8 - 02/15/2016
+### Added
+* iplantc/cyverse-cli:1.0.8 released to Dockerhub
+
+### Changed
+* Substantial updates to docs reflecting state of Agave API at Cyverse
+* Fixed Docker image cache directory amnesia
+* Fixed broken cyverse-sdk-info
+
+### Removed
+* Nothing
+
 ## Version 1.0.7 - 02/15/2016
 ### Added
 * Nothing

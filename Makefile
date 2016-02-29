@@ -91,7 +91,7 @@ docker-test:
 docker: docker-test customize
 	docker build --rm=true -t iplantc/$(OBJ):$(sdk_version) .
 
-docker-dist: docker
+docker-release: docker
 	docker push iplantc/$(OBJ):$(sdk_version)
 
 docker-clean:
