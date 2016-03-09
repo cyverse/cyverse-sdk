@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.0.9 - 03/09/2016
+### Added
+* Nothing
+
+### Changed
+* Fixed an issue with tacc-systems-create where the final listing of systems would fail. This was due to the script calling to Agave's hosted json-mirror over http. Problem was addressed by changing url to https.
+
+### Removed
+* Nothing
+
 ## Version 1.0.8 - 02/15/2016
 ### Added
 * iplantc/cyverse-cli:1.0.8 released to Dockerhub

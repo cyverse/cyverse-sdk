@@ -123,7 +123,7 @@ do
 
 done
 
-CYVERSE_USERNAME=$(curl -sk -H "Content-Type: application/json" -X POST --data-binary "$(profiles-list -v me)" "http://agaveapi.co/json-mirror?q=username")
+CYVERSE_USERNAME=$(curl -sk -H "Content-Type: application/json" -X POST --data-binary "$(profiles-list -v me)" "https://agaveapi.co/json-mirror?q=username")
 temp="${CYVERSE_USERNAME%\"}"
 temp="${temp#\"}"
 CYVERSE_USERNAME=$temp
