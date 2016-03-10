@@ -23,8 +23,8 @@ After being prompted for your CyVerse username and password, you should get a re
         }
     },
     "callbackUrl": "",
-    "consumerKey": "fMYfhijQE8ajqcKaswlGH4D5sngh",
-    "consumerSecret": "8FZ6K9QwN1PY6bA9SOcyi4oaEkMa",
+    "consumerKey": "fMYfhijQE8fauxkeyGH4D5sngh",
+    "consumerSecret": "8FZ6K9Qwfauxsecretcyi4oaEkMa",
     "description": "Client used for app development",
     "name": "my_client",
     "tier": "Unlimited"

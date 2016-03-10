@@ -2,7 +2,7 @@ Creating an CyVerse application for TACC Stampede
 ================================================
 
 We will now go through the process of building and deploying an Agave application to provide 'samtools sort' functionality on TACC's Stampede system. The following tutorial assumes you have properly installed and configured the CyVerse SDK on Stampede. They assume you have defined an environment variable CYVERSEUSERNAME as your CyVerse username. For example:
-export CYVERSEUSERNAME=<your_cyverse_username>
+```export CYVERSEUSERNAME=<your_cyverse_username>```
 
 Agave application packaging
 ---------------------------
@@ -20,7 +20,7 @@ package-name-version.dot.dot
 |----app.json
 ```
 
-Agave runs a job by first transferring a copy of this directory into temporary directory on the target executionSystem. Then, the input data files (we'll show you how to specify those are later) are staged into place automatically. Next, Agave writes a scheduler submit script (using a template you provide i.e. script.template) and puts it in the queue on the target system. The Agave service then monitors progress of the job and, assuming it completes, copies all newly-created files to the location specified when the job was submitted. Along the way, critical milestones and metadata are recorded in the job's history. 
+Agave runs a job by first transferring a copy of this directory into temporary directory on the target executionSystem. Then, the input data files (we'll show you how to specify those later) are staged into place automatically. Next, Agave writes a scheduler submit script (using a template you provide i.e. script.template) and puts it in the queue on the target system. The Agave service then monitors progress of the job and, assuming it completes, copies all newly-created files to the location specified when the job was submitted. Along the way, critical milestones and metadata are recorded in the job's history. 
 
 *Agave app development proceeds via the following steps:*
 
@@ -98,7 +98,7 @@ files-get -S data.iplantcollaborative.org /shared/iplantcollaborative/example_da
 ```
 or you can any other BAM file for your testing purposes. Make sure if you use another file to change the filename in your test script accordingly!
 
-Now, author your script. You can paste the following code into a file called *test-sort.sh* or you can copy it from $IPLANT_SDK_HOME/examples/samtools-0.1.19/stampede/test-sort.sh
+Now, author your script. You can paste the following code into a file called *test-sort.sh* or you can copy it from $HOME/cyverse-sdk/examples/samtools-0.1.19/stampede/test-sort.sh
 
 ```sh
 #!/bin/bash
@@ -172,7 +172,7 @@ Assuming all goes according to plan, you'll end up with a sorted BAM called *sor
 
 Craft an Agave app description 
 -------------------------------
-In order for Agave to know how to run an instance of the application, we need to provide quite a bit of metadata about the application. This includes a unique name and version, the location of the application bundle, the identities of the execution system and destination system for results, whether its an HPC or other kind of job, the default number of processors and memory it needs to run, and of course, all the inputs and parameters for the actual program. It seems a bit over-complicated, but only because you're comfortable with the command line already. Your goal here is to allow your applications to be portable across systems and present a web-enabled, rationalized interface for your code to consumers.
+In order for Agave to know how to run an instance of the application, we need to provide quite a bit of metadata about the application. This includes a unique name and version, the location of the application bundle, the identities of the execution system and destination system for results, whether it is an HPC or other kind of job, the default number of processors and memory it needs to run, and of course, all the inputs and parameters for the actual program. It seems a bit over-complicated, but only because you're comfortable with the command line already. Your goal here is to allow your applications to be portable across systems and present a web-enabled, rationalized interface for your code to consumers.
 
 Rather than have you write a description for "samtools sort" from scratch, let's systematically dissect an existing file provided with the SDK. Go ahead and copy the file into place and open it in your text editor of choice. If you don't have the SDK installed, you can [grab it here](../examples/samtools-0.1.19/stampede/samtools-sort.json).
 ```sh
@@ -467,13 +467,11 @@ First, you may check to see if your new application shows up in the bulk listing
 ```sh
 # Shows all apps that are public, private to you, or shared with you
 apps-list 
-# Show all apps on a specific system that are public, private to you, or shared with you
-apps-list -S stampede.tacc.utexas.edu
 # Show only your private apps
 apps-list --privateonly
 ```
 
-You should see *your new app ID* in "apps-list" and "apps-list --privateonly" but not "apps-list -S stampede.tacc.utexas.edu". Why do you think this is the case? Give up? It's because your new app is not registered to the public iPlant-maintained executionSystem called "stampede.tacc.utexas.edu" and so is filtered from display. 
+# You should see *your new app ID* in "apps-list" and "apps-list --privateonly" but not "apps-list -S stampede.tacc.utexas.edu". Why do you think this is the case? Give up? It's because your new app is not registered to the public iPlant-maintained executionSystem called "stampede.tacc.utexas.edu" and so is filtered from display. 
 
 You can print a detailed view, in JSON format, of any app description to your screen:
 

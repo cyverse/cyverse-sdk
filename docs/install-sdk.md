@@ -1,9 +1,9 @@
 Installing the CyVerse software development kit
 ===============================================
 
-The Agave API comes bundled with a set of command line scripts. Using these scripts is generally easier than hand-crafting cURL commands, but if you prefer that route, consult [Getting Started with the Agave API](http://agaveapi.co/getting-started-with-the-agave-api/). We include these scripts in our SDK and supplement them with additional support scripts, example files, and documents.
+The Agave API comes bundled with a set of command line scripts. Using these scripts is generally easier than hand-crafting cURL commands, but if you prefer that route, consult the [Agave API Documentation](http://agaveapi.co/documentation/). We include these scripts in our SDK and supplement them with additional support scripts, example files, and documents.
 
-If you are installing and working with the Cyverse SDK on your own personal computer, skip ahead to _Change to the directory where you wish to install the SDK_:
+If you are installing and working with the CyVerse SDK on your own personal computer, skip ahead to _Change to the directory where you wish to install the SDK_:
 
 Using your Terminal program, *ssh* into the system you will be working with (e.g. Stampede, Lonestar5, etc)
 
@@ -21,25 +21,23 @@ Clone the SDK repository:
 
 ```git clone https://github.com/iPlantCollaborativeOpenSource/cyverse-sdk.git```
 
+Change directory into cyverse-sdk
+
+```cd cyverse-sdk```
+
 Uncompress the cyverse-cli.tgz file
 
-```
-tar xf cyverse-cli.tgz
-```
+```tar xf cyverse-cli.tgz```
 
 Move the cyverse-cli directory to your preferred installation location. Here, we are using your HOME directory. (Note that if you already have a cyverse-cli directory in your installation location, you'll have to remove it before performing the move command).
 
-```
-mv cyverse-cli $HOME
-```
+```mv cyverse-cli $HOME```
 
 Edit ```~/.bashrc``` to add ```cyverse-cli/bin``` to your ```$PATH``` by adding a line like ```PATH=$PATH:$HOME/cyverse-cli/bin```
 
 Example:
 
-```
-echo "PATH=\$PATH:\$HOME/cyverse-cli/bin" >> ~/.bashrc
-```
+```echo "PATH=\$PATH:\$HOME/cyverse-cli/bin" >> ~/.bashrc```
 
 Reload your ```.bashrc```
 
