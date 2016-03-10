@@ -471,8 +471,6 @@ apps-list
 apps-list --privateonly
 ```
 
-# You should see *your new app ID* in "apps-list" and "apps-list --privateonly" but not "apps-list -S stampede.tacc.utexas.edu". Why do you think this is the case? Give up? It's because your new app is not registered to the public iPlant-maintained executionSystem called "stampede.tacc.utexas.edu" and so is filtered from display. 
-
 You can print a detailed view, in JSON format, of any app description to your screen:
 
 ```sh
