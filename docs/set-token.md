@@ -14,9 +14,9 @@ auth-tokens-create -S -v
 ```
 Token successfully refreshed and cached for 14400 seconds
 {
-    "access_token": "e431846eb2c917a4c5796eb1cc2c6f",
+    "access_token": "abc1236eb2c917a4c5796eb1cc2c6f",
     "expires_in": 14400,
-    "refresh_token": "8212a515b26ebc1aec5d6e232bb455b",
+    "refresh_token": "abc12315b26ebc1aec5d6e232bb455b",
     "token_type": "bearer"
 }
 ```
@@ -29,15 +29,15 @@ When your token expires in 4 hours, you may refresh it:
 auth-tokens-refresh -S -v
 Token for iplantc.org:vaughn successfully refreshed and cached for 3600 seconds
 {
-    "access_token": "3baebe5418ffce0da7fbdcb193d0ef",
+    "access_token": "abc1235418ffce0da7fbdcb193d0ef",
     "expires_in": 3600,
-    "refresh_token": "4a51a7524638e9d7ed0c3adcd3e99d5",
+    "refresh_token": "abc123524638e9d7ed0c3adcd3e99d5",
     "scope": "default",
     "token_type": "bearer"
 }
 ```
 
-This topic is covered in great detail at [Authentication Token Management](http://agaveapi.co/authentication-token-management/) in the Agave live docs
+This topic is covered in great detail at [Authorization Guide](http://agaveapi.co/documentation/authorization-guide/) in the Agave live docs
 
 *This completes the section on obtaining an OAuth2 authentication token.*
 
