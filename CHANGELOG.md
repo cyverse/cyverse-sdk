@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.0.10 - 04/06/2016
+### Added
+* Nothing
+
+### Changed
+* Incorporated @wjallen updates and improvements to Agave foundation-cli
+
+### Removed
+* Nothing
+
 ## Version 1.0.9 - 03/09/2016
 ### Added
 * Nothing
