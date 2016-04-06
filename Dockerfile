@@ -11,7 +11,7 @@
 #
 ######################################################
 
-FROM quantumobject/docker-baseimage:15.10
+FROM ubuntu:trusty
 MAINTAINER Matthew Vaughn <vaughn@tacc.utexas.edu>
 
 RUN apt-get -y update && \

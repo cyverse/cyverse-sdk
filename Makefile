@@ -4,7 +4,6 @@
 sdk_version := $(shell cat VERSION)
 api_version := v2
 api_release := 2.1.6
-api_branch := cyverse
 
 TENANT_NAME := 'Cyverse'
 TENANT_KEY := 'iplantc.org'
@@ -22,7 +21,7 @@ all: $(SOURCES)
 foundation-cli: git-test
 	echo "Fetching foundation-cli source..."
 	if [ ! -d "$(OBJ)" ]; then \
-		git clone -b ${api_branch} -q https://bitbucket.org/taccaci/foundation-cli ;\
+		git clone -b cyverse -q https://bitbucket.org/taccaci/foundation-cli ;\
 		rm -rf foundation-cli/.git ;\
 		cp -R foundation-cli $(OBJ); \
 	fi

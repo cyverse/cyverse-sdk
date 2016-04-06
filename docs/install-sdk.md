@@ -48,7 +48,7 @@ Verify that the CLI is available
 Typing ```cyverse-sdk-info``` should return a response resembling this:
 
 ```
-Cyverse CLI v1.0.1
+Cyverse CLI v1.0.10
 For use with:
     Tenant: iplantc.org
     Agave API: v2/2.1.6+
