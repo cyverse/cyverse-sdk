@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.1.0 - 05/06/2016
+### Added
+* Nothing
+
+### Changed
+* Moved to use agaveapi/cli as basis for the SDK
+
+### Removed
+* Nothing
+
 ## Version 1.0.10 - 04/06/2016
 ### Added
 * Nothing
