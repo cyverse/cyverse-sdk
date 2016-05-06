@@ -1,9 +1,9 @@
 # Matthew Vaughn
-# Feb 4, 2016
+# May 6, 2016
 
 sdk_version := $(shell cat VERSION)
 api_version := v2
-api_release := 2.1.6
+api_release := 2.1.8
 
 TENANT_NAME := 'Cyverse'
 TENANT_KEY := 'iplantc.org'
@@ -17,17 +17,17 @@ SED = ''
 
 all: $(SOURCES)
 
-.SILENT: foundation-cli
-foundation-cli: git-test
-	echo "Fetching foundation-cli source..."
+.SILENT: cli
+cli: git-test
+	echo "Fetching agaveapi/cli source..."
 	if [ ! -d "$(OBJ)" ]; then \
-		git clone -b cyverse -q https://bitbucket.org/taccaci/foundation-cli ;\
-		rm -rf foundation-cli/.git ;\
-		cp -R foundation-cli $(OBJ); \
+		git clone -q https://bitbucket.org/agaveapi/cli.git ;\
+		rm -rf cli/.git ;\
+		cp -R cli $(OBJ); \
 	fi
 
 .SILENT: customize
-customize: foundation-cli
+customize: cli
 	echo "Customizing..."
 	cp -fr src/templates $(OBJ)/
 	cp -fr src/scripts/* $(OBJ)/bin/
@@ -49,7 +49,7 @@ test:
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJ) foundation-cli
+	rm -rf $(OBJ) cli
 
 .SILENT: install
 install: $(OBJ)
@@ -102,7 +102,7 @@ docker-clean:
 dist: all
 	tar -czf "$(OBJ).tgz" $(OBJ)
 	rm -rf $(OBJ)
-	rm -rf foundation-cli
+	rm -rf cli
 	echo "Ready for release. "
 
 .SILENT: release
