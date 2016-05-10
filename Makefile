@@ -8,6 +8,8 @@ api_release := 2.1.8
 TENANT_NAME := 'Cyverse'
 TENANT_KEY := 'iplantc.org'
 PREFIX := $(HOME)
+SDK_GIT_REPO := 'https://github.com/iPlantCollaborativeOpenSource/cyverse-sdk'
+CLI_GIT_REPO := 'https://bitbucket.org/agaveapi/cli'
 
 OBJ = cyverse-cli
 SOURCES = customize
@@ -31,6 +33,7 @@ customize: cli
 	echo "Customizing..."
 	cp -fr src/templates $(OBJ)/
 	cp -fr src/scripts/* $(OBJ)/bin/
+	cp VERSION $(OBJ)/SDK-VERSION
 	sed -e 's|$${TENANT_NAME}|$(TENANT_NAME)|g' \
 		-e 's|$${TENANT_KEY}|$(TENANT_KEY)|g' \
 		-e 's|$${api_version}|$(api_version)|g' \

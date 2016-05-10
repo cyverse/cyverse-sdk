@@ -36,3 +36,39 @@ echo "${TENANT_NAME} CLI v${sdk_version}"
 echo "For use with"
 echo "    Tenant: ${TENANT_KEY}"
 echo "    Agave API: ${api_version}/${api_release}+"
+
+function do_update {
+
+
+	DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+	INSTALLED=$(cat $DIR/../SDK-VERSION)
+	AVAILABLE=$(curl -skL "https://raw.githubusercontent.com/iPlantCollaborativeOpenSource/cyverse-sdk/master/VERSION")
+	UPDATE_NEEDED=$(awk -v n1=$INSTALLED -v n2=$AVAILABLE 'BEGIN {if (n1<n2) printf ("1"); else printf ("0");}')
+
+	function update_cli {
+
+		mytmpdir=`mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir'`
+		curl -skL -o ${mytmpdir}/cyverse-cli.tgz "https://raw.githubusercontent.com/iPlantCollaborativeOpenSource/cyverse-sdk/master/cyverse-cli.tgz"
+		tar -xf ${mytmpdir}/cyverse-cli.tgz -C "$DIR/../../"
+		rm -rf ${mytmpdir}
+		echo "Done."
+	}
+
+	if [ ${UPDATE_NEEDED} -eq 1 ];
+	then
+		echo -e "\nUpdating from ${INSTALLED} to ${AVAILABLE}..."
+		update_cli
+	else
+		echo -e "\nThere is no update available."
+	fi
+
+
+}
+
+if [ "$1" = "--update" ];
+then
+	do_update
+else
+	echo -e "\nRe-run with --update to check for and install the latest version of the SDK."
+fi
