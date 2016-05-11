@@ -83,22 +83,15 @@ git-test:
 	if [ $$? -ne 0 ] ; then echo "Git not found or unable to be executed. Exiting." ; exit 1 ; fi
 	git --version
 
-.SILENT: docker-test
-docker-test:
-	echo "Verifying that docker is installed and reachable..."
-	DOCKER_INFO=`docker info > /dev/null`
-	if [ $$? -ne 0 ] ; then echo "Docker not found or unreachable. Exiting." ; exit 1 ; fi
-	docker info
-
 # Docker image
-docker: docker-test customize
-	docker build --rm=true -t iplantc/$(OBJ):$(sdk_version) .
+docker: customize
+	build/docker.sh $(OBJ) $(sdk_version) build
 
 docker-release: docker
-	docker push iplantc/$(OBJ):$(sdk_version)
+	build/docker.sh $(OBJ) $(sdk_version) release
 
 docker-clean:
-	docker rmi iplantc/$(OBJ):$(sdk_version)
+	build/docker.sh $(OBJ) $(sdk_version) clean
 
 # Github release
 .SILENT: dist

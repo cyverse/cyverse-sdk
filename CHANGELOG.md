@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 * cyverse-sdk-info learned to check the SDK version and update if necessary
 
 ### Changed
-* Nothing
+* Official Ubuntu-based cyverse/cyverse-cli image is automagically available at Docker Hub with every release
 
 ### Removed
 * Nothing
