@@ -268,7 +268,7 @@ For completeness, the job json file used in this example is shown below.
     	"maxMemSort":800000000,
     	"nameSort":true,
         "outputBam": "ex1_sorted.bam"
-    }
+    },
     "outputs": {
     	"bam": "ex1_sorted.bam"
     }
