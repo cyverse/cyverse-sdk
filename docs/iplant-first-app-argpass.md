@@ -141,7 +141,7 @@ In our previous example of samtools-sort.json, showArgument was set to "false" f
  "inputs":[
     {"id":"inputBam",
      "value":
-        {"default":"",
+        {"default":"input.bam",
          "order":0,
          "required":true,
          "validator":".bam$",
@@ -158,7 +158,7 @@ In our previous example of samtools-sort.json, showArgument was set to "false" f
  "parameters":[
    {"id":"maxMemSort",
      "value":
-        {"default":"500000000",
+        {"default":500000000,
          "order":1,
          "required":true,
          "type":"number",
@@ -266,7 +266,7 @@ For completeness, the job json file used in this example is shown below.
     },
     "parameters": {
     	"maxMemSort":800000000,
-    	"nameSort":true
+    	"nameSort":true,
         "outputBam": "ex1_sorted.bam"
     }
     "outputs": {
