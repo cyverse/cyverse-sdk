@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.1.2 - 06/15/2016
+### Added
+* Nothing
+
+### Changed
+* Updated to latest Agave CLI featuring `jobs-kick` command + fixes
+
+### Removed
+* Nothing
+
 ## Version 1.1.1 - 05/10/2016
 ### Added
 * cyverse-sdk-info learned to check the SDK version and update if necessary
