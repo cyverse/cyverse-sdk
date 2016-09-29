@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.1.4 - 09/29/2016
+### Added
+* Nothing
+
+### Changed
+* Updated to track latest agaveapi/cli ece6d2043dd734aedfed10fe10cb900f7e5c9fb9
+
+### Removed
+* Nothing
+
 ## Version 1.1.2 - 06/15/2016
 ### Added
 * Nothing
