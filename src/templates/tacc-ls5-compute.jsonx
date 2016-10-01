@@ -5,11 +5,12 @@
     "id": "tacc-lonestar5-${USERNAME}",
     "login": {
         "auth": {
-            "username": "${USERNAME}",
-            "password": "${PASSWORD}",
-            "type": "PASSWORD"
+            "publicKey": "${PUBLIC_KEY}",
+            "privateKey": "${PRIVATE_KEY}",
+			"username": "${USERNAME}",
+            "type": "SSHKEYS"
         },
-        "host": "login2.ls5.tacc.utexas.edu",
+        "host": "gateway.ls5.tacc.utexas.edu",
         "port": 22,
         "protocol": "SSH"
     },
@@ -46,15 +47,16 @@
     "startupScript": "./bashrc",
     "status": "UP",
     "storage": {
-        "host": "ls5.tacc.utexas.edu",
+        "host": "gateway.ls5.tacc.utexas.edu",
         "port": 22,
         "protocol": "SFTP",
         "homeDir": "/",
         "rootDir": "${WORKD}",
         "auth": {
-            "username": "${USERNAME}",
-            "password": "${PASSWORD}",
-            "type": "PASSWORD"
+            "publicKey": "${PUBLIC_KEY}",
+            "privateKey": "${PRIVATE_KEY}",
+			"username": "${USERNAME}",
+            "type": "SSHKEYS"
         }
     },
     "type": "EXECUTION",

@@ -1,0 +1,21 @@
+{
+	"id": "tacc-globalfs-${USERNAME}",
+	"name": "TACC Global Filesystem [${USERNAME}]",
+	"status": "UP",
+	"type": "STORAGE",
+	"description": "Storage (1TB quota) on TACC global $WORK filesystem",
+	"site": "tacc.utexas.edu",
+	"storage": {
+		"host": "gateway.stampede.tacc.utexas.edu",
+		"port": 22,
+		"protocol": "SFTP",
+		"rootDir": "${WORKD}",
+		"homeDir": "/",
+        "auth": {
+            "publicKey": "${PUBLIC_KEY}",
+            "privateKey": "${PRIVATE_KEY}",
+			"username": "${USERNAME}",
+            "type": "SSHKEYS"
+        }
+	}
+}

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SYSNAME=$(hostname --fqdn | awk -F '.' '{ print $2 }')
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Test for agave cli in $PATH
@@ -29,8 +31,8 @@ cat << EOF
 
 *Cyverse API Enrollment*
 
-This script will register personal copies of TACC
-systems that can be used build and validate Agave
+This script will register a personal instance of TACC
+'${SYSNAME}' that can be used build and validate Agave
 apps. The following steps assume you have created
 an Agave Oauth2 client using 'client-create'.
 
@@ -53,73 +55,87 @@ if [ $? -ne 0 ]; then echo "Error with OAuth2 configuration. Exiting."; exit 1; 
 # Collect TACC info
 cat << EOF
 
-*Connect Agave to TACC HPC*
+*Connect Agave to the '${SYSNAME}' HPC system*
 
-The following information will be gathered in order to
-configure TACC-managed HPC systems for
-use with the Agave API:
+The following information will be generated or gathered to
+configure this system for access via Agave:
 
   TACC username
-  TACC password
-  TACC project name (default: iPlant-Collabs)
-  The path to your TACC \$WORK directory
+  SSH keys for your account
+  TACC Allocation name
+  Path to your TACC \$WORK directory
 
 EOF
 
 default="Yes"
-read -p "Do you have these values at the ready? [$default]: " READY
+read -p "Are you ready to proceed? [$default]: " READY
 READY=${READY:-$default}
 if [ "$READY" != "Yes" ]; then exit 1; fi
 
-echo -e "\nOK. Let's begin...\n"
+echo -e "\n"
 
-default=""
-read -p "Enter your TACC user account [$default]: " USERNAME
+generate_agave_ssh_keys () {
+
+	PRIVATE_KEY_PATH="$HOME/.ssh/agaveapi"
+	PUBLIC_KEY_PATH="${PRIVATE_KEY_PATH}.pub"
+
+	ssh-keygen -q -t rsa -N '' -f ${PRIVATE_KEY_PATH}
+
+	if [ -e ${PUBLIC_KEY_PATH} ] && [ -e ${PRIVATE_KEY_PATH} ];
+	then
+		cat ${PUBLIC_KEY_PATH} >> ~/.ssh/authorized_keys
+	else
+		echo "Error creating ~/.ssh/agave keypair. Exiting." && exit 1
+	fi
+
+}
+
+echo "Checking for existence of SSH keys..."
+
+PRIVATE_KEY_PATH="~/.ssh/id_rsa"
+PUBLIC_KEY_PATH="~/.ssh/id_rsa.pub"
+if [ ! -e ${PUBLIC_KEY_PATH} ] || [ ! -e ${PRIVATE_KEY_PATH} ];
+then
+	echo -e "Keys not found. Generating a keypair.\n\n"
+	generate_agave_ssh_keys
+fi
+
+PUBLIC_KEY=$(jsonpki --public ${PUBLIC_KEY_PATH})
+PRIVATE_KEY=$(jsonpki --private ${PRIVATE_KEY_PATH})
+
+default=$USER
+read -p "TACC user account [$default]: " USERNAME
 USERNAME=${USERNAME:-$default}
 if [ -z "$USERNAME" ]; then echo "Error: TACC username can't be empty."; exit 1; fi
 echo "Confirmed: $USERNAME"
 
-default=""
-read -s -p "Enter your TACC account password [$default]: " PASSWORD
-PASSWORD=${PASSWORD:-$default}
-if [ -z "$PASSWORD" ]; then echo "Error: Password can't be empty."; exit 1; fi
-echo "\n"
-
 default="iPlant-Collabs"
-read -p "Enter a TACC project associated with this system [$default]: " PROJECT
+read -p "TACC allocation to be used with this system [$default]: " PROJECT
 PROJECT=${PROJECT:-$default}
 if [ -z "$PROJECT" ]; then echo "Error: TACC project name can't be empty."; exit 1; fi
 echo "Confirmed: $PROJECT"
 
-default=""
-read -p "Enter your TACC work directory [$default]: " WORKD
+default=$(echo $WORK)
+read -p "TACC work directory [$default]: " WORKD
 WORKD=${WORKD:-$default}
-if [ -z "$WORKD" ]; then echo "Error: TACC work directory can't be empty."; exit 1; fi
+if [ -z "$WORKD" ]; then echo "Error: TACC work directory can't be left empty."; exit 1; fi
 echo "Confirmed: $WORKD"
 
 # Create a date stamp (we don't use anymore in system descriptions)
 DATESTAMP=$(date +%m%d%Y-%0k%M)
 
 # Register with Agave API
-echo -e "\n*Registering systems with Agave API*\n"
+echo -e "\n*Registering system with Agave API*\n"
 
 TMPDIR="${HOME}/tmp"
 mkdir -p "${TMPDIR}"
 
-for F in $DIR/../templates/tacc*
+for F in $DIR/../templates/tacc-${SYSNAME}*
 do
-  echo "Processing template ${BN}..."
-  BN=$(basename $F .jsonx)
+  echo "System template ${BN}..."
+  tacc-template-write.py ${USERNAME} ${PROJECT} ${WORKD} ${PRIVATE_KEY_PATH} ${F} ${TMPDIR}
 
-  sed -e "s|\${USERNAME}|${USERNAME}|g" \
-      -e "s|\${PROJECT}|${PROJECT}|g" \
-      -e "s|\${PASSWORD}|${PASSWORD}|g" \
-      -e "s|\${DATESTAMP}|${DATESTAMP}|g" \
-      -e "s|\${WORKD}|${WORKD}|g" \
-      ${F} > "$TMPDIR/$BN.json"
-
-  systems-addupdate -q -F "${TMPDIR}/${BN}.json" \
-      && rm -rf "${TMPDIR}/${BN}.json"
+  systems-addupdate -q -F "${TMPDIR}/${BN}.json"
 
 done
 
