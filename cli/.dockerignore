@@ -1,8 +1,0 @@
-/bin/transforms-apply
-auth-filter.sh
-playground
-
-auth-switch
-transfers-*
-bin/actors-*
-docker
