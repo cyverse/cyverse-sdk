@@ -1,0 +1,183 @@
+#!/bin/bash
+#
+# apps-list
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It retrieves a list of one or more registered applications from the api
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(access_token apikey)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]...
+$(basename $0) [OPTION]... [APP_ID]
+
+List all applications available to the user. Results can be filtered by
+partial name, tag, or ontology term. A more flexible solution is provided
+by the apps-search command.
+
+ Options:
+  -z, --access_token    Access token
+  -n, --name            Search for app by name
+  -t, --tag             Search for app by tag
+  -S, --system          Search for app by system id
+  -O, --ontology        Search for app by ontology term
+  -P, --publiconly      Only return public apps. Ignored if apps id is given
+  -Q, --privateonly     Only return private apps. Ignored if apps id is given
+  -l, --limit           Maximum number of results to return
+  -o, --offset          Number of results to skip from the start
+      --filter          Comma separated list of fields to return in the response
+  -H, --hosturl         URL of the service
+  -d, --development     Run in dev mode using default dev server
+  -f, --force           Skip all user interaction
+  -i, --interactive     Prompt for values
+  -q, --quiet           Quiet (no output)
+  -v, --verbose         Verbose output
+  -V, --veryverbose     Very verbose output
+  -h, --help            Display this help and exit
+      --version         Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/apps-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+
+  	querystring="pretty=true$(pagination)"
+
+	hosturl=${hosturl%/}
+	if [ -n "$args" ]; then
+		hosturl="$hosturl/$args"
+	else
+		if [ -n "$name" ]; then
+			querystring="name.eq=$name&${querystring}"
+		fi
+
+		if [ -n "$tag" ]; then
+			querystring="tag.eq=$tag&${querystring}"
+		fi
+
+		if [ -n "$ontology" ]; then
+			querystring="ontology.eq=$ontology&${querystring}"
+		fi
+
+		if [ -n "$system" ]; then
+			querystring="executionSystem.eq=$system&${querystring}"
+		fi
+
+		if [ -n "$publiconly" ]; then
+			querystring="publicOnly=true&${querystring}"
+		fi
+
+		if [ -n "$privateonly" ]; then
+			querystring="privateOnly=true&${querystring}"
+		fi
+	fi
+
+	cmd="curl -sk -H \"${authheader}\" '$hosturl?${querystring}'"
+
+	if ((veryverbose)); then
+		[ "$piped" -eq 0 ] && log "Calling $cmd"
+	fi
+
+	response=`curl -sk -H "${authheader}" "$hosturl?${querystring}"`
+
+	if [[ $(jsonquery "$response" "status") = 'success' ]]; then
+		result=$(format_api_json "$response")
+		success "$result"
+	else
+		errorresponse=$(jsonquery "$response" "message")
+		err "$errorresponse"
+	fi
+
+
+}
+
+format_api_json() {
+
+	if ((veryverbose)); then
+		echo "$1"
+	elif [[ $verbose -eq 1 ]]; then
+		result=$(jsonquery "$1" "result" 1)
+		json_prettyify "${result}"
+	else
+		if [ -n "$args" ]; then
+			result=$(jsonquery "$1" "result.id")
+		else
+			result=$(jsonquery "$1" "result.[].id")
+		fi
+		echo "${result}"
+	fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+#[[ $# -eq 0 ]] && set -- "--help"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -z|--access_token) shift; access_token=$1 ;;
+    -n|--name) shift; name=$1 ;;
+    -t|--tag) shift; tag=$1 ;;
+    -O|--ontology) shift; ontology=$1 ;;
+    -S|--system) shift; system=$1 ;;
+    -P|--publiconly) publiconly=1;;
+    -Q|--privateonly) privateonly=1;;
+    -l|--limit) shift; limit=$1;;
+    -o|--offset) shift; offset=$1;;
+    --filter) shift; responsefilter=$1 ;;
+    -H|--hosturl) shift; hosturl=$1;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

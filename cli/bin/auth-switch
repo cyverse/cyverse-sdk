@@ -1,0 +1,183 @@
+#!/bin/bash
+#
+# auth-switch
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It changes the current auth parameters cached to disk. Saves time
+# between manually updating the dev url and username
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# set to 1 to prevent using cache. token creation requires a valid key
+savechanges=0
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apisecret apikey username devurl baseurl tenantid access_token refresh_token)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]...
+
+Updated the cached auth credentials with the given values. For ease of use,
+the -S option can be specified to store the updated cache object for reuse
+in subsequent calls to the API.
+
+ Options:
+  -u, --username        Agave tenant username
+  -d, --devurl          URL to the development server
+  -b, --baseurl         URL to the production API server
+  -t, --tenantid        Current tenant id. ex. iplantc.org
+  -s, --apisecret       Consumer secret
+  -k, --apikey          Consumer Key
+  -z, --access_token    Current auth token
+  -r, --refresh_token   Current refresh token
+  -S, --savechanges     Save the updated value
+  -f, --force           Skip all user interaction
+  -i, --interactive     Prompt for values
+  -q, --quiet           Quiet (no output)
+  -v, --verbose         Verbose output
+  -V, --veryverbose     Very verbose output
+  -h, --help            Display this help and exit
+      --version         Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/auth-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+	local post_options="grant_type=password&username=${username}&password=${password}&scope=PRODUCTION"
+
+    current_cache=$(kvget current )
+
+    if [ -e "$DIR/auth-switch-filter.sh" ]; then
+        source $DIR/auth-switch-filter.sh
+    elif [ "$dev" = "local" ]; then
+        dev="http://localhost:8080"
+    elif [ "$dev" = "docker" ]; then
+        dev="https://docker.example.com"
+    else
+        dev=$(jsonquery "$current_cache" "devurl")
+    fi
+
+    if [ -z "$user" ]; then
+        user=$(jsonquery "$current_cache" "username")
+    fi
+
+    if [ -z "$tenant" ]; then
+        tenant=$(jsonquery "$current_cache" "tenantid")
+    fi
+
+    if [ -z "$baseurl" ]; then
+        baseurl=$(jsonquery "$current_cache" "baseurl")
+    fi
+
+    if [ -z "$apisecret" ]; then
+        apisecret=$(jsonquery "$current_cache" "apisecret")
+    fi
+
+    if [ -z "$apikey" ]; then
+        apikey=$(jsonquery "$current_cache" "apikey")
+    fi
+
+    if [ -z "$access_token" ]; then
+        access_token=$(jsonquery "$current_cache" "access_token")
+    fi
+
+    if [ -z "$refresh_token" ]; then
+        refresh_token=$(jsonquery "$current_cache" "refresh_token")
+    fi
+
+    if [ -z "$refresh_token" ]; then
+        refresh_token=$(jsonquery "$current_cache" "refresh_token")
+    fi
+
+    expires_in=$(jsonquery "$current_cache" "expires_in")
+
+    expires_at=$(jsonquery "$current_cache" "expires_at")
+
+    created_at=$(jsonquery "$current_cache" "created_at")
+
+    response="{\"tenantid\":\"$tenant\",\"baseurl\":\"${baseurl}\",\"devurl\":\"${dev}\",\"apisecret\":\"$apisecret\",\"apikey\":\"$apikey\",\"username\":\"$user\",\"access_token\":\"$access_token\",\"refresh_token\":\"$refresh_token\",\"created_at\":\"$created_at\",\"expires_in\":\"$expires_in\",\"expires_at\":\"$expires_at\"}"
+
+    result=$(format_api_json "$response")
+
+    success "$result"
+}
+
+format_api_json() {
+
+	if ((savechanges)); then
+
+		kvset current "$1"
+
+		echo "Cache successfully updated and saved to $AGAVE_CACHE_DIR/current";
+	fi
+
+  json_prettyify "${1}"
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+[[ $# -eq 0 ]] && set -- "-i"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -u|--user) shift; user=$1 ;;
+  	-d|--dev) shift; dev=$1 ;;
+    -b|--baseurl) shift; baseurl=$1 ;;
+    -t|--tenant) shift; tenant=$1 ;;
+    -s|--apisecret) shift; apisecret=$1 ;;
+    -k|--apikey) shift; apikey=$1 ;;
+    -z|--access_token) shift; access_token=$1 ;;
+    -r|--refresh_token) shift; refresh_token=$1 ;;
+    -S|--savechanges) savechanges=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"
