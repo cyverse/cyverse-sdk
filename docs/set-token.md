@@ -1,9 +1,9 @@
 Obtaining an OAuth 2 authentication token
 =========================================
 
-Tokens are a form of short-lived, temporary authenticiation and authorization used in place of your username and password. To interact with CyVerse APIs, you will need to acquire one. Your Cyverse token will expire 4 hours, but can easily be refreshed.
+Tokens are a form of short-lived, temporary authenticiation and authorization used in place of your username and password. To interact Agave and other CyVerse APIs, you will need to acquire one. Each CyVerse token expires after 4 hours, but can easily be refreshed.
 
-The command to accomplish this is:
+On a host where you have configured an OAuth2 client already, the command to get a new token is:
 
 ```sh
 # From your terminal interface, type:
@@ -21,9 +21,15 @@ Token successfully refreshed and cached for 14400 seconds
 }
 ```
 
+If you have installed the SDK on a new host and are creating a token for the first time on that host, you will need to also include the key and secret from your Oauth2 client. In the future, the key and secret will cached on the host and you will not need to pass them in the command line. 
+
+```sh
+auth-tokens-create -S -v --apisecret CONSUMER_SECRET --apikey CONSUMER_KEY
+```
+
 ## Refreshing your token
 
-When your token expires in 4 hours, you may refresh it:
+This tutorial won't take very long, but if you are interrupted and come back later, you might find your token has expired. You can always refresh a token as follows:
 
 ```sh
 auth-tokens-refresh -S -v

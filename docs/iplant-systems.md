@@ -1,19 +1,25 @@
-Setting up CyVerse development systems
+Setting up CyVerse/TACC development systems
 =====================================
 
-One of the most interesting features of Agave is its ability to make use of diverse systems for storing data and executing applications. This offers both an opportunity and a challenge if you come to us from Agave V1 application development. Under the V1 model, there were a limted number of monolithic, shared public systems; you had to get special permission to do app development; and debugging was *painful* because your jobs didn't run under your own username on the host systems. Agave 2.0 opens up additional possibilities by allowing you to enroll your own compute and storage resources, as well as create versions of the resources used by CyVerse. A separate tutorial covers creating your own systems.
+One interesting feature of Agave is its ability to make use of diverse systems for storing data and executing applications. This offers both an opportunity and a challenge if you come to us from Agave V1 application development. Under the V1 model, there were a limted number of monolithic, shared public systems; you had to get special permission to do app development; and debugging was *painful* because your jobs didn't run under your own username on the host systems. Agave 2.0 opens up additional possibilities by allowing you to enroll your own compute and storage resources, as well as create versions of the resources used by CyVerse. A separate tutorial covers creating your own systems.
 
 A "system" under Agave 2.0 is a combination of login credentials, information about available physical resources, policy descriptions, and configuration options that combine to create an abstraction of a physical computing system. This frees end users from needing to know specific details about the actual computing environment in order to move data to the system and run computing tasks on it.
 
-We will now set up private versions of all public systems at TACC that CyVerse uses to power Discovery Environment applications. You can accomplish this manually via the systems-clone and systems-list commands, but we have bundled an automated script with the SDK to make it even more straightforward. You only need to do this once, as the systems created here will be forever associated with your CyVerse credentials.
+The following instructions will guide you through setting up Agave-based access to two TACC HPC systems and a private storage system powered by TACC's global file system. 
 
-Because we're bridging CyVerse and [Texas Advanced Computing Center](https://www.tacc.utexas.edu/resources/hpc) systems, you will need information from both organizations. We assume you have been in contact with [CyVerse support staff](mailto:support@iplantcollaborative.org) and asked to be added to our list of Agave app developers who are allowed to log into TACC systems, and we assume you have an active CyVerse account. Gather your CyVerse credentials (specifically your password), your TACC username and password, and the full path to your WORK directory on TACC systems. To find out this last bit of information:
+Because we're bridging CyVerse and [Texas Advanced Computing Center](https://www.tacc.utexas.edu/resources/hpc) systems, you will need some information from both organizations. We assume you are setting up systems at TACC under one of two conditions:
 
-```sh
-ssh stampede.tacc.utexas.edu 'echo $WORK'
-```
+1. You have been in contact with [CyVerse support staff](mailto:support@cyverse.org) and asked to be added to our list of Agave app developers who are allowed to log into TACC systems
+2. You have your own TACC allocation that allows you to run jobs on Stampede and/or Lonestar5
 
-Now, type ```tacc-systems-create``` which will iterate through a set of templates create a new, private version of each TACC system for you. Here's an example log from running this:
+You will need to log into Stampede and Lonestar5, in succession; install the SDK on each; configure the SDK for access to Agave; and enroll the system you're logged in to. Previous versions of the SDK supported remote setup of TACC HPC and storage systems, but the arrival of increased account security measures at TACC make this infeasible now. 
+
+1. Log in via SSH to Stampede ```ssh stampede.tacc.utexas.edu```
+2. Install the SDK as outlined in *[Installing the CyVerse software development kit](install-sdk.md)*
+3. Configure the SDK to use your existing Agave OAuth2 client or create a new one as per *[Creating a client and getting a set of API Keys](client-create.md)*
+4. Fnally, run the ```tacc-systems-create``` command, which will create a private version of Stampede and a private storage system for you. 
+
+Here is an example of what the script looks like when it runs successfully:
 
 ```sh
  _____  _    ____ ____
@@ -24,59 +30,60 @@ Now, type ```tacc-systems-create``` which will iterate through a set of template
 
 *Cyverse API Enrollment*
 
-This script will register personal copies of TACC
-systems that can be used build and validate Agave
-apps. The following steps assume you have created
-an Agave Oauth2 client using 'client-create'.
+This script will register a personal instance of TACC
+'stampede' that can be used build and validate Agave
+apps. The following steps assume you have configured the
+SDK with a valid Agave Oauth2 client key/secret. 
 
 The following 'auth-tokens-create' command will
 create and store a temporary access token. To refresh
 it after it expires, use 'auth-tokens-refresh -S'.
 
 *Create an OAuth2 token*
-API password:
+API password: 
 
-*Connect Agave to TACC HPC*
+*Connect Agave to the 'stampede' HPC system*
 
-The following information will be gathered in order to
-configure TACC-managed HPC systems for
-use with the Agave API:
+The following information will be generated or gathered to
+configure this system for access via Agave:
 
-  TACC username
-  TACC password
-  TACC project name (default: iPlant-Collabs)
-  The path to your TACC $WORK directory
+  Your TACC username
+  A short alphanumeric key to identiy this system
+  A SSH keypair for your account on this system
+  A TACC Allocation that you have access to
+  Path to your TACC $WORK directory
 
-Do you have these values at the ready? [Yes]: Yes
+Are you ready to proceed? [Yes]: 
 
-OK. Let's begin...
+Ensuring existence of an SSH keypair...
+Done
 
-Enter your TACC user account []: myusername
-Confirmed: myusername
-Enter your TACC account password []:
-Enter a TACC project associated with this system [iPlant-Collabs]:
+Agave system identifier [stampede]: 
+Confirmed: stampede
+
+TACC user account [vaughn]: 
+Confirmed: vaughn
+
+TACC allocation to be used with this system [iPlant-Collabs]: 
 Confirmed: iPlant-Collabs
-Enter your TACC work directory []: /work/12345/myusername
-Confirmed: /work/12345/myusername
 
+TACC work directory [/work/01374/vaughn]: 
+Confirmed: /work/01374/vaughn
 *Registering systems with Agave API*
+    Processing template tacc-stampede-compute...
+    Processing template tacc-stampede-storage...
+Done
 
-Processing template ...
-Processing template tacc-lonestar5-compute...
-Processing template tacc-maverick-compute...
-Processing template tacc-stampede-compute...
+Test out private systems you've updated or created today by running a quick files-list operation as illustrated below. You should see the contents of /work/01374/vaughn returned to you after each operation.
 
-Here are up to 10 recently registered private systems owned by myusername
-tacc-lonestar5-myusername
-tacc-maverick-myusername
-tacc-stampede-myusername
+    files-list -S tacc-globalfs-vaughn /
+    files-list -S tacc-stampede-vaughn /
 ```
 
-The systems with your username are private systems that you can use to develop and run Agave apps. We will cover how to share these with your colleagues and eventually make them fully public elsewhere in our tutorial materials.
+Our convention is that systems containing your username are private systems that you can use to develop and run Agave apps. We will cover how to share these with your colleagues and eventually make them fully public elsewhere in our tutorial materials.
 
-Now, verify that you can access your private systems (the ones containing your username) as follows:
-```files-list -S tacc-stampede-myusername``` where -S specifies one of your private systems. This should display a listing of your $WORK directory on the specified TACC computer.
+If you also want to use Lonestar5 for application development or execution, repeat the steps on this page after logging into Lonestar5 via SSH ```ssh ls5.tacc.utexas.edu```
 
-*This completes the section on setting up private CyVerse execution systems.*
+*This completes the section on setting up private CyVerse HPC/storage systems.*
 
 [Back to READ ME](../README.md) | [Next: Creating a CyVerse application for TACC Stampede](iplant-first-app.md)

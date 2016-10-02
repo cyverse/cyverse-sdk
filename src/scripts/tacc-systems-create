@@ -30,8 +30,10 @@ cat << EOF
 
 This script will register a personal instance of TACC
 '${SYSNAME}' that can be used build and validate Agave
-apps. The following steps assume you have created
-an Agave Oauth2 client associated with this system as follows:
+apps. The following steps assume you have created or configured
+an Agave Oauth2 client on this host.
+
+If you have not, you may exit out of this script and run:
 
 clients-create -S -N "sdk-${SYSNAME}" -D "OAuth client for TACC system $SYSNAME"
 
@@ -48,7 +50,6 @@ if [ $? -ne 0 ]; then echo "There is an error reading your OAuth2 configuration.
 
 # Pause briefly... race conditions are frustrating
 auth-tokens-create -q -S
-sleep 1
 
 # Collect TACC info
 cat << EOF
@@ -59,7 +60,7 @@ The following information will be generated or gathered to
 configure this system for access via Agave:
 
   Your TACC username
-  A short alphanumeric key to identiy this system
+  A short alphanumeric key to identify this system
   A SSH keypair for your account on this system
   A TACC Allocation that you have access to
   Path to your TACC \$WORK directory
@@ -70,8 +71,6 @@ default="Yes"
 read -p "Are you ready to proceed? [$default]: " READY
 READY=${READY:-$default}
 if [ "$READY" != "Yes" ]; then exit 1; fi
-
-echo -e "\n"
 
 generate_agave_ssh_keys () {
 
@@ -98,7 +97,7 @@ then
 	echo "    Keys not found. Generating a keypair."
 	generate_agave_ssh_keys
 fi
-echo -e "Done\n\n"
+echo "Done"
 
 default=$SYSNAME
 read -p "Agave system identifier [$default]: " SYSID
@@ -135,14 +134,14 @@ do
   tacc-template-write.py ${USERNAME} ${PROJECT} ${WORKD} ${PRIVATE_KEY_PATH} ${F} ${TMPDIR}
   systems-addupdate -q -F "${TMPDIR}/${BN}.json"
 done
-echo -e "Done\n\n"
+echo "Done"
 
 CYVERSE_USERNAME=$(curl -sk -H "Content-Type: application/json" -X POST --data-binary "$(profiles-list -v me)" "https://agaveapi.co/json-mirror?q=username")
 temp="${CYVERSE_USERNAME%\"}"
 temp="${temp#\"}"
 CYVERSE_USERNAME=$temp
 
-echo -e "Test out private systems you've updated or created today by running a quick files-list operation as illustrated below. You should see the contents of ${WORKD} returned to you after each operation.\n\n"
+echo "Test out private systems you've updated or created today by running a quick files-list operation as illustrated below. You should see the contents of ${WORKD} returned to you after each operation."
 
 for S in $(systems-search "owner=$CYVERSE_USERNAME" "private=true" "lastupdated.on=today")
 do
