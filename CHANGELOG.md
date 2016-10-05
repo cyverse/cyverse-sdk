@@ -1,6 +1,19 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.2.0 - 10/05/2016
+### Added
+* Support for Lonestar5 at TACC
+
+### Changed
+* Private TACC systems now use gateway hosts in order to support Multifactor Authentication
+* System enrollment now relies on a dedicated Python 2.6.x script rather than sed
+* Revised onboarding tutorial to support SSHKEYS for TACC systems in favor of passwords, which are deprecated
+
+### Removed
+* Temporarily deprecated support for TACC Maverick
+* Removed private system support for Lonestar4
+
 ## Version 1.1.4 - 09/29/2016
 ### Added
 * Nothing
