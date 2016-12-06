@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import terrainpy
 import argparse
 import json
 import os.path
@@ -8,19 +9,6 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 token_cache = '~/.agave/current'
-
-def get_cached_token():
-    token = None
-    if os.path.isfile(os.path.expanduser(token_cache)):
-        with open(os.path.expanduser(token_cache), 'r') as json_file:
-            token = str(json.load(json_file)['access_token'])
-    return token
-
-def prompt_user(keyword):
-    """Prompt user to enter value for given key at command line."""
-    print 'Enter', keyword.replace('_', ' ') + ':'
-    return_key = raw_input('')
-    return return_key
 
 if __name__ == '__main__':
 
@@ -33,11 +21,11 @@ if __name__ == '__main__':
 
     # if token not supplied, get from token_cache
     if args.accesstoken is None:
-    	args.accesstoken = get_cached_token()
+    	args.accesstoken = terrainpy.get_cached_token()
 
     # if description file not supplied, prompt user
     if args.description_file is None:
-        args.description_file = prompt_user('description_file')
+        args.description_file = terrainpy.prompt_user('description_file')
 
     # build header
     header = {
