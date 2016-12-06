@@ -5,6 +5,7 @@ import argparse
 import json
 import os.path
 import requests
+import urllib
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
@@ -39,8 +40,7 @@ if __name__ == '__main__':
     header = {'Authorization': 'Bearer ' + args.accesstoken}
 
     # list hierarchys
-    url = 'https://agave.iplantc.org/terrain/v2/apps/hierarchies' #+ args.iri
-    print url
+    url = 'https://agave.iplantc.org/terrain/v2/apps/hierarchies' + args.iri
     list_hierarchys = requests.get(url, headers = header, verify = False)
     list_hierarchys.raise_for_status
     list_hierarchys = list_hierarchys.json()
@@ -48,9 +48,9 @@ if __name__ == '__main__':
     # print output based on -v flag
     if args.verbose:
 	print json.dumps(list_hierarchys, sort_keys = True, indent = 4, separators = (',', ': '))
+    elif args.iri != '':
+	for item in list_hierarchys['apps']:
+	    print item['name'], '\t', item['id']
     else:
-	for item in list_hierarchys:
-	    if args.iri != '':
-		print item['name'], '\t', item['id']	    
-	    else:
-		print item['label'], '\t', item['iri']
+	for item in list_hierarchys['hierarchies']:
+	    print item['label'], '\t', item['iri']
