@@ -3,7 +3,6 @@
 import terrainpy
 import argparse
 import json
-import os.path
 import requests
 import urllib
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
