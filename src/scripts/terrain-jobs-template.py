@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
     # build template
     template = {
-        'app_Id': args.appID,
+        'app_id': args.appID,
         'archive_logs': True,
         'config': parameters,
         'create_output_subdir': True,
