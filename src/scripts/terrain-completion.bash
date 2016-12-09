@@ -23,7 +23,8 @@ _terrain() {
 	    *)				;;
 	esac
     fi
+
+    return 0
 }
 
-#complete -F _terrain terrain-apps-description.py terrain-apps-list-by-hierarchy.py terrain-apps-search.py terrain-hierarchies-list.py terrain-jobs-submit.py terrain-jobs-template.py
 complete -F _terrain terrain
