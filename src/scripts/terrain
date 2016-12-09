@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+case "$1" in
+    apps)	 shift;
+	case "$1" in
+	    description)	shift; terrain-apps-description.py "$@";;
+	    list)		shift; terrain-apps-list-by-hierarchy.py "$@";;
+	    search)		shift; terrain-apps-search.py "$@";;
+	esac;;
+
+    hierarchies) shift;
+	case "$1" in
+	    list)		shift; terrain-hierarchies-list.py "$@";;
+        esac;;
+
+    jobs)	 shift;
+	case "$1" in
+	    submit)		shift; terrain-jobs-submit.py "$@";;
+	    template)		shift; terrain-jobs-template.py "$@";;
+	esac;;
+
+    -h|--help|-help)		break ;;
+    --) 			break;;
+    *)	 			break;;
+esac
