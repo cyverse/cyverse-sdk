@@ -10,9 +10,8 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 if __name__ == '__main__':
 
     # arguments
-    parser = argparse.ArgumentParser(description = 'Generate template for job given app ID.')
+    parser = argparse.ArgumentParser(description = 'Generate template for job with supplied appID. Parameter defaults are given in parenthesis where provided in the app description.')
     parser.add_argument('-a', '--appID', dest = 'appID', nargs = '?', help = 'app ID with which to generate template')
-    parser.add_argument('-v', '--verbose', dest = 'verbose', action = 'store_true', help = 'verbose output')
     parser.add_argument('-z', '--accesstoken', dest = 'accesstoken', nargs = '?', help = 'access token')
     args = parser.parse_args()
 
@@ -36,9 +35,18 @@ if __name__ == '__main__':
     # get parameters
     parameters = {}   
     groups = description['groups']
+#    for item in groups:
+#        for parameter in item['parameters']:
+#            parameters[parameter['id']] = parameter['label']
     for item in groups:
         for parameter in item['parameters']:
             parameters[parameter['id']] = parameter['label']
+            if parameter.get('defaultValue') is not None:
+                if type(parameter['defaultValue']) != dict:
+                    parameters[parameter['id']] += ' (' + parameter['defaultValue'] + ')'
+                else:
+                    parameters[parameter['id']] += ' (' + parameter['defaultValue']['display'] + ', id ' + \
+                                                          parameter['defaultValue']['id'] + ')'
 
     # build template
     template = {
