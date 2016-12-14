@@ -74,7 +74,7 @@ This output must be edited before submission, so it is convientient to send it d
 ````
 $ ./terrain jobs template -a c7f05682-23c8-4182-b9a2-e09650a5f49b > job_file.json
 ```
-Once in file form, a name and output directory must be provided. Additionally, the string descriptions given as values for the ID keys in the config block must be replaced by valid input. In the example above, `"Select an input file"` would be replaced by a file path, such as `""/iplant/home/jturcino/word_count.txt"`. If there is a default value for any of these parameters, it will be provided in parentheses. Thus, the final job file for our word count example could look like this:
+Once in file form, a name and output directory must be provided. Additionally, the string descriptions given as values for the ID keys in the config block must be replaced by valid input. In the example above, `"Select an input file"` would be replaced by a file path, such as `"/iplant/home/jturcino/word_count.txt"`. If there is a default value for any of these parameters, it will be provided in parentheses. Thus, the final job file for our word count example could look like this:
 ```
 {
     "app_id": "c7f05682-23c8-4182-b9a2-e09650a5f49b",
