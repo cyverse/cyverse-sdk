@@ -10,7 +10,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 if __name__ == '__main__':
 
     # arguments
-    parser = argparse.ArgumentParser(description = 'List apps found with search term provided.')
+    parser = argparse.ArgumentParser(description = 'Search apps found with term provided.')
     parser.add_argument('-s', '--search', dest = 'search', nargs = '?', help = 'single term with which to search')
     parser.add_argument('-v', '--verbose', dest = 'verbose', action = 'store_true', help = 'verbose output')
     parser.add_argument('-z', '--accesstoken', dest = 'accesstoken', nargs = '?', help = 'access token')
@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     # search apps
     url = 'https://agave.iplantc.org/terrain/v2/apps?search=' + args.search
-    search = requests.get(url, headers = header, verify = False)
+    search = requests.get(url, headers = header)
     search.raise_for_status
     search = search.json()
 
@@ -38,4 +38,4 @@ if __name__ == '__main__':
 	print json.dumps(search, sort_keys = True, indent = 4, separators = (',', ': '))
     else:
 	for item in search['apps']:
-	    print item['name'], '\t', item['id']
+	    print item['name'], item['id']

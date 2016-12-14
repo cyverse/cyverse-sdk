@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     # list hierarchys
     url = 'https://agave.iplantc.org/terrain/v2/apps/hierarchies'
-    list_hierarchys = requests.get(url, headers = header, verify = False)
+    list_hierarchys = requests.get(url, headers = header)
     list_hierarchys.raise_for_status
     list_hierarchys = list_hierarchys.json()
 
@@ -33,4 +33,4 @@ if __name__ == '__main__':
 	print json.dumps(list_hierarchys, sort_keys = True, indent = 4, separators = (',', ': '))
     else:
 	for item in list_hierarchys['hierarchies']:
-	    print item['label'], '\t', item['iri']
+	    print item['label'], item['iri']

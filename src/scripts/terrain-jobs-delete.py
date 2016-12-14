@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     # arguments
     parser = argparse.ArgumentParser(description = 'Delete job specified by given jobID.')
-    parser.add_argument('-j', '--jobID', dest = 'jobID', default = '', nargs = '?', help = 'ID of job for which to give verbose output')
+    parser.add_argument('-j', '--jobID', dest = 'jobID', nargs = '?', help = 'ID of job for which to give verbose output')
     parser.add_argument('-z', '--accesstoken', dest = 'accesstoken', nargs = '?', help = 'access token')
     args = parser.parse_args()
 
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     	args.accesstoken = terrainpy.get_cached_token()
 
     # if only a jobID is not given
-    if args.jobID is None or args.jobID == '':
+    if args.jobID is None:
         args.jobID = terrainpy.prompt_user('jobID')
 
     # build header

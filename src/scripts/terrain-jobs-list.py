@@ -26,9 +26,8 @@ if __name__ == '__main__':
     header = {'Authorization': 'Bearer ' + args.accesstoken}
 
     # list jobs
-    list_jobs = requests.get('https://agave.iplantc.org/terrain/v2/analyses', 
-   				headers = header, 
-   			      )
+    url = 'https://agave.iplantc.org/terrain/v2/analyses'
+    list_jobs = requests.get(url, headers = header)
     list_jobs.raise_for_status
     list_jobs = list_jobs.json()
 

@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     # arguments
     parser = argparse.ArgumentParser(description = 'Return app description for the specified appID.')
-    parser.add_argument('-a', '--appID', dest = 'appID', nargs = '?', help = 'app ID with which to search')
+    parser.add_argument('-a', '--appID', dest = 'appID', nargs = '?', help = 'app ID for which to fetch description')
     parser.add_argument('-v', '--verbose', dest = 'verbose', action = 'store_true', help = 'verbose output')
     parser.add_argument('-z', '--accesstoken', dest = 'accesstoken', nargs = '?', help = 'access token')
     args = parser.parse_args()
@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     # get app description
     url = 'https://agave.iplantc.org/terrain/v2/apps/de/' + args.appID
-    description = requests.get(url, headers = header, verify = False)
+    description = requests.get(url, headers = header)
     description.raise_for_status
     description = description.json()
 

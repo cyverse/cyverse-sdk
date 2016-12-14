@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     # get app description
     url = 'https://agave.iplantc.org/terrain/v2/apps/de/' + args.appID
-    description = requests.get(url, headers = header, verify = False)
+    description = requests.get(url, headers = header)
     description.raise_for_status
     description = description.json()
 
