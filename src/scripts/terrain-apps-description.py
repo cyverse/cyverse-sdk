@@ -33,4 +33,7 @@ if __name__ == '__main__':
     description.raise_for_status
     description = description.json()
 
-    print json.dumps(description, sort_keys = True, indent = 4, separators = (',', ': '))
+    if args.verbose:
+        print json.dumps(description, sort_keys = True, indent = 4, separators = (',', ': '))
+    else:
+        print description['name'] + ':\n' + description['description']
