@@ -10,8 +10,8 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 if __name__ == '__main__':
 
     # arguments
-    parser = argparse.ArgumentParser(description = 'List apps under hierarchy provided.')
-    parser.add_argument('-s', '--search', dest = 'search', nargs = '?', help = 'single term with whihc to search for apps')
+    parser = argparse.ArgumentParser(description = 'List apps found with search term provided.')
+    parser.add_argument('-s', '--search', dest = 'search', nargs = '?', help = 'single term with which to search')
     parser.add_argument('-v', '--verbose', dest = 'verbose', action = 'store_true', help = 'verbose output')
     parser.add_argument('-z', '--accesstoken', dest = 'accesstoken', nargs = '?', help = 'access token')
     args = parser.parse_args()
