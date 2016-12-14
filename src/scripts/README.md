@@ -18,7 +18,7 @@ $ source terrain-completion.bash
 ```
 
 ## Usage
-This cli is designed to allow you to go through all the steps of selecting an app and running a job through the TACC Discovery Environment without using the visual interface. We begin by finding an appropriate app via hierarchies or search, creating a job submission form based on that app's decription, and finallly submitting the job. Additionally, tools are available to list and delete previous jobs.
+This cli is designed to allow you to go through all the steps of selecting an app and running a job through the Cyverse Discovery Environment without using the visual interface. We begin by finding an appropriate app via hierarchies or search, creating a job submission form based on that app's decription, and finallly submitting the job. Additionally, tools are available to list and delete previous jobs.
 While walking through usage, I will use the example of counting words in a text file.
 
 ### Finding an app
