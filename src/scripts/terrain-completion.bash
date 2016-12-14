@@ -13,13 +13,14 @@ _terrain() {
         case "$prev" in
 	    app|apps)		   COMPREPLY=( $(compgen -W "description list search" -- $cur) ) ;;
 	    hierarchy|hierarchies) COMPREPLY=( $(compgen -W "list" -- $cur) ) ;;
-	    job|jobs)		   COMPREPLY=( $(compgen -W "submit template" -- $cur) ) ;;
+            job|jobs)              COMPREPLY=( $(compgen -W "delete list submit template" -- $cur) ) ;;
 	    *)			   COMPREPLY=( $(compgen -f $cur)) ;;
 	esac
 
     elif [ $COMP_CWORD -gt 2 ]; then
 	case "$prev" in
 	    -f|--description_file)	COMPREPLY=( $(compgen -f $cur)) ;;
+            -j|--jobID)                 COMPREPLY=( $( compgen -W "$(./terrain-jobs-list.py | awk  '{print $2}')" -- $cur) );;
 	    *)				;;
 	esac
     fi
