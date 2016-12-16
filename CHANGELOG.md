@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.2.1 - 12/16/2016
+### Added
+* Nothing
+
+### Changed
+* Synced to latest Agave CLI
+
+### Removed
+* Nothing
+
 ## Version 1.2.0 - 10/05/2016
 ### Added
 * Support for Lonestar5 at TACC
