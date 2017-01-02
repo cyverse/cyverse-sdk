@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.2.2 - 01/02/2017
+### Added
+* Nothing
+
+### Changed
+* Synced to latest Agave CLI
+
+### Removed
+* Nothing
+
 ## Version 1.2.1 - 12/16/2016
 ### Added
 * Nothing
