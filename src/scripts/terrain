@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+case "$1" in
+    apps)	 shift;
+	case "$1" in
+	    description)	shift; $DIR/terrain-apps-description.py "$@";;
+	    list)		shift; $DIR/terrain-apps-list-by-hierarchy.py "$@";;
+	    search)		shift; $DIR/terrain-apps-search.py "$@";;
+	esac;;
+
+    hierarchies) shift;
+	case "$1" in
+	    list)		shift; $DIR/terrain-hierarchies-list.py "$@";;
+        esac;;
+
+    jobs)	 shift;
+	case "$1" in
+	    delete)		shift; $DIR/terrain-jobs-delete.py "$@";;
+	    list)		shift; $DIR/terrain-jobs-list.py "$@";;
+	    submit)		shift; $DIR/terrain-jobs-submit.py "$@";;
+	    template)		shift; $DIR/terrain-jobs-template.py "$@";;
+	esac;;
+
+    -h|--help|-help)		break ;;
+    --) 			break;;
+    *)	 			break;;
+esac
