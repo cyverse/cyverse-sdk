@@ -28,8 +28,12 @@ cli: git-test
 		cp -R cli $(OBJ); \
 	fi
 
+.SILENT: pip
+pip: git-test
+	pip install --user -r requirements.txt
+
 .SILENT: customize
-customize: cli
+customize: pip cli
 	echo "Customizing..."
 	cp -fr src/templates $(OBJ)/
 	cp -fr src/scripts/* $(OBJ)/bin/
