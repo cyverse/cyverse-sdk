@@ -2,6 +2,49 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+function printusage {
+
+cat <<USAGE
+Terrain: API interface to the CyVerse Discovery Environment
+Usage:
+	terrain [apps|jobs|hierarchies]
+
+Search for applications by plaintext keyword:
+	terrain apps search -s [SEARCH TERM] -v(erbose)
+
+Retrieve the description of a specific application:
+	terrain apps description -a [APPID] -v(erbose)
+
+List for applications in specific category, by IRRI:
+	terrain apps list -i [IRRI] -v(erbose)
+
+List all current and past jobs:
+	terrain jobs list -v(erbose)
+
+List a specific job by ID:
+	terrain jobs list -j [JOBID] -v(erbose) 
+
+Create an editable job file for a given application:
+	terrain jobs template -a [APPID] -v(erbose) > job.json
+
+Submit a job defined in a simple JSON file:
+	terrain jobs submit -f [JOBFILE] -v(erbose) 
+
+Delete a specific job by ID:
+	terrain jobs delete -j [JOBID] -v(erbose) 
+
+List application catalog hierarchies:
+	terrain hierarchies list -v(erbose)
+
+Search application catalog hierarchies:
+	terrain hierarchies search -s [SEARCH TERM] -v(erbose)
+
+USAGE
+
+exit 0
+
+}
+
 case "$1" in
     apps)	 shift;
 	case "$1" in
@@ -23,7 +66,10 @@ case "$1" in
 	    template)		shift; $DIR/terrain-jobs-template.py "$@";;
 	esac;;
 
-    -h|--help|-help)		break ;;
-    --) 			break;;
-    *)	 			break;;
+    -h|--help|-help)
+		printusage;;
+    --)
+		printusage;;
+    *)
+		printusage;;
 esac

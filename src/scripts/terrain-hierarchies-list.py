@@ -10,7 +10,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 if __name__ == '__main__':
 
     # arguments
-    parser = argparse.ArgumentParser(description = 'List hierarchys in nested format')
+    parser = argparse.ArgumentParser(description = 'List hierarchies in nested format')
     parser.add_argument('-v', '--verbose', dest = 'verbose', action = 'store_true', help = 'verbose output')
     parser.add_argument('-z', '--accesstoken', dest = 'accesstoken', nargs = '?', help = 'access token')
     args = parser.parse_args()
