@@ -1,6 +1,28 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.3.1 - 02/17/2017
+### Added
+* Nothing
+
+### Changed
+* Updated help text and syntax in `terrain` helper command to be more helpful!
+* Synced to latest Agave CLI
+
+### Removed
+* Nothing
+
+## Version 1.3.0 - 02/08/2017
+### Added
+* New Agave CLI supports `uuid-lookup` 
+* Initial support for Discovery Environment Terrain APIs thanks to @jturcino
+
+### Changed
+* Synced to latest Agave CLI
+
+### Removed
+* Nothing
+
 ## Version 1.2.2 - 01/02/2017
 ### Added
 * Nothing
