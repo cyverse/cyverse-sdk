@@ -38,11 +38,18 @@ statusio = {'tacc.agave': {'pageid': '53a1e022814a437c5a000781',
 
 # Set up command line
 parser = argparse.ArgumentParser()
-parser.add_argument("--services", help="show individual service reports", action="store_true")
-parser.add_argument("--maintenance", help="show maintenance notices", action="store_true")
-parser.add_argument("--incident", help="show incident reports", action="store_true")
+parser.add_argument("--services",
+                    help="show individual service reports",
+                    action="store_true")
+parser.add_argument("--maintenance",
+                    help="show maintenance notices",
+                    action="store_true")
+parser.add_argument("--incident",
+                    help="show incident reports",
+                    action="store_true")
 args = parser.parse_args()
 
+PRINTPLATFORMS = True
 PRINTSERVICES = False
 PRINTMAINT = False
 PRINTINCIDENT = False
@@ -54,14 +61,16 @@ if args.maintenance:
 if args.incident:
     PRINTINCIDENT = True
 
+# Platforms
+platforms = []
 # Holds all per-service responses
 services = []
 # Active incidents
 incidents = []
 # Maintenance notices
-maintenances = []
+maintenance_upcoming = []
+maintenance_active = []
 
-print '***Platforms***'
 # Iterate over our collection of status.io pages
 for e in statusio.keys():
     headers = {'user-agent': user_agent}
@@ -71,7 +80,17 @@ for e in statusio.keys():
     reselect = re.compile(statusio[e]['select'])
     restrip = re.compile(statusio[e]['strip'])
     overview = j['result']['status_overall']
-    print statusio[e]['name'], ': ', mappings[overview['status_code']], ' ', overview['status'], ' ', overview['updated']
+    plat = {'name': statusio[e]['name'],
+            'status': overview['status'],
+            'emoji': mappings[overview['status_code']],
+            'updated': overview['updated']}
+    platforms.append(plat)
+
+    # Parse maintenance notes
+    maintenances_a = j['result']['maintenance']['active']
+    maintenances_p = j['result']['maintenance']['upcoming']
+    for m in maintenances_a:
+        mainta = {}
 
     # Parse individual service status reports
     statuses = j['result']['status']
@@ -87,6 +106,13 @@ for e in statusio.keys():
                    'status': s['status'],
                    'emoji': mappings[s['status_code']]}
             services.append(svc)
+
+# Platforms
+if PRINTPLATFORMS:
+    print '***Platforms***'
+    finale = sorted(platforms, key=itemgetter('name'))
+    for f in finale:
+        print f['name'], ':', f['emoji'], ' ', f['updated']
 
 # Incidents
 
