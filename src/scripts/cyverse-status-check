@@ -77,8 +77,8 @@ if args.services:
     PRINTSERVICES = True
 if args.maintenance:
     PRINTMAINT = True
-if args.incident:
-    PRINTINCIDENT = True
+# if args.incident:
+#     PRINTINCIDENT = True
 
 # Platforms
 platforms = []

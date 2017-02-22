@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.3.3 - 02/21/2017
+### Added
+* Nothing
+
+### Changed
+* Fixed missing param in `cyverse-status-check` that was causing it to fail to launch
+
+### Removed
+* Nothing
+
 ## Version 1.3.2 - 02/19/2017
 ### Added
 * Fancy new `cyverse-status-check` consolidates agave and cyverse status.io channels into one CLI view
