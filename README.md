@@ -1,3 +1,6 @@
+![CyVerse Logo](https://github.com/cyverse/cyverse-sdk/blob/pages/docs/cyverse_logo.png)
+<img src="https://github.com/cyverse/cyverse-sdk/blob/pages/docs/Agave-teal.png" height="80">
+
 Overview
 --------
 
