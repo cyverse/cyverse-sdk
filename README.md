@@ -22,6 +22,10 @@ We're providing this software development kit to help you with
 
 Over time, we'll address more use cases, such as working with cloud systems such as Amazon Web Services, Google Compute Engine, or [NSF Jetstream](https://use.jetstream-cloud.org/), building web applications, improving reproducible science and analysis with Docker, and more. 
 
+### Tutorials
+
+[CyVerse Application Development](docs/cyverse-app-development.md) | 
+
 *Tutorial 1: Application Development at CyVerse*
 * [Initial assumptions](docs/iplant-assumptions.md)
 * [Installing the SDK](docs/install-sdk.md)
