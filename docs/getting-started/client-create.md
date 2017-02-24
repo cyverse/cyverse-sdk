@@ -38,4 +38,4 @@ You will need access to the ```consumerKey``` and ```consumerSecret``` values wh
 
 *This completes the section on obtaining API keys.*
 
-[Back to READ ME](../README.md) | [Next: Obtaining an OAuth 2 authentication token](set-token.md)
+[Back](README.md) | [Next: Obtaining an OAuth 2 authentication token](set-token.md)
