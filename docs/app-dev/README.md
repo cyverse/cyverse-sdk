@@ -5,6 +5,6 @@ Tutorial: Application Development at CyVerse
 * [Creating a CyVerse application](first-app.md)
 * [Running a job with Agave](first-app-job.md)
 * [Sharing your app with others](share-app.md)
-* [Using Agave argument passing](app-argpass.md)
+* [Using Agave argument passing](argpass.md)
 
 [Back to Overview](../../README.md) | 
