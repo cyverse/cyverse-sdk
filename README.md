@@ -1,5 +1,5 @@
-![CyVerse Logo](docs/cyverse_logo.png)
-<img src="docs/Agave-teal.png" height="80">
+<a href="https://www.cyverse.org"><img src="docs/cyverse_logo.png"></a>
+<a href="https://www.agaveapi.co"><img src="docs/Agave-teal.png" height="72"></a>
 
 Overview
 --------
