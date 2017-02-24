@@ -99,4 +99,4 @@ jobs-output --download --path samtools-sort-01.ipcexe 0001397239178196-5056a550b
 ```
 * You can get more detailed outputs from any of the Agave CLI commands by adding -v to your command line to output the JSON response, and/or by adding -V which will print STDERR to your screen.
 
-[Back](README.md) | [Next: Sharing your app with others](share-app.md)
+[Back](app-dev.md) | [Next: Sharing your app with others](app-dev-share-app.md)

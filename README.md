@@ -24,9 +24,9 @@ Over time, we'll address more use cases, such as working with cloud systems such
 
 ### Tutorials
 
-[Getting Started with CyVerse SDK](docs/getting-started/README.md) | 
+[Getting Started with CyVerse SDK](docs/getting-started.md) | 
 
-[Develop an Application for CyVerse](docs/app-dev/README.md) | 
+[Develop an Application for CyVerse](docs/app-dev.md) | 
 
 
 ### Reporting errors and getting help

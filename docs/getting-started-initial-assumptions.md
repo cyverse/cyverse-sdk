@@ -9,4 +9,4 @@ Before getting started with CyVerse SDK, we assume the following:
 * You can successully log into a TACC Stampede and/or Lonestar5 HPC systems
 * You are comfortable editing text files and working at the command line
 
-[Back](README.md) | [Next: Installing CyVerse SDK](install-sdk.md)
+[Back](getting-started.md) | [Next: Installing CyVerse SDK](getting-started-install-sdk.md)
