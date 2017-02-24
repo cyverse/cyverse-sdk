@@ -64,4 +64,4 @@ Now initialize the command line tools for use with Cyverse
 
 *This completes the section on installing the CyVerse SDK.*
 
-[Back to READ ME](../README.md) | [Next: Creating an OAuth2 client and getting a set of keys](client-create.md)
+[Back](README.md) | [Next: Creating an OAuth2 client and getting a set of keys](client-create.md)
