@@ -481,4 +481,4 @@ Take some time to review how the app description looks when printed from app-lis
 
 *This completes the section on creating and enrolling your own simple application.*
 
-[Back](README.md) | [Next: Running a job using your App](first-app-job.md)
+[Back](README.md) | [Next: Running a job with Agave](first-app-job.md)
