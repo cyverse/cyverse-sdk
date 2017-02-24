@@ -1,4 +1,4 @@
-Tutorial: Application Development at CyVerse*
+Tutorial: Application Development at CyVerse
 -------
 
 * [Initial assumptions](docs/iplant-assumptions.md)
