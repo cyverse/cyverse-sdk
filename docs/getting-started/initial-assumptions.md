@@ -6,4 +6,4 @@ To complete the entire "Guide to App Development at Cyverse" tutorial we assume 
 * You can successully log into a TACC Stampede and/or Lonestar5 HPC systems
 * You are comfortable editing text files and working at the command line
 
-[Back to READ ME](../README.md) | [Next: Installing the SDK](install-sdk.md)
+[Back](README.md) | [Next: Installing CyVerse SDK](install-sdk.md)
