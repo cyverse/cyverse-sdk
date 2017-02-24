@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.3.4 - 02/24/2017
+### Added
+* Nothing
+
+### Changed
+* `cyverse-status-check` gracefully handles absence of `requests`
+* `cyverse-status-check` now properly reports upcoming maintenance
+
+### Removed
+* Nothing
+
 ## Version 1.3.3 - 02/21/2017
 ### Added
 * Nothing

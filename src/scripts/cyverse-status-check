@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 
-import requests
+import sys
 import re
 import argparse
-
 from operator import itemgetter
+
+try:
+    import requests
+except ImportError:
+    print "Please install Python requests>=2.12.4"
+    sys.exit()
+
 
 base_url = 'https://api.status.io/1.0/status/'
 user_agent = 'cyverse-sdk/1.3.1 (python-requests)'
@@ -150,7 +156,7 @@ if maintenance_active:
     print color.BOLD + 'Active Maintenance' + color.END
     ma = sorted(maintenance_active, key=itemgetter('start'), reverse=True)
     for m in ma:
-        print 'Platform: ', m['name']
+        print color.BOLD + u'\U0001f6a7' + '  Platform: ', m['name'] + color.END
         print m['title']
         print m['details']
         print 'Begin: ', m['start']
@@ -159,14 +165,16 @@ if maintenance_active:
 
 if PRINTMAINT:
     print color.BOLD + 'Planned Maintenance' + color.END
-    if maintenance_active:
+    print ''
+    if maintenance_planned:
         mp = sorted(maintenance_planned, key=itemgetter('start'), reverse=True)
         for m in mp:
-            print 'Platform: ', m['name']
+            print color.BOLD + u'\U0001f6a7' + '  Platform: ', m['name'] + color.END
             print m['title']
             print m['details']
             print 'Begin: ', m['start']
             print 'End: ', m['stop']
+            print ''
     else:
         print u'\U0001f477', " None"
     print ""
