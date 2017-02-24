@@ -1,4 +1,6 @@
-*Tutorial 1: Application Development at CyVerse*
+Tutorial: Application Development at CyVerse*
+-------
+
 * [Initial assumptions](docs/iplant-assumptions.md)
 * [Installing the SDK](docs/install-sdk.md)
 * [Creating an OAuth2 client and getting a set of keys](docs/client-create.md)
