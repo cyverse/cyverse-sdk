@@ -47,4 +47,4 @@ This topic is covered in great detail at [Authorization Guide](http://agaveapi.c
 
 *This completes the section on obtaining an OAuth2 authentication token.*
 
-[Back](README.md) | [Next: Setting up CyVerse development systems](systems.md)
+[Back](getting-started.md) | [Next: Setting up CyVerse development systems](getting-started-systems.md)
