@@ -1,4 +1,4 @@
-Crafting applications using Agave argument passing
+Using Agave argument passing
 ==================================================
 Agave supports a limited form of automatic command line generation. We will demonstrate how to take advantage of it.
 
