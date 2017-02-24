@@ -1,4 +1,4 @@
-Creating an CyVerse application for TACC Stampede
+Creating a CyVerse Application
 ================================================
 
 We will now go through the process of building and deploying an Agave application to provide 'samtools sort' functionality on TACC's Stampede system. The following tutorial assumes you have properly installed and configured the CyVerse SDK on Stampede. They assume you have defined an environment variable CYVERSEUSERNAME as your CyVerse username. For example:
@@ -481,4 +481,4 @@ Take some time to review how the app description looks when printed from app-lis
 
 *This completes the section on creating and enrolling your own simple application.*
 
-[Back to READ ME](../README.md) | [Next: Running a job using your Agave app](iplant-first-app-job.md)
+[Back](README.md) | [Next: Running a job with Agave](first-app-job.md)

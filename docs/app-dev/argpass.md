@@ -1,4 +1,4 @@
-Crafting applications using Agave argument passing
+Using Agave argument passing
 ==================================================
 Agave supports a limited form of automatic command line generation. We will demonstrate how to take advantage of it.
 
@@ -296,4 +296,4 @@ jobs-submit -F jobs/samtools-sort-02-job.json
 
 *This completes the section on using Agave argument passing in your apps.*
 
-[Back to READ ME](../README.md)
+[Back](README.md) |
