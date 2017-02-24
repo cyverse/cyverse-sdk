@@ -7,4 +7,4 @@ Tutorial: Getting Started with CyVerse SDK
 * [Obtaining an OAuth 2 authentication token](set-token.md)
 * [Setting up CyVerse development systems at TACC](systems.md)
 
-[Back to Overview](../../README.md) | 
+[Back to Overview](../README.md) | 
