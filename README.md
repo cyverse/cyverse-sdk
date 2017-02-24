@@ -32,11 +32,13 @@ Over time, we'll address more use cases, such as working with cloud systems such
 ### Reporting errors and getting help
 * Visit the *[Ask CyVerse](http://ask.cyverse.org/)* forums for in-depth help. Make sure to mark your questions with the ```Agave_API``` tag so that the API team doesn't miss your questions.
 * Find more in-depth technical detail at the [Agave Science-as-a-Service API](http://agaveapi.co/) home page
-* Another tutorial focused on using the Agave CLI to interact with various aspects of the CyVerse Cyberinfrastructure can be found [here](https://github.com/wjallen/using-agave)
+
 
 *Additional Guides*
+* Another tutorial focused on using the Agave CLI to interact with various aspects of the CyVerse Cyberinfrastructure can be found [here](https://github.com/wjallen/using-agave)
 * [Setting up your own systems](docs/atmo-system.md)
 * [Cloning a CyVerse application to your own systems](docs/iplant-clone-app.md)
 * [Advanced app authoring with Launcher]
+
 
 
