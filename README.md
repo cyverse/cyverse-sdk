@@ -24,26 +24,19 @@ Over time, we'll address more use cases, such as working with cloud systems such
 
 ### Tutorials
 
-[CyVerse Application Development](docs/cyverse-app-development.md) | 
+[Getting Started with CyVerse SDK](docs/getting-started/README.md) | 
 
-*Tutorial 1: Application Development at CyVerse*
-* [Initial assumptions](docs/iplant-assumptions.md)
-* [Installing the SDK](docs/install-sdk.md)
-* [Creating an OAuth2 client and getting a set of keys](docs/client-create.md)
-* [Obtaining an OAuth 2 authentication token](docs/set-token.md)
-* [Setting up CyVerse development systems at TACC](docs/iplant-systems.md)
-* [Creating a CyVerse application on TACC Stampede](docs/iplant-first-app.md)
-* [Running and debugging a job using your Agave app](docs/iplant-first-app-job.md)
-* [Sharing your Agave app with others](docs/iplant-share-app.md)
-* [Crafting applications using Agave argument passing](/docs/iplant-first-app-argpass.md)
+[Develop an Application for CyVerse](docs/cyverse-app-development/README.md) | 
+
+
+### Reporting errors and getting help
+* Visit the *[Ask CyVerse](http://ask.cyverse.org/)* forums for in-depth help. Make sure to mark your questions with the ```Agave_API``` tag so that the API team doesn't miss your questions.
+* Find more in-depth technical detail at the [Agave Science-as-a-Service API](http://agaveapi.co/) home page
+* Another tutorial focused on using the Agave CLI to interact with various aspects of the CyVerse Cyberinfrastructure can be found [here](https://github.com/wjallen/using-agave)
 
 *Additional Guides*
 * [Setting up your own systems](docs/atmo-system.md)
 * [Cloning a CyVerse application to your own systems](docs/iplant-clone-app.md)
 * [Advanced app authoring with Launcher]
 
-### Reporting errors and getting help
-* Visit the *[Ask CyVerse](http://ask.cyverse.org/)* forums for in-depth help. Make sure to mark your questions with the ```Agave_API``` tag so that the API team doesn't miss your questions.
-* Find more in-depth technical detail at the [Agave Science-as-a-Service API](http://agaveapi.co/) home page
-* Another tutorial focused on using the Agave CLI to interact with various aspects of the CyVerse Cyberinfrastructure can be found [here](https://github.com/wjallen/using-agave)
 
