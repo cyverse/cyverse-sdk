@@ -1,7 +1,7 @@
 Installing the CyVerse software development kit
 ===============================================
 
-The Agave API comes bundled with a set of command line scripts. Using these scripts is generally easier than hand-crafting cURL commands, but if you prefer that route, consult the [Agave API Documentation](http://agaveapi.co/documentation/). We include these scripts in our SDK and supplement them with additional support scripts, example files, and documents.
+The [Agave API](https://agaveapi.co) comes bundled with a set of command line scripts. Using these scripts is generally easier than hand-crafting cURL commands, but if you prefer that route, consult the [Agave API Documentation](http://agaveapi.co/documentation/). We include these scripts in our SDK and supplement them with additional support scripts, example files, and documents.
 
 If you are installing and working with the CyVerse SDK on your own personal computer, skip ahead to _Change to the directory where you wish to install the SDK_:
 
@@ -58,7 +58,7 @@ All rights reserved.
 ...
 ```
 
-Now initialize the command line tools for use with Cyverse
+Now initialize the command line tools for use with CyVerse
 
 ```tenants-init -t iplantc.org```
 
