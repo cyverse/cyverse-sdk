@@ -62,6 +62,6 @@ Now initialize the command line tools for use with CyVerse
 
 ```tenants-init -t iplantc.org```
 
-*This completes the section on installing the CyVerse SDK.*
+*This completes the section on Installing the CyVerse SDK.*
 
 [Back](getting-started.md) | [Next: Creating an OAuth2 client and getting a set of keys](getting-started-client-create.md)
