@@ -4,7 +4,7 @@ Initial Assumptions
 Before getting started with CyVerse SDK, we assume the following:
 * You have a [CyVerse account](https://user.cyverse.org/register/)
 * You have a [TACC user account](https://portal.tacc.utexas.edu)
-* You are a member of a [TACC](https://www.tacc.utexas.edu) project with an active allocation to use [TACC systems](https://portal.tacc.utexas.edu/user-guides), that is, either:
+* You are a member of a [TACC](https://www.tacc.utexas.edu) project with an active allocation to use [TACC systems](https://www.tacc.utexas.edu/resources/hpc), that is, either:
   * You have your own TACC project allocation (e.g. through [XSEDE](https://portal.xsede.org/allocations-overview)) _or_
   * You are developing a public CyVerse application and thus have access to the iPlant-Collabs project allocation (to request access to this allocation, join the [Agave Platform on Slack](https://slackin.agaveapi.co) and message John Fonner)
 
