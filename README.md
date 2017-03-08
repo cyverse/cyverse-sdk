@@ -31,7 +31,7 @@ We're providing this software development kit to help you with
 * Find more in-depth technical detail at the [Agave Science-as-a-Service API](http://agaveapi.co/) home page
 
 ### Additional Guides
-Over time, we will add more tutorials to address more use cases, such as working with cloud systems such as Amazon Web Services, Google Compute Engine, or [NSF Jetstream](https://use.jetstream-cloud.org/), building web applications, improving reproducible science and analysis with Docker, and more. Here are some additional guides currently available:
+Over time, we will add tutorials to address more use cases, such as working with cloud systems such as Amazon Web Services, Google Compute Engine, or [NSF Jetstream](https://use.jetstream-cloud.org/), building web applications, improving reproducible science and analysis with Docker, and more. Here are some additional guides currently available:
 
 * [Using an Atmosphere VM as an Agave Execution System](docs/atmo-system.md)
 * [Cloning a CyVerse application to your own systems](docs/iplant-clone-app.md)
