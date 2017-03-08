@@ -10,4 +10,6 @@ A "system" under [Agave API v2](https://www.agaveapi.co/) is a combination of lo
 * [Obtaining an OAuth 2 authentication token](getting-started-set-token.md)
 * [Setting up CyVerse development systems at TACC](getting-started-systems.md)
 
+Need help?  Ask your questions using [Agave’s Slack communication channel](https://slackin.agaveapi.co).
+
 [Back to Overview](../README.md) | 
