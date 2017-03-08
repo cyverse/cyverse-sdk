@@ -61,6 +61,7 @@ Done
 
 Test out private systems you've updated or created today by running a quick files-list operation as illustrated below. You should see the contents of /work/01374/vaughn returned to you after each operation.
 
+```
     files-list -S tacc-globalfs-vaughn /
     files-list -S tacc-stampede-vaughn /
 ```
