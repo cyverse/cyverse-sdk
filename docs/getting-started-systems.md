@@ -84,6 +84,6 @@ Our convention is that systems containing your username are private systems that
 
 If you also want to use Lonestar5 for application development or execution, repeat the steps on this page after logging into Lonestar5 via SSH ```ssh ls5.tacc.utexas.edu```
 
-*This completes the section on setting up private CyVerse HPC/storage systems.*
+*This completes the section on setting up CyVerse/TACC development systems*
 
 [Back](getting-started.md) |
