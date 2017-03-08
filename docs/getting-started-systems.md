@@ -16,15 +16,24 @@ Here is an example of what the script looks like when it runs successfully:
 
 This script will register a personal instance of TACC
 'stampede' that can be used build and validate Agave
-apps. The following steps assume you have configured the
-SDK with a valid Agave Oauth2 client key/secret. 
+apps. The following steps assume you have created or configured
+an Agave Oauth2 client on this host.
+
+If you have not, you may exit out of this script and run:
+
+clients-create -S -N "sdk-stampede" -D "OAuth client for TACC system stampede"
 
 The following 'auth-tokens-create' command will
 create and store a temporary access token. To refresh
 it after it expires, use 'auth-tokens-refresh -S'.
 
 *Create an OAuth2 token*
-API password: 
+API password:
+```
+
+Enter your CyVerse password.  When prompted in the next steps, you should be able to simply hit the return key to use the default option.  You should see your own TACC username and path instead of *vaughn*.
+
+```sh
 
 *Connect Agave to the 'stampede' HPC system*
 
@@ -32,16 +41,14 @@ The following information will be generated or gathered to
 configure this system for access via Agave:
 
   Your TACC username
-  A short alphanumeric key to identiy this system
+  A short alphanumeric key to identify this system
   A SSH keypair for your account on this system
   A TACC Allocation that you have access to
   Path to your TACC $WORK directory
 
-Are you ready to proceed? [Yes]: 
-
+Are you ready to proceed? [Yes]:
 Ensuring existence of an SSH keypair...
 Done
-
 Agave system identifier [stampede]: 
 Confirmed: stampede
 
@@ -53,17 +60,13 @@ Confirmed: iPlant-Collabs
 
 TACC work directory [/work/01374/vaughn]: 
 Confirmed: /work/01374/vaughn
+
 *Registering systems with Agave API*
     Processing template tacc-stampede-compute...
     Processing template tacc-stampede-storage...
 Done
-```
-
 Test out private systems you've updated or created today by running a quick files-list operation as illustrated below. You should see the contents of /work/01374/vaughn returned to you after each operation.
-
-```
     files-list -S tacc-globalfs-vaughn /
-    files-list -S tacc-stampede-vaughn /
 ```
 
 Our convention is that systems containing your username are private systems that you can use to develop and run Agave apps. We will cover how to share these with your colleagues and eventually make them fully public elsewhere in our tutorial materials.
