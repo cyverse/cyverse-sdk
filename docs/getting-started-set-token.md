@@ -5,12 +5,10 @@ Tokens are a form of short-lived, temporary authenticiation and authorization us
 
 On a host where you have configured an OAuth2 client already, the command to get a new token is:
 
-```sh
-# From your terminal interface, type:
-auth-tokens-create -S -v
-```
-* You will then be prompted to enter your *API password*. Type your CyVerse password.
-* At this point, you should receive an affirmation of success in your terminal that resembles this one:
+```auth-tokens-create -S -v```
+
+You will then be prompted to enter your *API password*. Type your CyVerse password.  At this point, you should receive an affirmation of success in your terminal that resembles this one:
+
 ```
 Token successfully refreshed and cached for 14400 seconds
 {
@@ -23,17 +21,13 @@ Token successfully refreshed and cached for 14400 seconds
 
 If you have installed the SDK on a new host and are creating a token for the first time on that host, you will need to also include the key and secret from your Oauth2 client. In the future, the key and secret will cached on the host and you will not need to pass them in the command line. 
 
-```sh
-auth-tokens-create -S -v --apisecret CONSUMER_SECRET --apikey CONSUMER_KEY
-```
+```auth-tokens-create -S -v --apisecret CONSUMER_SECRET --apikey CONSUMER_KEY```
 
 ## Refreshing your token
 
 This tutorial won't take very long, but if you are interrupted and come back later, you might find your token has expired. You can always refresh a token as follows:
 
-```sh
-auth-tokens-refresh -S -v
-```
+```auth-tokens-refresh -S -v```
 
 A successful refresh should appear:
 
