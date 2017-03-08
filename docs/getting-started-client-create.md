@@ -4,9 +4,7 @@ The Agave API uses OAuth 2 for managing authentication and authorization. Before
 
 Create a set of API keys using the Agave clients service as follows:
 
-```sh
-clients-create -S -v -N my_api_client -D "Client used for app development"
-```
+```clients-create -S -v -N my_api_client -D "Client used for app development" ```
 
 *Note:* The -N flag allows you to specify a machine-readable name for your application and -D provides the description. The -S option stores your API keys for future use, so you will not need to manually enter them when you authenticate later. Please do not forget to include the -S option when creating a client. 
 
