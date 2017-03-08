@@ -9,4 +9,6 @@ This tutorial details the steps necessary to create a new private CyVerse HPC ap
 * [Sharing your app with others](app-dev-share-app.md)
 * [Using Agave argument passing](app-dev-argpass.md)
 
+Need help?  Ask your questions using [Agave’s Slack communication channel](https://slackin.agaveapi.co).
+
 [Back to Overview](../README.md) | 
