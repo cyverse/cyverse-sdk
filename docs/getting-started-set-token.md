@@ -33,6 +33,11 @@ This tutorial won't take very long, but if you are interrupted and come back lat
 
 ```sh
 auth-tokens-refresh -S -v
+```
+
+A successful refresh should appear:
+
+```
 Token for iplantc.org:vaughn successfully refreshed and cached for 3600 seconds
 {
     "access_token": "abc1235418ffce0da7fbdcb193d0ef",
@@ -43,7 +48,7 @@ Token for iplantc.org:vaughn successfully refreshed and cached for 3600 seconds
 }
 ```
 
-This topic is covered in great detail at [Authorization Guide](http://agaveapi.co/documentation/authorization-guide/) in the Agave live docs
+This topic is covered in great detail at the Agave [Authorization Guide](http://developer.agaveapi.co/#authorization) 
 
 *This completes the section on obtaining an OAuth2 authentication token.*
 
