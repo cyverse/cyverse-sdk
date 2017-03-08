@@ -15,6 +15,6 @@ systems-roles-addupdate -v -u qwerty -r USER stampede-01010000-12340-me
 apps-pems-update -v -u qwerty -p READ_EXECUTE me-foo-0.0.1
 ```
 
-To make your app public, contact Rion Dooley at TACC.
+To make your app publicly available to the entirety of CyVerse, join the developer community on [Agave’s Slack communication channel](https://slackin.agaveapi.co) and share your request there.
 
 [Back](app-dev.md)  | [Next: Using Agave argument passing](app-dev-argpass.md)
