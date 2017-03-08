@@ -7,9 +7,9 @@ A "system" under Agave 2.0 is a combination of login credentials, information ab
 
 The following instructions will guide you through setting up Agave-based access to two TACC HPC systems and a private storage system powered by TACC's global file system. 
 
-Because we're bridging CyVerse and [Texas Advanced Computing Center](https://www.tacc.utexas.edu/resources/hpc) systems, you will need some information from both organizations. We assume you are setting up systems at TACC under one of two conditions:
+Because we're bridging CyVerse and [TACC](https://www.tacc.utexas.edu/resources/hpc) systems, you will need some information from both organizations. We assume you are setting up systems at TACC under one of two conditions:
 
-1. You have been in contact with [CyVerse support staff](mailto:support@cyverse.org) and asked to be added to our list of Agave app developers who are allowed to log into TACC systems
+1. You have been added to iPlant-Collabs, a list of Agave app developers for CyVerse who are allowed to log into TACC systems
 2. You have your own TACC allocation that allows you to run jobs on Stampede and/or Lonestar5
 
 You will need to log into Stampede and Lonestar5, in succession; install the SDK on each; configure the SDK for access to Agave; and enroll the system you're logged in to. Previous versions of the SDK supported remote setup of TACC HPC and storage systems, but the arrival of increased account security measures at TACC make this infeasible now. 
