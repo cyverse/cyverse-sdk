@@ -7,7 +7,7 @@ On a host where you have configured an OAuth2 client already, the command to get
 
 ```auth-tokens-create -S -v```
 
-You will then be prompted to enter your *API password*. Type your CyVerse password.  At this point, you should receive an affirmation of success in your terminal that resembles this one:
+You will then be prompted to enter your *API password*. **Type your CyVerse password**.  At this point, you should receive an affirmation of success in your terminal that resembles this one:
 
 ```
 Token successfully refreshed and cached for 14400 seconds
