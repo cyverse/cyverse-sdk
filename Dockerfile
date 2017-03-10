@@ -18,7 +18,8 @@ RUN apt-get -y update && \
     apt-get -y install -y  git \
                         vim.tiny \
                         curl \
-                        python && \
+                        python \
+                        python-pip && \
     apt-get -y clean
 
 RUN curl -L -sk -o /usr/local/bin/jq "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" \
@@ -35,7 +36,7 @@ RUN echo HOME=/root >> /root/.bashrc && \
     echo PATH=/usr/local/agave-cli/bin:$PATH >> /root/.bashrc && \
     echo AGAVE_CACHE_DIR=/root/.agave >> /root/.bashrc
 
-ENV ENV /root/.bashrc
+ENV /root/.bashrc
 
 RUN /usr/local/agave-cli/bin/tenants-init -t iplantc.org
 

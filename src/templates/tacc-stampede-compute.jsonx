@@ -100,7 +100,7 @@
     "scheduler": "SLURM",
     "scratchDir": "",
     "site": "tacc.utexas.edu",
-    "startupScript": "./bashrc",
+    "startupScript": "./.bashrc",
     "status": "UP",
     "storage": {
         "host": "gateway.stampede.tacc.utexas.edu",

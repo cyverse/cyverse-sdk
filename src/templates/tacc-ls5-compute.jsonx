@@ -44,7 +44,7 @@
     "scheduler": "SLURM",
     "scratchDir": "",
     "site": "tacc.utexas.edu",
-    "startupScript": "./bashrc",
+    "startupScript": "./.bashrc",
     "status": "UP",
     "storage": {
         "host": "gateway.ls5.tacc.utexas.edu",

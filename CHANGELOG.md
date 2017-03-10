@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.3.5 - 03/10/2017
+### Added
+* Nothing
+
+### Changed
+* Updated templates for private systems to point `startupScrip` to user's `~/.bashrc`
+
+### Removed
+* Nothing
+
 ## Version 1.3.4 - 02/24/2017
 ### Added
 * Nothing
