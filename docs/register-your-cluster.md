@@ -1,8 +1,14 @@
-The [CyVerse SDK](https://github.com/cyverse/cyverse-sdk) currently guides developers through the process of creating apps that run on [TACC](https://www.tacc.utexas.edu/) supercomputers, which requires both a TACC account and an active allocation.
-For users without an active allocation, they can request to be added to the [iPlant-Collabs allocation](https://github.com/cyverse/cyverse-sdk/blob/dee56dfbd6e18ef25066a4acec66ba834242b827/docs/iplant-assumptions.md), which allows developers to *prototype* CyVerse applications.
-I stress the word prototype because the iPlant-Collabs allocation is relatively small on purpose to make sure unvetted apps aren't burning away all the compute time allotted for CyVerse.
-This methodology is great to generate new apps, the apps needs to be reviewed and published by administrators before they can be run at scale on CyVerse.
-If a user already has access to a high-performance cluster at their own institution, they can circumvent the constrains of iPlant-Collabs by registering their own [executionSystem](http://developer.agaveapi.co/#execution-systems) to the Agave API and running apps on it from the CyVerse Discovery Environment.
+# Tutorial: Use Your Own Cluster on CyVerse
+
+The [application development tutorial](app-dev.html) guides developers through the process of creating apps that run on [TACC](https://www.tacc.utexas.edu/) supercomputers, which requires both a TACC account and an active allocation.
+Users without an active allocation can request access to the [iPlant-Collabs allocation](getting-started-initial-assumptions.html), which allows developers to *prototype* CyVerse applications.
+We stress the word prototype because the iPlant-Collabs allocation is relatively small and shared between all developers, so long-running applications will quickly deplete it for everyone.
+This methodology is great to generate new apps, and experience the HPC environment they will run on, but they will always need to be reviewed and published by administrators before they can be run at scale on CyVerse.
+
+This tutorial explains how to register your own cluster with CyVerse to enable:
+- Higher job throughput
+- Private large-scale applications
+- Personal applications dependent on licenses
 
 <script>
 function gVal(id) {
@@ -46,7 +52,7 @@ function updateJSON() {
 	}];
 	systemJSON.maxSystemJobs = gInt("maxJobs");
 	systemJSON.scheduler = gVal("scheduler");
-	
+
 	systemJSON.scratchDir = gVal("scratchDir");
 	systemJSON.storage = {
 		mirror:false,
@@ -62,13 +68,16 @@ function updateJSON() {
 }
 </script>
 
-I am still a student at Indiana University, so I will be registering [Mason](https://kb.iu.edu/d/bbhh) as an *executionSystem* to be used with my CyVerse applications. Mason is [available](https://kb.iu.edu/d/bbhh#account) to all
+To reinforce why anyone would want to go through the extra effort of registering a system of their own, this guide lays out how to register Indiana University's [Mason](https://kb.iu.edu/d/bbhh) supercomputer as an Agave *[executionSystem](http://developer.agaveapi.co/#execution-systems)*.
+Mason is an ideal example because it is [available](https://kb.iu.edu/d/bbhh#account) to all
 
 - IU students, staff, and faculty
 - NSF-funded life sciences researchers
 - XSEDE researchers
 
-Apart from the accessibility, the fact that [each of the 18 nodes](https://kb.iu.edu/d/bbhh#info) also have 512GB of RAM, makes the system desirable for running memory-hungry software.
+and [each of the 18 nodes](https://kb.iu.edu/d/bbhh#info) also have 512GB of RAM, making it desirable for running memory-hungry software.
+
+## Prerequisites
 
 To create this and any other executionSystem, you will need
 
@@ -77,24 +86,23 @@ To create this and any other executionSystem, you will need
 - [System information](#system-information)
 - [Storage paths for jobs](#storage-paths)
 
-To make creation of the executionSystem JSON easier, I will be providing forms in each section below.
+This guide also contains forms, which populate a valid *executionSystem* JSON at the end.
 Editing any field will automatically update the final JSON for you send to Agave.
-At no point is any of this information transmitted, so you can safely add your login credentials without worry.
-However, you have the option to fill in your actual rsa keys before submitting to Agave.
-The inputs to these forms are pre-populated with information about Mason, so you will need to adapt the values and the JSON description for a different system.
+At no point is any of this information transmitted, so you can safely add your login credentials without worry, but you can always fill in your RSA keys outside of this tutorial.
+The inputs to these forms are pre-populated with information about Mason, so you will need to adapt the values and the JSON description for other systems.
 
 ### Login Credentials
 
 Whenever you launch a job on CyVerse, Agave uses the main CyVerse user credentials to access TACC systems to run jobs.
 Similarly, Agave stores and uses your own personal credentials after running [tacc-systems-create](https://github.com/cyverse/cyverse-sdk/blob/master/docs/iplant-systems.md) while following the CyVerse SDK guide.
 So, the first requirement to creating a new *executionSystem* is having `ssh` access to it.
-I usually access Mason using ssh with the command
+One usually accesses Mason using ssh with the command
 
 ```shell
 $ ssh user@mason.indiana.edu
 ```
 
-and then enter my password when prompted.
+and then entering their password when prompted.
 Agave does support password authentication, but handing your password over to strange systems is generally a bad habit.
 Allowing systems to authenticate to your account using ssh keys is much more secure, and makes it impossible for them to change your account password.
 Please follow the directions below to generate a set of keys for agave.
@@ -114,7 +122,7 @@ Owhcksd0X5swsCLzoivhf+EpALcohwAwR6fbreavprdIJikwDIBs0ruPOZ7nk4nz
 OOYL2M7VZ1XdHzg70IvblLDZCOX/sghRPvBZZwdKHVbCDlLBKuOP4CdnZmpCD3Yx
 V/qIgePP+LanugxaRdzdZLcQJ7crk1L+3/2McMWaAtNwpvDCk31rQhIVpJE=
 -----END RSA PRIVATE KEY-----
-[mason]$ cat agave_rsa.pub 
+[mason]$ cat agave_rsa.pub
 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAgEApQQ+n7AsXzAHqkd+xhkmLTIuhLIY
 iDGNr4DNuFiV+/LsFKREZyqacqOwf3ZA51C9XcsPLfaglNrBbCiRl70W8z8zybQU
 dW3hJPjC7qrG2lAJBfjEBcodjwtR0DVny8JGyWwSdCw6/I4TFxS/+dT6CQ7XoYpf
@@ -135,7 +143,7 @@ Your public key now needs to be added to your authorized key file for automatic 
 [mason]$ cat agave_rsa.pub >> ~/.ssh/authorized_keys
 ```
 
-Copy your **entire** private key (agave\_rsa), including the `---` header and footer and paste into the corresponding field below. Do the same with your public key (agave\_rsa.pub), including the "ssh-rsa" and your email at the end.
+Copy your **entire** private key (agave\_rsa), including the `---` header and footer, and paste into the corresponding field below. Do the same with your public key (agave\_rsa.pub), including the "ssh-rsa" and your email at the end.
 
 | Description | Value |
 |--|--|
@@ -168,7 +176,7 @@ The SLURM scheduler on Stampede enforces [many rules](https://portal.tacc.utexas
 | Max Runtime (hours) | <input type="number" id="runtime" min="-1" max="120" value="48" oninput="updateJSON()"> |
 | Custom queue directives | <input type="text" id="directives" style="width:200px; box-sizing:border-box;" value="" oninput="updateJSON()"> |
 
-You technically can register a single workstation to Agave by setting the *executionType* to `CLI`, but this guide is looking to enable large-scale computing, so we and the automatic JSON are going to focus on registering a cluster.
+You technically can register a single workstation to Agave by setting the *executionType* to `CLI`, but this guide is looking to enable large-scale computing, so we (and the automatic JSON) are going to focus on registering a cluster.
 
 ### System Information
 
@@ -184,8 +192,8 @@ Agave also needs information on the physical configuration of each compute node 
 Lastly, Agave needs to know what paths to use for storing job data each time an app is run.
 Before submitting to a scheduler, Agave first stages all app (binaries) and input data in a folder unique to that job.
 This folder is created in a location relative to a directory you choose.
-Our home path should be set to our `$HOME` directory so Agave can find our `.bashrc` and properly load our environment.
-We should also set our scratch path to a directory with a lot of storage and also capable of handling a lot of i/o activity. At TACC, we would set it to our `$SCRATCH` directory, but am going to use my [Data Capacitor](https://kb.iu.edu/d/avvh) directory for running jobs. Jobs are stored in the following layout:
+The *executionSystem* home path should be set to your `$HOME` directory so Agave can find your `.bashrc` and properly load your environment.
+You should also set your scratch path to a directory with a lot of storage and also capable of handling a significant i/o load. At TACC, we would set it to the `$SCRATCH` directory, but IU uses the [Data Capacitor](https://kb.iu.edu/d/avvh) found at `/N/dc2/scratch/user` for scratch (no quota and temporary) space. Jobs are stored in the following layout:
 
 ```
 scratchDir/
@@ -199,7 +207,7 @@ scratchDir/
    \- job0010
 ```
 
-To keep clutter down in the root of my personal folder, I'm going to create a CyVerse folder
+To reduce clutter in the root of your personal folder, you should create a CyVerse folder
 
 ```shell
 [mason]$ mkdir /N/dc2/scratch/user/CyVerse
@@ -217,14 +225,14 @@ for Agave to store user and job directories in. In the fields below, please chan
 
 ## Registering with Agave
 
-Assuming you have already have an installed and working version of the [CyVerse SDK](https://github.com/cyverse/cyverse-sdk), you just need to copy the JSON above into a file on your system. In my example below, I'll be using `user-mason.json`.
+Assuming you have a working version of the [CyVerse SDK](https://github.com/cyverse/cyverse-sdk), you just need to copy the JSON above into a file on your system. In the example below, we copied and pasted it into the file `user-mason.json`.
 
 ```shell
 [mason]$ auth-tokens-refresh -S
 Token for iplantc.org:user successfully refreshed and cached for 14400 seconds
 45098349583490859034859304859043
 
-[mason]$ systems-addupdate -F user-mason.json 
+[mason]$ systems-addupdate -F user-mason.json
 Successfully added system user-IU-mason
 
 [mason]$ systems-list -Q
@@ -278,6 +286,4 @@ blatScript.sh      runBlast.py         .viminfo
 combineFiles.sh    runBlat.py          .Xauthority
 ```
 
-Your new Mason *executionSystem* is ready for use! In my next post, I plan on demonstrating how to clone and deploy apps to personal systems. If you can't wait, just follow the [CyVerse SDK](https://github.com/cyverse/cyverse-sdk), but specify Mason as your executionSystem in your app description.
-
-*2017-02-10 - Guide was updated to use ssh keys instead of passwords for authentication.*
+Your new Mason *executionSystem* is ready for use!
