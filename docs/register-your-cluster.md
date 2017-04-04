@@ -94,7 +94,7 @@ The inputs to these forms are pre-populated with information about Mason, so you
 ### Login Credentials
 
 Whenever you launch a job on CyVerse, Agave uses the main CyVerse user credentials to access TACC systems to run jobs.
-Similarly, Agave stores and uses your own personal credentials after running [tacc-systems-create](https://github.com/cyverse/cyverse-sdk/blob/master/docs/iplant-systems.md) while following the CyVerse SDK guide.
+Similarly, Agave stores and uses your own personal credentials after running [tacc-systems-create](getting-started-systems.html) while following the CyVerse SDK guide.
 So, the first requirement to creating a new *executionSystem* is having `ssh` access to it.
 One usually accesses Mason using ssh with the command
 
@@ -176,7 +176,7 @@ The SLURM scheduler on Stampede enforces [many rules](https://portal.tacc.utexas
 | Max Runtime (hours) | <input type="number" id="runtime" min="-1" max="120" value="48" oninput="updateJSON()"> |
 | Custom queue directives | <input type="text" id="directives" style="width:200px; box-sizing:border-box;" value="" oninput="updateJSON()"> |
 
-You technically can register a single workstation to Agave by setting the *executionType* to `CLI`, but this guide is looking to enable large-scale computing, so we (and the automatic JSON) are going to focus on registering a cluster.
+You technically can register a single workstation to Agave by setting the *executionType* to `CLI`, but this guide is looking to enable large-scale computing, so the automatic JSON is built to register a cluster.
 
 ### System Information
 
@@ -287,3 +287,5 @@ combineFiles.sh    runBlat.py          .Xauthority
 ```
 
 Your new Mason *executionSystem* is ready for use!
+
+[Back to Overview](../README.md) |
