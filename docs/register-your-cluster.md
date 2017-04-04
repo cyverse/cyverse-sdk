@@ -220,6 +220,7 @@ for Agave to store user and job directories in. In the fields below, please chan
 | Home path | <input type="text" id="homeDir" style="width:200px; box-sizing:border-box;" value="/N/u/user/Mason" oninput="updateJSON()"> |
 | Scratch path | <input type="text" id="scratchDir" style="width:200px; box-sizing:border-box;" value="/N/dc2/scratch/user/CyVerse" oninput="updateJSON()"> |
 
+<br>
 <div class="language-json highlighter-rouge"><pre class="highlight"><code id="outJSON"></code></pre></div>
 <script>updateJSON();</script>
 
