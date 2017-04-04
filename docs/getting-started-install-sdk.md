@@ -3,62 +3,45 @@ Installing the CyVerse software development kit
 
 The Agave API comes bundled with a set of command line scripts. Using these scripts is generally easier than hand-crafting cURL commands, but if you prefer that route, consult the [Agave API Documentation](http://agaveapi.co/documentation/). We include these scripts in our SDK and supplement them with additional support scripts, example files, and documents.
 
-If you are installing and working with the CyVerse SDK on your own personal computer, skip ahead to _Change to the directory where you wish to install the SDK_:
+If you are installing and working with the CyVerse SDK on your own personal computer, skip ahead to _Run the Installer command_:
 
 Using your Terminal program, *ssh* into the system you will be working with (e.g. Stampede, Lonestar5, etc)
 
 ```ssh stampede.tacc.utexas.edu```
 
-Load an updated git module by typing:
+Run the Installer command
+-------------------------
 
-```module load git```
-
-Change to the directory where you wish to install the SDK
-
-```cd $HOME```
-
-Clone the SDK repository:
-
-```git clone https://github.com/iPlantCollaborativeOpenSource/cyverse-sdk.git```
-
-Change directory into cyverse-sdk
-
-```cd cyverse-sdk```
-
-Uncompress the cyverse-cli.tgz file
-
-```tar xf cyverse-cli.tgz```
-
-Move the cyverse-cli directory to your preferred installation location. Here, we are using your HOME directory. (Note that if you already have a cyverse-cli directory in your installation location, you'll have to remove it before performing the move command).
-
-```mv cyverse-cli $HOME```
-
-Edit ```~/.bashrc``` to add ```cyverse-cli/bin``` to your ```$PATH``` by adding a line like ```PATH=$PATH:$HOME/cyverse-cli/bin```
-
-Example:
-
-```echo "PATH=\$PATH:\$HOME/cyverse-cli/bin" >> ~/.bashrc```
+```curl -L https://github.com/cyverse/cyverse-sdk/install/install.sh | sh```
 
 Reload your ```.bashrc```
 
 ```source ~/.bashrc```
 
 Verify that the CLI is available
+---------------------------------
 
-Typing ```cyverse-sdk-info``` should return a response resembling this:
+Entering ```cyverse-sdk-info``` should return a response resembling this:
 
 ```
-Cyverse CLI v1.0.10
-For use with:
+Cyverse CLI v1.3.5
+For use with
     Tenant: iplantc.org
-    Agave API: v2/2.1.6+
-
-Copyright (c) 2013, Texas Advanced Computing Center
-All rights reserved.
+    Agave API: v2/2.1.8+
 ...
 ```
 
-Now initialize the command line tools for use with Cyverse
+Updating the SDK
+----------------
+
+In the future, you can update the CyVerse CLI automatically to the latest version by typing
+
+```cyverse-sdk-info --update```
+
+Initialize the SDK
+------------------
+
+The first time you install the SDK on a computer, you need to initialize it. Do so by entering:
 
 ```tenants-init -t iplantc.org```
 

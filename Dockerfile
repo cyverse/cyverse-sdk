@@ -26,6 +26,7 @@ RUN curl -L -sk -o /usr/local/bin/jq "https://github.com/stedolan/jq/releases/do
     && chmod a+x /usr/local/bin/jq
 
 ADD cyverse-cli /usr/local/agave-cli
+ENV PATH $PATH:/usr/local/agave-cli/bin
 
 RUN echo export PS1=\""\[\e[32;4m\]cyverse-cli\[\e[0m\]:\u@\h:\w$ "\" >> /root/.bashrc
 
@@ -33,10 +34,7 @@ RUN echo export PS1=\""\[\e[32;4m\]cyverse-cli\[\e[0m\]:\u@\h:\w$ "\" >> /root/.
 
 # set user's default env. This won't get sourced, but is helpful
 RUN echo HOME=/root >> /root/.bashrc && \
-    echo PATH=/usr/local/agave-cli/bin:$PATH >> /root/.bashrc && \
     echo AGAVE_CACHE_DIR=/root/.agave >> /root/.bashrc
-
-ENV /root/.bashrc
 
 RUN /usr/local/agave-cli/bin/tenants-init -t iplantc.org
 

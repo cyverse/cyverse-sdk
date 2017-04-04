@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.3.6 - 04/04/2017
+### Added
+* Support for curl|bash installer on Linux/macOS
+
+### Changed
+* Nothing
+
+### Removed
+* Nothing
+
 ## Version 1.3.5 - 03/10/2017
 ### Added
 * Nothing

@@ -8,7 +8,7 @@ api_release := 2.1.8
 TENANT_NAME := 'Cyverse'
 TENANT_KEY := 'iplantc.org'
 PREFIX := $(HOME)
-SDK_GIT_REPO := 'https://github.com/iPlantCollaborativeOpenSource/cyverse-sdk'
+SDK_GIT_REPO := 'https://github.com/cyverse/cyverse-sdk'
 CLI_GIT_REPO := 'https://bitbucket.org/agaveapi/cli'
 
 OBJ = cyverse-cli

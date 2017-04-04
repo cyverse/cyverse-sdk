@@ -1,43 +1,45 @@
 INSTALLATION INSTRUCTIONS
--------------------------
+=========================
 
-If you checked out the cyverse-sdk project from Github, cd into it now. If you downloaded the versioned release file, uncompress it and cd into the resulting directory. Then...
+Prerequisites
+-------------
 
-Uncompress the cyverse-cli.tgz file
+Disclaimer: CyVerse SDK works best on macOS and Linux. Your best option on Windows is to use the official Docker image. 
 
-```
-tar xf cyverse-cli.tgz
-```
+* Unix-like operating system (macOS or Linux)
+* Bash should be installed (v3.2 or more recent).
+* curl should be installed
+* git should be installed
 
-Move the cyverse-cli directory to your preferred installation location. Here, we are using your HOME directory. (Note that if you already have a cyverse-cli directory in your installation location, you'll have to remove it before performing the move command).
-
-```
-mv cyverse-cli $HOME
-```
-
-Edit ```~/.bashrc``` to add ```cyverse-cli/bin``` to your ```$PATH``` by adding a line like ```PATH=$PATH:$HOME/cyverse-cli/bin```
-
-Example:
+Use curl Installer
+------------------
 
 ```
+curl -L https://github.com/cyverse/cyverse-sdk/install/install.sh | sh
+source ~/.bashrc
+cyverse-sdk-info
+```
+
+Install from source
+-------------------
+
+```
+git clone https://github.com/cyverse/cyverse-sdk.git
+cd cyverse-sdk
+make && make install
+# Append $HOME/cyverse-cli/bin to $PATH
 echo "PATH=\$PATH:\$HOME/cyverse-cli/bin" >> ~/.bashrc
+source ~/.bashrc
+# Test that one of the tools is runnable
+cyverse-sdk-info
 ```
 
-Reload your ```.bashrc```
-
-```source ~/.bashrc```
-
-Verify that the CLI is available
-
-Typing ```cyverse-sdk-info``` should return a response resembling this:
+Use the official Docker image
+-----------------------------
 
 ```
-Cyverse CLI v1.0.1
-For use with:
-    Tenant: iplantc.org
-    Agave API: v2/2.1.6+
-
-Copyright (c) 2013, Texas Advanced Computing Center
-All rights reserved.
-...
+docker pull cyverse/cyverse-cli
+docker run -it -v $HOME/.agave:/root/.agave cyverse/cyverse-cli cyverse-sdk-info
 ```
+
+_Insert Docker+Powershell instructions for Win10 here_
