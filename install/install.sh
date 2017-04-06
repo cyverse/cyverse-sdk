@@ -292,9 +292,9 @@ if exists pip
 then
     if [[ -z "$VIRTUAL_ENV" ]];
   then
-    pip install -q -r requirements.txt
+    pip install -q --trusted-host pypi.python.org -r requirements.txt
   else
-    pip install -q --user -r requirements.txt
+    pip install -q --trusted-host pypi.python.org --user -r requirements.txt
   fi
   if [ $? = 1 ];
   then

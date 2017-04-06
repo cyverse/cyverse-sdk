@@ -9,6 +9,10 @@ Using your Terminal program, *ssh* into the system you will be working with (e.g
 
 ```ssh stampede.tacc.utexas.edu```
 
+Now, load the Python module
+
+```module load python```
+
 Run the Installer command
 -------------------------
 
