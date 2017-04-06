@@ -286,11 +286,11 @@ fi
 
 # INSTALL PYTHON DEPS
 echo "Installing Python dependencies..."
+do_download https://github.com/cyverse/cyverse-sdk/raw/${channel}/requirements.txt requirements.txt
+
 if exists pip
 then
-  
-  do_download https://github.com/cyverse/cyverse-sdk/raw/${channel}/requirements.txt requirements.txt
-  if [[ -z "$VIRTUAL_ENV" ]];
+    if [[ -z "$VIRTUAL_ENV" ]];
   then
     pip install -q -r requirements.txt
   else
