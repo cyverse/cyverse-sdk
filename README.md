@@ -26,6 +26,8 @@ We're providing this software development kit to help you with
 
 [Develop an Application for CyVerse](docs/app-dev.md) | 
 
+[Use Your Own Cluster on CyVerse](docs/register-your-cluster.md) |
+
 ### Reporting errors and getting help
 * Join the developer community on [Agave's Slack communication channel](https://slackin.agaveapi.co/)
 * Find more in-depth technical detail at the [Agave Science-as-a-Service API](http://agaveapi.co/) home page
