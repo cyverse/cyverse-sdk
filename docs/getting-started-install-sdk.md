@@ -1,7 +1,7 @@
 Installing the CyVerse software development kit
 ===============================================
 
-The Agave API comes bundled with a set of command line scripts. Using these scripts is generally easier than hand-crafting cURL commands, but if you prefer that route, consult the [Agave API Documentation](http://agaveapi.co/documentation/). We include these scripts in our SDK and supplement them with additional support scripts, example files, and documents.
+The [Agave API](https://agaveapi.co) comes bundled with a set of command line scripts. Using these scripts is generally easier than hand-crafting cURL commands, but if you prefer that route, consult the [Agave API Documentation](http://agaveapi.co/documentation/). We include these scripts in our SDK and supplement them with additional support scripts, example files, and documents.
 
 If you are installing and working with the CyVerse SDK on your own personal computer, skip ahead to _Run the Installer command_:
 
@@ -41,10 +41,11 @@ In the future, you can update the CyVerse CLI automatically to the latest versio
 Initialize the SDK
 ------------------
 
-The first time you install the SDK on a computer, you need to initialize it. Do so by entering:
+The first time you install the SDK on a computer, you need to initialize it. Do this by entering:
+
 
 ```tenants-init -t iplantc.org```
 
-*This completes the section on installing the CyVerse SDK.*
+*This completes the section on Installing the CyVerse SDK.*
 
 [Back](getting-started.md) | [Next: Creating an OAuth2 client and getting a set of keys](getting-started-client-create.md)
