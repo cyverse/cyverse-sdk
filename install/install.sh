@@ -281,7 +281,7 @@ echo $PATH | grep --quiet "$PREFIX/cyverse-cli/bin"
 if [ $? = 1 ]
 then
   echo "Extended PATH with $PREFIX/cyverse-cli/bin"
-  echo "export PATH=\$PATH:\$PREFIX/cyverse-cli/bin" >> $HOME/.bashrc
+  echo "export PATH=\$PATH:$PREFIX/cyverse-cli/bin" >> $HOME/.bashrc
 fi
 
 # INSTALL PYTHON DEPS
