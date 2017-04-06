@@ -12,7 +12,7 @@ Using your Terminal program, *ssh* into the system you will be working with (e.g
 Run the Installer command
 -------------------------
 
-```curl -L https://github.com/cyverse/cyverse-sdk/install/install.sh | sh```
+```curl -L https://cyverse.github.io/cyverse-sdk/install/install.sh | sh```
 
 Reload your ```.bashrc```
 
