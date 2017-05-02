@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.3.7 - 05/02/2017
+### Added
+* Support for TACC Wrangler
+
+### Changed
+* Moved to `develop` branch of Agave CLI
+
+### Removed
+* Nothing
+
 ## Version 1.3.6 - 04/04/2017
 ### Added
 * Support for curl|bash installer on Linux/macOS

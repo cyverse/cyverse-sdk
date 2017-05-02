@@ -5,11 +5,12 @@ sdk_version := $(shell cat VERSION)
 api_version := v2
 api_release := 2.1.8
 
-TENANT_NAME := 'Cyverse'
-TENANT_KEY := 'iplantc.org'
+TENANT_NAME := Cyverse
+TENANT_KEY := iplantc.org
 PREFIX := $(HOME)
-SDK_GIT_REPO := 'https://github.com/cyverse/cyverse-sdk'
-CLI_GIT_REPO := 'https://bitbucket.org/agaveapi/cli'
+SDK_GIT_REPO := https://github.com/cyverse/cyverse-sdk
+CLI_GIT_REPO := https://bitbucket.org/agaveapi/cli
+CLI_GIT_BRANCH := develop
 
 OBJ = cyverse-cli
 SOURCES = customize
@@ -23,7 +24,7 @@ all: $(SOURCES)
 cli: git-test
 	echo "Fetching agaveapi/cli source..."
 	if [ ! -d "$(OBJ)" ]; then \
-		git clone -q https://bitbucket.org/agaveapi/cli.git ;\
+		git clone -q -b "$(CLI_GIT_BRANCH)" "$(CLI_GIT_REPO)" ;\
 		rm -rf cli/.git ;\
 		cp -R cli $(OBJ); \
 	fi
