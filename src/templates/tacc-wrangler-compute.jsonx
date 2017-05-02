@@ -1,0 +1,64 @@
+{
+    "description": "Wrangler is the most powerful data analysis system allocated in XSEDE. The system is designed for large scale data transfer, analytics, and sharing and provides flexible support for a wide range of software stacks and workflows.",
+    "environment": null,
+    "executionType": "HPC",
+    "id": "tacc-wrangler-${USERNAME}",
+    "login": {
+        "auth": {
+            "publicKey": "${PUBLIC_KEY}",
+            "privateKey": "${PRIVATE_KEY}",
+			"username": "${USERNAME}",
+            "type": "SSHKEYS"
+        },
+        "host": "gateway.wrangler.tacc.utexas.edu",
+        "port": 22,
+        "protocol": "SSH"
+    },
+    "maxSystemJobs": 10,
+    "maxSystemJobsPerUser": 5,
+    "name": "TACC Wrangler [${USERNAME}]",
+    "public": false,
+    "queues": [
+        {
+            "name": "normal",
+            "default": false,
+            "maxJobs": 5,
+            "maxUserJobs": 5,
+            "maxNodes": 4,
+            "maxProcessorsPerNode": 96,
+            "maxMemoryPerNode": "128GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "48:00:00"
+        },{
+            "name": "debug",
+            "default": true,
+            "maxJobs": 5,
+            "maxUserJobs": 5,
+            "maxNodes": 4,
+            "maxProcessorsPerNode": 96,
+            "maxMemoryPerNode": "128GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "04:00:00"
+        }
+    ],
+    "scheduler": "SLURM",
+    "scratchDir": "",
+    "site": "tacc.utexas.edu",
+    "startupScript": "./.bashrc",
+    "status": "UP",
+    "storage": {
+        "host": "gateway.wrangler.tacc.utexas.edu",
+        "port": 22,
+        "protocol": "SFTP",
+        "homeDir": "/",
+        "rootDir": "${WORKD}",
+        "auth": {
+            "publicKey": "${PUBLIC_KEY}",
+            "privateKey": "${PRIVATE_KEY}",
+			"username": "${USERNAME}",
+            "type": "SSHKEYS"
+        }
+    },
+    "type": "EXECUTION",
+    "workDir": ""
+}

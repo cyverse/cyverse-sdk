@@ -1,0 +1,64 @@
+{
+    "description": "Maverick is HP/NVIDIA Interactive Visualization and Data Analytics System, is TACC's latest addition to its suite of advanced computing systems, combines capacities for interactive advanced visualization and large-scale data analytics as well as traditional high performance computing.",
+    "environment": null,
+    "executionType": "HPC",
+    "id": "tacc-maverick-${USERNAME}",
+    "login": {
+        "auth": {
+            "publicKey": "${PUBLIC_KEY}",
+            "privateKey": "${PRIVATE_KEY}",
+			"username": "${USERNAME}",
+            "type": "SSHKEYS"
+        },
+        "host": "gateway.maverick.tacc.utexas.edu",
+        "port": 22,
+        "protocol": "SSH"
+    },
+    "maxSystemJobs": 50,
+    "maxSystemJobsPerUser": 50,
+    "name": "TACC Maverick [${USERNAME}]",
+    "public": false,
+    "queues": [
+        {
+            "name": "vis",
+            "default": false,
+            "maxJobs": 20,
+            "maxUserJobs": 2,
+            "maxNodes": 32,
+            "maxProcessorsPerNode": 640,
+            "maxMemoryPerNode": "256GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "04:00:00"
+        },{
+            "name": "gpu",
+            "default": true,
+            "maxJobs": 20,
+            "maxUserJobs": 2,
+            "maxNodes": 32,
+            "maxProcessorsPerNode": 640,
+            "maxMemoryPerNode": "256GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "12:00:00"
+        }
+    ],
+    "scheduler": "SLURM",
+    "scratchDir": "",
+    "site": "tacc.utexas.edu",
+    "startupScript": "./.bashrc",
+    "status": "UP",
+    "storage": {
+        "host": "gateway.maverick.tacc.utexas.edu",
+        "port": 22,
+        "protocol": "SFTP",
+        "homeDir": "/",
+        "rootDir": "${WORKD}",
+        "auth": {
+            "publicKey": "${PUBLIC_KEY}",
+            "privateKey": "${PRIVATE_KEY}",
+			"username": "${USERNAME}",
+            "type": "SSHKEYS"
+        }
+    },
+    "type": "EXECUTION",
+    "workDir": ""
+}
