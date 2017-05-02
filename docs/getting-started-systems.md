@@ -1,7 +1,7 @@
 Setting up CyVerse/TACC development systems
-=====================================
+===========================================
 
-Run the ```tacc-systems-create``` command, which will create a private version of Stampede (or Lonestar5 if logged in there) and create a private storage system for you. 
+Run the ```tacc-systems-create``` command, which will create a private version of Stampede, Lonestar5, and Wrangler if logged in there. It will also create a private storage system for you on TACC's global shared flesystem."
 
 Here is an example of what the script looks like when it runs successfully:
 
