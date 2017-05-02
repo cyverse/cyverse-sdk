@@ -2,7 +2,7 @@
     "description": "Wrangler is the most powerful data analysis system allocated in XSEDE. The system is designed for large scale data transfer, analytics, and sharing and provides flexible support for a wide range of software stacks and workflows.",
     "environment": null,
     "executionType": "HPC",
-    "id": "tacc-maverick-${USERNAME}",
+    "id": "tacc-wrangler-${USERNAME}",
     "login": {
         "auth": {
             "publicKey": "${PUBLIC_KEY}",
@@ -16,7 +16,7 @@
     },
     "maxSystemJobs": 10,
     "maxSystemJobsPerUser": 5,
-    "name": "TACC Maverick [${USERNAME}]",
+    "name": "TACC Wrangler [${USERNAME}]",
     "public": false,
     "queues": [
         {
