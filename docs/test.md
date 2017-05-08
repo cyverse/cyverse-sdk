@@ -1,14 +1,6 @@
 Blah 1
 
-<html>
- <head>
-    <meta charset="UTF-8">
-    <title>CyVerse SDK</title>
-    <meta name="description" content="Software development kit supporting the CyVerse Science APIs"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#157878">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="/cyverse-sdk/assets/css/style.css?v=8c945a4c95e098015fc5f84d0043fb571df0f366">
+
   	<script>
 		/**
 		* Function that tracks a click on an outbound link in Analytics.
@@ -23,8 +15,7 @@ Blah 1
 		   });
 		}
 	</script>
-  </head>
-  <body>
+
 
 
 Blah 30
@@ -41,8 +32,7 @@ Blah 30
 
 	</script>
   
-    </body>
-</html>
+
   
   
 
