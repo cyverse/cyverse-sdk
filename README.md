@@ -29,8 +29,7 @@ We're providing this software development kit to help you with
 [Use Your Own Cluster on CyVerse](docs/register-your-cluster.md) |
 
 ### Reporting errors and getting help
-* Join the developer community on [Agave's Slack communication channel](https://slackin.agaveapi.co/)
-* Find more in-depth technical detail at the [Agave Science-as-a-Service API](http://agaveapi.co/) home page
+* [Join the developer community](docs/slackin_agaveapi.html)
 
 ### Additional Guides
 Over time, we will add tutorials to address more use cases, for example: working with cloud systems including Amazon Web Services, Google Compute Engine, or [NSF Jetstream](https://use.jetstream-cloud.org/); building web applications; and improving reproducible science and analysis with Docker. Here are some additional guides currently available:
