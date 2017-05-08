@@ -1,4 +1,4 @@
-Blah 1
+Test 1
 
 
 <script>
@@ -18,7 +18,9 @@ Blah 1
 
 
 
-Blah 30
+Test 2
+
+  <li>Join the developer community on <a href="https://slackin.agaveapi.co/" onclick="trackOutboundLink('https://slackin.agaveapi.co/'); return false;">Agave’s Slack communication channel</a></li>
 
 
 <script>
@@ -32,9 +34,4 @@ Blah 30
 
 </script>
   
-
-  
-  
-
-
-Blah 50
+Test 3
