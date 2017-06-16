@@ -14,6 +14,10 @@ files you want to use, and then request an image of the instance
 using the Request Imaging form within Atmosphere, as [detailed here](https://pods.iplantcollaborative.org/wiki/display/atmman/Requesting+an+Image+of+an+Instance).
 
 * **Add new algorithms to Bisque.**
+[Bisque](https://bisque.cyverse.org) supports viewing, annotating, processing, 
+and sharing image data through a web-based platform. 
+Additional image analysis algorithms, or modules, can be be integrated and shared 
+using the Python API wrapping of the Bisque REST interfaceas as described in this [downloadable pdf document](https://wiki.cyverse.org/wiki/download/attachments/22675956/BisqueOverviewModules.pdf).
 
 * **Bring in new tools and resources using the Agave APIs.**
 
