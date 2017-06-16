@@ -20,6 +20,6 @@ Additional image analysis algorithms, or modules, can be be integrated and share
 using the Python API wrapping of the Bisque REST interfaceas as described in this [downloadable pdf document](https://wiki.cyverse.org/wiki/download/attachments/22675956/BisqueOverviewModules.pdf).
 
 * **Bring in new tools and resources using the Agave APIs.**
-CyVerse provides full scriptable access to its underlying infrastructure.  Use the [CyVerse SDK](docs/cyversesdk.md) to quickly interface with the [Agave API](https://www.agaveapi.co) to customize your capabilites and infrastructure within CyVerse.
+CyVerse provides full scriptable access to its underlying infrastructure.  Use the [CyVerse SDK](cyversesdk.md) to quickly interface with the [Agave API](https://www.agaveapi.co) to customize your capabilites and infrastructure within CyVerse.
 
 | [Back to CyVerse Developer Portal](../index.md) |
