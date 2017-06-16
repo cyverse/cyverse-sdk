@@ -4,7 +4,7 @@ CyVerse allows user-developers to integrate their own resources and applications
 
 * **Dockerize Your Tools for the CyVerse Discovery Environment.** [Docker](https://www.docker.com/) facilitates platform-independent installation of software, enhancing reproducibility.  [Click here for instructions](https://wiki.cyverse.org/wiki/display/DEmanual/Dockerizing+Your+Tools+for+the+CyVerse+Discovery+Environment) on how to use Docker to add new applications to the CyVerse DE.  There is also a helpful [video tutorial](https://wiki.cyverse.org/wiki/display/Events/Focus+Forum+Webinar+-+Using+Docker+to+Bring+Tools+into+the+Discovery+Environment) available.
 
-* **Bring in new Metadata templates.** CyVerse supports [metadata templates](https://pods.iplantcollaborative.org/wiki/display/DEmanual/Using+Metadata+in+the+DE) to facilitate associating attributes with data.  To add a new metadata template to CyVerse, please contact data_curator@cyverse.org.
+* **Bring in new Metadata templates.** CyVerse supports [metadata templates](https://pods.iplantcollaborative.org/wiki/display/DEmanual/Using+Metadata+in+the+DE) to facilitate associating attributes with data.  To add a new metadata template to CyVerse, please contact [data_curator@cyverse.org](mailto:data_curator@cyverse.org).
 
 * **Publish your own image in Atmosphere.**
 [Atmosphere](https://atmo.cyverse.org/) is CyVerse's cloud-computing platform. 
