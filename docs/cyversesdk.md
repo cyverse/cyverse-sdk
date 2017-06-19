@@ -36,8 +36,8 @@ Google Compute Engine, or [NSF Jetstream](https://use.jetstream-cloud.org/);
 building web applications; and improving reproducible science and analysis with Docker. 
 Here are some additional guides currently available:
 
-* [Using an Atmosphere VM as an Agave Execution System](docs/atmo-system.md)
-* [Cloning a CyVerse application to your own systems](docs/iplant-clone-app.md)
+* [Using an Atmosphere VM as an Agave Execution System](atmo-system.md)
+* [Cloning a CyVerse application to your own systems](iplant-clone-app.md)
 * [Using the Agave CLI to interact with various aspects of the CyVerse Cyberinfrastructure](https://github.com/wjallen/using-agave)
 
 ---
