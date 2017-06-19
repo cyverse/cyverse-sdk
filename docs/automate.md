@@ -7,7 +7,7 @@ CyVerse supports multiple avenues for automating your work.
 * HT_apps (condor)
 * CyVerse APIs
 
-* **Atmosphere user data scripts and cloud-init directives**.  [Atmosphere](http://www.cyverse.org/atmosphere) is Cyverse's cloud-computing platform.  You can automate your workflows through Atmosphere by customizing scripts that run automatically when launching an instance.  A tutorial on this is coming soon.
+* **Atmosphere deployment scripts**.  [Atmosphere](http://www.cyverse.org/atmosphere) is Cyverse's cloud-computing platform.  You can automate your workflows through Atmosphere by customizing deployment scripts that run automatically when launching an instance.  Information on this is found under *Step 4* of [Launching a New Instance](https://pods.iplantcollaborative.org/wiki/display/atmman/Launching+a+New+Instance)
 
 * **Atmosphere APIs**.  Programmatic access methods to Atmosphere via APIs are coming soon.
 
