@@ -1,3 +1,6 @@
+<a href="https://www.cyverse.org"><img src="cyverse_develop_logo2.png"></a>
+
+
 # Automate your CyVerse workflows
 
 CyVerse supports multiple avenues for automating your work.

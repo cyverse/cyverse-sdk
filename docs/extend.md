@@ -1,3 +1,6 @@
+<a href="https://www.cyverse.org"><img src="cyverse_develop_logo2.png"></a>
+
+
 # Extend CyVerse Capabilities
 
 CyVerse allows user-developers to integrate their own resources and applications for their own use, and to share these with their collaborators at their discretion.
