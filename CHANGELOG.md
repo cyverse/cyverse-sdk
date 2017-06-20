@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.3.8 - 06/20/2017
+### Added
+* Customized prompt in Docker container with tenant+username
+
+### Changed
+* Merged in changes to agave/cli to support rich text
+
+### Removed
+* Nothing
+
 ## Version 1.3.7 - 05/02/2017
 ### Added
 * Support for TACC Wrangler
