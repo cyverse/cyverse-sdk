@@ -13,6 +13,8 @@ CyVerse supports multiple avenues for automating your work.
 
 * **BisQue automation**.  [BisQue](http://www.cyverse.org/bisque) (Bio-Image Semantic Query User Environment) allows you to store, visualize, organize and analyze images in the cloud. Learn how to automate analysis of images using [this tutorial](https://wiki.cyverse.org/wiki/display/BIS/Analyzing+BisQue+Data)
 
-* Automate your existing DE workflows using Agave APIs via the command line.
+* **Agave Command Line Interface (CLI)**. Automate your existing DE workflows using Agave APIs via the command line. Learn how to effectively use the Agave CLI to take advantage of the CyVerse cyberinfrastructure [here](using-agave/README.md).
+
+* **Mac OSX App Development Kit**. Automate CyVerse tasks with the click of a button from your Mac. ***Coming Soon***.
 
 | [Back to CyVerse Developer Portal](../index.md) |
