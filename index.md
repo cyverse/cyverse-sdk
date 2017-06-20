@@ -1,5 +1,5 @@
 <a href="https://www.cyverse.org"><img src="docs/cyverse_logo.png"></a>
-<a href="https://www.agaveapi.co"><img src="docs/bisque_logo.png"></a>
+<a href="https://bisque.cyverse.org"><img src="docs/bisque_logo.png"></a>
 <a href="https://www.agaveapi.co"><img src="docs/Agave-teal.png" height="72"></a>
 
 # CyVerse Developer Portal
