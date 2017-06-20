@@ -1,0 +1,294 @@
+#!/bin/bash
+#
+# files-get
+#
+# author: jfonner@tacc.utexas.edu, dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It downloads a file listing from a remote system.
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apisecret apikey)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]... [PATH]
+
+Downloads a remote file. Regardless of the remote protocol used to access the
+system, the file will be downloaded over HTTP. Keep this in mind for larger
+files. If no system is specified, your default storage system will be used.
+By specifying a system, the path given will be resolved on that remote system.
+Note that the system id, not hostname must be given.
+
+ Options:
+  -z, --access_token    Access token
+  -S, --systemId        Specify the system id
+  -R, --range           Byte range to retrieve in <start>-<end> format
+  -N, --filename        Name by which the local file should be saved
+  -r, --recursive       Copy files and directories recursively
+  -P, --print           Print contents to stdout
+  -H, --hosturl         URL of the service
+  -d, --development     Run in dev mode using default dev server
+  -f, --force           Skip all user interaction
+  -i, --interactive     Prompt for values
+  -q, --quiet           Quiet (no output)
+  -v, --verbose         Verbose output
+  -V, --veryverbose     Very verbose output
+  -h, --help            Display this help and exit
+      --version         Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/files-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+
+	if [  -z "$args" ]; then
+		err "Please specify a valid file path to download. Directory downloads are not yet supported."
+	else
+
+		if [ -n "$systemId" ]; then
+			filesurl="${hosturl}media/system/${systemId}/${args}"
+		else
+			filesurl="${hosturl}media/${args}"
+		fi
+
+		if (($print)); then
+      if ((recursive)); then
+        err "Printing to standard out cannot be specified with recursive downloads"
+        exit
+      else
+			  outputarg=" "
+      fi
+		elif [ -n "$filename" ]; then
+			outputarg="-o $filename"
+		else
+			outputarg="-O"
+		fi
+
+		if [ -n "$range" ]; then
+		  if ((recursive)); then
+        err "Range queries cannot be specified with recursive downloads"
+        exit
+      else
+        filerange="-r ${range} "
+      fi
+		else
+			filerange=""
+		fi
+
+    if ((recursive)); then
+
+        if ((veryverbose)); then
+          out "Retrieving remote directory listing..."
+        fi
+
+        if [ -n "$systemId" ]; then
+          fileslistingurl="${hosturl}listings/system/${systemId}/${args}"
+        else
+          fileslistingurl="${hosturl}listings/${args}"
+        fi
+
+        response=`curl -sk -H "${authheader}" "${fileslistingurl%/}"`
+
+        if [[ $(jsonquery "$response" "status") = 'success' ]]; then
+
+          if ((development)); then
+            fgrparams=" -d "
+          fi
+
+          if ((veryverbose)); then
+
+            fgrparams="$fgrparams -V "
+
+          elif ((verbose)); then
+
+            fgrparams="$fgrparams -v "
+          fi
+
+          read -a names <<< $(jsonquery "$response" "result.[].name")
+          read -a types <<< $(jsonquery "$response" "result.[].type")
+          read -a formats <<< $(jsonquery "$response" "result.[].format")
+          read -a paths <<< $(jsonquery "$response" "result.[].path")
+          read -a lengths <<< $(jsonquery "$response" "result.[].length")
+
+          # make sure we have the systemID
+          if [ -z "$systemId" ]; then
+              systems=($(jsonquery "$response" "result.[].system"))
+              systemId=${systems[0]}
+          fi
+
+          # skip the first index in the array in this for loop
+          #echo "${!names[@]}" | xargs -P 5 -n 1 -I "%%FILE%%" files-get -v $args
+          for i in `echo "${!names[@]}"`; do
+
+            if [ "${formats[i]}" == "folder" ] && [ "${names[i]}" == "." ]; then
+
+              if [ -z "$filename" ]; then
+                filename=$(basename "$args")
+                if [ -z "$filename" ]; then
+                  filename=$(basename "${paths[i]}")
+                fi
+              fi
+
+              if [ -f "$filename" ]; then
+                err "${filename} is a directory (not copied)"
+                exit
+              elif [ -d "$filename" ]; then
+                #echo "Directory $filename exists. Skipping mkdir..."
+                #basefilename=$(basename "$filename");
+                #targetpath=$(printf "%s/%s" ${filename%/} "$basefilename")
+                targetpath="$filename"
+              else
+                echo "Creating directory $filename..."
+                targetpath="$filename"
+              fi
+
+              mkdir -p "$targetpath"
+
+            elif [ "${types[i]}" == "file" ] && [ "${names[i]}" == "." ]; then
+
+              # the target was a file, not a folder
+              if [ -n "$filename" ]; then
+                files-get -${fgrparams} -S $systemId -N $filename $args
+              else
+                files-get ${fgrparams} -S $systemId $args
+              fi
+
+            else
+
+              if [ "${formats[i]}" == "folder" ]; then
+                files-get -r ${fgrparams} -S $systemId -N $targetpath/${names[i]} $args/${names[i]}
+              elif [ "${lengths[i]}" -gt "0" ]; then
+                files-get -v ${fgrparams} -S $systemId -N $targetpath/${names[i]} $args/${names[i]}
+              else
+                echo "Downloading empty file $args/${names[i]}..."
+                echo "######################################################################## 100.0%"
+                touch $targetpath/${names[i]}
+              fi
+
+            fi
+          done
+
+          #I'm doing breadth first, but it would be slightly more compact to do depth first
+          # for i in `echo "${!names[@]}"`; do
+          #   if [ "${formats[i]}" == "folder" ] && [ "${names[i]}" != "." ]; then
+          #
+          #     files-get ${fgrparams} -r -S $systemId -N $targetpath/${names[i]} $args/${names[i]}
+          #
+          #   fi
+          # done
+
+        else
+          errorresponse=$(jsonquery "$response" "message")
+          err "$errorresponse"
+        fi
+
+    else
+       # set -x
+      cmd="curl -k -H \"${authheader}\" ${filerange} ${outputarg} '${filesurl}'"
+
+
+      if ((veryverbose)); then
+       [ "$piped" -eq 0 ] && log "Calling $cmd"
+      fi
+
+      if [ -z "$filename" ]; then
+        filename=$(basename "$args")
+        if [ -n "$filename" ]; then
+          filename=$(basename "${args}")
+        fi
+      fi
+
+      if ((verbose)); then
+        [ "$piped" -eq 0 ] && out "Downloading $args ..."
+      fi
+
+      curl -# -k -H "${authheader}" ${filerange} ${outputarg} "${filesurl}"
+
+      if [ "$?" -eq 0 ] && [ ! -f "$filename" ]; then
+        if ((verbose)); then
+          echo "Creating empty file $filename..."
+        fi
+        touch $filename
+      else
+        response=$(grep '"status":"error"' $filename)
+        if [ -n "$response" ]; then
+          err "$response"
+        fi
+      fi
+
+  	fi
+
+  fi
+}
+
+
+format_api_json() {
+    names=$(jsonquery "$1" "result.[].name")
+    types=$(jsonquery "$1" "result.[].type")
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+#[[ $# -eq 0 ]] && set -- "--help"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -z|--access_token) shift; access_token=$1 ;;
+    -R|--range) shift; range=$1 ;;
+    -S|--systemId) shift; systemId=$1 ;;
+    -N|--filename) shift; filename=$1 ;;
+    -r|--recursive) recursive=1 ;;
+    -P|--print) print=1 ;;
+    -H|--hosturl) shift; hosturl=$1;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

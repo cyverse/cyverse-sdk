@@ -1,0 +1,139 @@
+#!/bin/bash
+#
+# auth-check
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It checks the current auth status
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=()
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]...
+
+Check the status of the current Oauth bearer token. If the token is expired,
+you can simply do an auth-tokens-refresh with your API username and password
+to refresh your token.
+
+ Options:
+  -d, --development    Run in dev mode using default dev server
+  -f, --force          Skip all user interaction
+  -i, --interactive    Prompt for values
+  -q, --quiet          Quiet (no output)
+  -v, --verbose        Verbose output
+  -V, --veryverbose    Very verbose output
+  -h, --help           Display this help and exit
+      --version        Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/auth-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+  currentcache=$(kvget current)
+
+  if ((veryverbose)); then
+    out "Reading authentication cache at $AGAVE_CACHE_DIR/current"
+  fi
+
+    #access_token=$(jsonquery "${currentcache}" "access_token")
+    jsonval access_token "$current_cache" "access_token"
+
+	time_left=$(get_token_remaining_time)
+
+	if [ "$time_left" -le "0" ]; then
+		response="{\"status\":\"error\",\"message\":\"Current token is expired\",\"result\":${currentcache}}"
+		response=`json_prettyify "${response}"`
+	else
+		response="{\"status\":\"success\",\"message\":\"Cache is valid for $time_left seconds\",\"result\":${currentcache}}"
+        response=`json_prettyify "${response}"`
+	fi
+
+  format_api_json "${response}"
+}
+
+format_api_json() {
+
+  if ((veryverbose)); then
+    echo "$1"
+  elif [[ $verbose -eq 1 ]]; then
+    result=$(jsonquery "$1" "result" 1)
+    json_prettyify "${result}"
+  else
+    if [ "$time_left" -le "0" ]; then
+      err $(jsonquery "$response" "message")
+      success "tenant: $(jsonquery "$1" "result.tenantid")"
+      success "username: $(jsonquery "$1" "result.username")"
+      success "time left: 0 seconds"
+      success "expired at: $(jsonquery "$1" "result.expires_at")"
+    else
+      success "tenant: $(jsonquery "$1" "result.tenantid")"
+      success "username: $(jsonquery "$1" "result.username")"
+      success "time left: $time_left seconds"
+      success "expires at: $(jsonquery "$1" "result.expires_at")"
+    fi
+  fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+[[ $# -eq 0 ]] && set -- "-i"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -u|--current_username) current_username=1;;
+    -z|--current_access_token) current_access_token=1;;
+    -d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

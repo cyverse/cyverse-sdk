@@ -1,0 +1,150 @@
+#!/bin/bash
+
+sysname () {
+	echo $(echo -n $(hostname --fqdn | awk -F '.' '{ print $2 }'))
+}
+
+sanitize_id () {
+
+	echo $(echo "$1" | tr -cd '[[:alnum:]]_-')
+
+}
+
+SYSNAME=$(sysname)
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Test for agave cli in $PATH
+AGAVE_CANARY=$(which auth-check)
+if [ -z "${AGAVE_CANARY}" ]; then echo "The Cyverse CLI is not in your PATH. Please ensure that it is and re-run this script."; exit 1; fi
+
+cat << EOF
+
+ _____  _    ____ ____
+|_   _|/ \  / ___/ ___|
+  | | / _ \| |  | |
+  | |/ ___ \ |__| |___
+  |_/_/   \_\____\____|
+
+*Cyverse API Enrollment*
+
+This script will register a personal instance of TACC
+'${SYSNAME}' that can be used build and validate Agave
+apps. The following steps assume you have created or configured
+an Agave Oauth2 client on this host.
+
+If you have not, you may exit out of this script and run:
+
+clients-create -S -N "sdk-${SYSNAME}" -D "OAuth client for TACC system $SYSNAME"
+
+The following 'auth-tokens-create' command will
+create and store a temporary access token. To refresh
+it after it expires, use 'auth-tokens-refresh -S'.
+
+*Create an OAuth2 token*
+EOF
+
+# Verify that Agave config is at least minimally installed before proceeding...
+auth-check -v | grep "iplantc" > /dev/null
+if [ $? -ne 0 ]; then echo "There is an error reading your OAuth2 configuration. Please repeat the client setup instructions and try again."; exit 1; fi
+
+# Pause briefly... race conditions are frustrating
+auth-tokens-create -q -S
+
+# Collect TACC info
+cat << EOF
+
+*Connect Agave to the '${SYSNAME}' HPC system*
+
+The following information will be generated or gathered to
+configure this system for access via Agave:
+
+  Your TACC username
+  A short alphanumeric key to identify this system
+  A SSH keypair for your account on this system
+  A TACC Allocation that you have access to
+  Path to your TACC \$WORK directory
+
+EOF
+
+default="Yes"
+read -p "Are you ready to proceed? [$default]: " READY
+READY=${READY:-$default}
+if [ "$READY" != "Yes" ]; then exit 1; fi
+
+generate_agave_ssh_keys () {
+
+	PRIVATE_KEY_PATH="$HOME/.ssh/agaveapi"
+	PUBLIC_KEY_PATH="${PRIVATE_KEY_PATH}.pub"
+
+	ssh-keygen -q -t rsa -N '' -f ${PRIVATE_KEY_PATH}
+
+	if [ -e ${PUBLIC_KEY_PATH} ] && [ -e ${PRIVATE_KEY_PATH} ];
+	then
+		cat ${PUBLIC_KEY_PATH} >> ~/.ssh/authorized_keys
+	else
+		echo "Error creating ~/.ssh/agave keypair. Exiting." && exit 1
+	fi
+
+}
+
+echo "Ensuring existence of an SSH keypair..."
+
+PRIVATE_KEY_PATH="$HOME/.ssh/id_rsa"
+PUBLIC_KEY_PATH="$HOME/.ssh/id_rsa.pub"
+if [ ! -e ${PUBLIC_KEY_PATH} ] || [ ! -e ${PRIVATE_KEY_PATH} ];
+then
+	echo "    Keys not found. Generating a keypair."
+	generate_agave_ssh_keys
+fi
+echo "Done"
+
+default=$SYSNAME
+read -p "Agave system identifier [$default]: " SYSID
+SYSID=${SYSID:-$default}
+SYSID=$(sanitize_id $SYSID)
+if [ -z "$SYSID" ]; then echo "Error: System identifier cannot be empty."; exit 1; fi
+echo -e "Confirmed: $SYSID\n"
+
+default=$USER
+read -p "TACC user account [$default]: " USERNAME
+USERNAME=${USERNAME:-$default}
+if [ -z "$USERNAME" ]; then echo "Error: TACC username can't be empty."; exit 1; fi
+echo -e "Confirmed: $USERNAME\n"
+
+default="iPlant-Collabs"
+read -p "TACC allocation to be used with this system [$default]: " PROJECT
+PROJECT=${PROJECT:-$default}
+if [ -z "$PROJECT" ]; then echo "Error: TACC project name can't be empty."; exit 1; fi
+echo -e "Confirmed: $PROJECT\n"
+
+default=$(echo $WORK)
+read -p "TACC work directory [$default]: " WORKD
+WORKD=${WORKD:-$default}
+if [ -z "$WORKD" ]; then echo "Error: TACC work directory can't be left empty."; exit 1; fi
+echo -e "Confirmed: $WORKD"
+
+# Register with Agave API
+echo -e "\n*Registering systems with Agave API*"
+TMPDIR="$HOME/tmp"
+for F in $DIR/../templates/tacc-${SYSNAME}*
+do
+  BN=$(basename $F .jsonx)
+  echo "    Processing template ${BN}..."
+  tacc-template-write.py ${USERNAME} ${PROJECT} ${WORKD} ${PRIVATE_KEY_PATH} ${F} ${TMPDIR}
+  systems-addupdate -q -F "${TMPDIR}/${BN}.json"
+done
+echo "Done"
+
+CYVERSE_USERNAME=$(curl -sk -H "Content-Type: application/json" -X POST --data-binary "$(profiles-list -v me)" "https://agaveapi.co/json-mirror?q=username")
+temp="${CYVERSE_USERNAME%\"}"
+temp="${temp#\"}"
+CYVERSE_USERNAME=$temp
+
+echo "Test out private systems you've updated or created today by running a quick files-list operation as illustrated below. You should see the contents of ${WORKD} returned to you after each operation."
+
+for S in $(systems-search "owner=$CYVERSE_USERNAME" "private=true" "lastupdated.on=today")
+do
+	echo "    files-list -S $S /"
+done
+

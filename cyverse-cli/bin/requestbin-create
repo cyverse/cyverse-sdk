@@ -1,0 +1,124 @@
+#!/bin/bash
+#
+# requestbin-create
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It create an ephimeral requestbin using Agave's hosted service.
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=()
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]...
+
+Creates a new RequestBin instance you can use as a callback
+for webhook testing.
+
+ Options:
+  -H, --hosturl        URL of the service
+  -d, --development    Run in dev mode using default dev server
+  -f, --force          Skip all user interaction
+  -i, --interactive    Prompt for values
+  -q, --quiet          Quiet (no output)
+  -v, --verbose        Verbose output
+  -V, --veryverbose    Very verbose output
+  -h, --help           Display this help and exit
+      --version        Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/requestbin-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+
+    cmd="curl -sk -X POST '${hosturl}api/v1/bins'"
+
+	if ((veryverbose)); then
+		[ "$piped" -eq 0 ] && log "Calling $cmd"
+	fi
+
+	response=`curl -sk -X POST ${hosturl}api/v1/bins`
+
+	if [[ -n $(jsonquery "$response" "name") ]]; then
+		result=$(format_api_json "$response")
+		success "$result"
+	else
+		errorresponse=$(jsonquery "$response" "error")
+		err "$errorresponse"
+	fi
+
+
+}
+
+format_api_json() {
+
+	if ((veryverbose)); then
+		json_prettyify "${1}"
+	elif (($verbose)); then
+		json_prettyify "${1}"
+	else
+		binname=$(jsonquery "$1" "name")
+		echo "${hosturl}${binname}"
+	fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+#[[ $# -eq 0 ]] && set -- "--help"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -H|--hosturl) shift; hosturl=$1;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

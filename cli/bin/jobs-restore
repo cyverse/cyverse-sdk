@@ -1,0 +1,137 @@
+#!/bin/bash
+#
+# jobs-restore
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It restores a job from a hidden or deleted status
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apisecret apikey)
+
+# Print usage
+usage() {
+    echo -n "$(basename $0) [OPTION]... JOB_ID...
+
+Restores a job from a hidden or deleted state to visible and
+available for interaction.
+
+ Options:
+  -z, --access_token    Access token
+      --filter          Comma separated list of fields to return in the response
+  -H, --hosturl         URL of the service
+  -d, --development     Run in dev mode using default dev server
+  -f, --force           Skip all user interaction
+  -i, --interactive     Prompt for values
+  -q, --quiet           Quiet (no output)
+  -v, --verbose         Verbose output
+  -V, --veryverbose     Very verbose output
+  -h, --help            Display this help and exit
+      --version         Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/jobs-common.sh"
+
+main() {
+    #echo -n
+    #set -x
+
+    hosturl=${hosturl%/}
+    if [ -z "$args" ]; then
+        err "Please specify one or more valid job ids to restore"
+    else
+
+        for jobid in "${args[@]}"
+        do
+            cmd="curl -sk -H \"${authheader}\" -H \"Content-Type: application/json\" -X POST --data-binary '{\"action\": \"restore\"}' '$hosturl/$jobid?pretty=true$(pagination)'"
+
+            if ((veryverbose)); then
+                [ "$piped" -eq 0 ] && log "Calling $cmd"
+            fi
+
+            response=`curl -sk -H "${authheader}" -H "Content-Type: application/json" -X POST --data-binary '{"action":"restore"}' "$hosturl/$jobid?pretty=true"`
+
+            if [[ $(jsonquery "$response" "status") = 'success' ]]; then
+                result=$(format_api_json "$response")
+                success "$result"
+            else
+                errorresponse=$(jsonquery "$response" "message")
+                err "$errorresponse"
+            fi
+        done
+    fi
+}
+
+format_api_json() {
+
+    if ((veryverbose)); then
+        echo "$1"
+    elif [[ $verbose -eq 1 ]]; then
+        result=$(jsonquery "$1" "result" 1)
+        json_prettyify "${result}"
+    else
+        jobstatus=$(jsonquery "$1" "result.status")
+        jobid=$(jsonquery "$1" "result.id")
+        echo "Successfully restored job $jobid."
+    fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+#[[ $# -eq 0 ]] && set -- "--help"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+    case $1 in
+        -h|--help) usage >&2; safe_exit ;;
+        --version) version; copyright; disclaimer; safe_exit ;;
+        -z|--access_token) shift; access_token=$1 ;;
+        --filter) shift; responsefilter=$1 ;;
+        -H|--hosturl) shift; hosturl=$1;;
+        -d|--development) development=1 ;;
+        -v|--verbose) verbose=1 ;;
+        -V|--veryverbose) veryverbose=1; verbose=1 ;;
+        -q|--quiet) quiet=1 ;;
+        -i|--interactive) interactive=1 ;;
+        -f|--force) force=1 ;;
+        --endopts) shift; break ;;
+        *) die "invalid option: $1" ;;
+    esac
+    shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

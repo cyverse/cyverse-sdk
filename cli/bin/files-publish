@@ -1,0 +1,199 @@
+#!/bin/bash
+#
+# files-publish
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# Upload a file or folder and generate a postit. The postit url is returned.
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apisecret apikey filetoupload)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]... [PATH]
+
+This is a convenience script that uploads a local file or folder to a remote
+storage system and create a PostIt download URL to the remote path. The upload
+will occur via HTTP. The subsequent staging will be done via the native data
+protocol for the destination system. If the given file type requires import
+filtering, it will be applied prior to the callback being sent. If not system
+id is specified, the user's default storage system will be used.
+
+ Options:
+  -z, --access_token        Access token
+  -F, --filetoupload        The file or folder to upload
+  -C, --callbackurl         The email address or webhook to notify upon completion of all
+                            import filtering
+  -T, --filetype            The filetype associated with this file. See transforms-list
+                            for a full list of supported file types. Defaults to 'raw'
+  -N, --filename            The name of the file once uploaded
+  -S, --systemid            The system to which the file or folder will be uploaded
+  -l, --lifetime            Lifetime of the returned token in seconds
+  -m, --maxUses             Maximum number of times the returned token can be used
+  -u, --internalUsername    Internal user to attach to this token
+  -x, --apiusername         API username for whom the returned token should apply,
+                            requires admin permissions
+  -M, --method              HTTP method the postit should perform: GET, POST, PUT, DELETE.
+                            Defaults to GET
+      --filter              Comma separated list of fields to return in the response
+  -H, --hosturl             URL of the service
+  -d, --development         Run in dev mode using default dev server
+  -f, --force               Skip all user interaction
+  -i, --interactive         Prompt for values
+  -q, --quiet               Quiet (no output)
+  -v, --verbose             Verbose output
+  -V, --veryverbose         Very verbose output
+  -h, --help                Display this help and exit
+      --version             Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/files-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+
+	local post_options='';
+
+	if [ ! -e "$filetoupload" ]; then
+
+		response="Local file $filetoupload does not exist"
+		err "$response"
+
+	else
+
+    commonparams="-z $access_token "
+
+    if ((development)); then
+      commonparams="$commonparams -d "
+    fi
+
+    if ((veryverbose)); then
+      commonparams="$commonparams -V "
+    elif ((verbose)); then
+      commonparams="$commonparams -v "
+    fi
+
+    fileparams=''
+
+    if [ -n "$callbackurl" ]; then
+      fileparams="$fileparams -C ${callbackurl} "
+    fi
+
+    if [ -n "$filetype" ]; then
+      fileparams="$fileparams -T ${filetype} "
+    fi
+
+    if [ -n "$filename" ]; then
+      fileparams="$fileparams -N ${filename} "
+    fi
+
+    if [ -n "$systemid" ]; then
+      fileparams="$fileparams -S ${systemid} "
+    fi
+
+    if ((veryverbose)); then
+      echo "Uploading $filetoupload"
+    fi
+
+    upload_response=$(files-upload -V $commonparams -F $filetoupload $fileparams $args 2>&1 | grep -v '####' | grep -vi '^Uploading')
+
+    if [ ! $? ]; then
+
+      err "$upload_response"
+
+    else
+
+      basefilename=$(basename $filetoupload)
+
+      remoteurl=$(echo "$upload_response" | grep -i "media/.*/$args/$basefilename\"\$" | sed 's/"href" : //g' | sed 's/"//g' | sed 's/ //g' )
+
+      postitparams=''
+
+      if [ -n "$lifetime" ]; then
+        postitparams="$postitparams -l ${lifetime} "
+      fi
+
+      if [ -n "$maxUses" ]; then
+        postitparams="$postitparams -m ${maxUses} "
+      fi
+
+      if [ -n "$internalUsername" ]; then
+        postitparams="$postitparams -u ${internalUsername} "
+      fi
+
+      postits-create $commonparams $postitparams $remoteurl
+    fi
+  fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+[[ $# -eq 0 ]] && set -- "-i"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -z|--access_token) shift; access_token=$1 ;;
+    -F|--filetoupload) shift; filetoupload=$1 ;;
+    -C|--callbackurl) shift; callbackurl=$1 ;;
+    -T|--filetype) shift; filetype=$1 ;;
+    -N|--filename) shift; filename=$1 ;;
+    -S|--systemid) shift; systemid=$1 ;;
+    -l|--lifetime) shift; lifetime=$1 ;;
+    -m|--maxUses) shift; maxUses=$1 ;;
+    -u|--internalUsername) shift; internalUsername=$1 ;;
+    -M|--method) shift; method=$1;;
+    --filter) shift; responsefilter=$1 ;;
+    -H|--hosturl) shift; hosturl=$1;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"
