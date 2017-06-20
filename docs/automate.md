@@ -4,8 +4,9 @@ CyVerse supports multiple avenues for automating your work.
 
 * **The Discovery Environment (DE) Workflow Manager**.  The [CyVerse DE](https://de.cyverse.org) supports creating and editing automated linear pipelines for data processing and analysis, as [documented at this link](https://pods.iplantcollaborative.org/wiki/pages/viewpage.action?pageId=8391828).   Examples of Genomics workflows are available [here](https://pods.iplantcollaborative.org/wiki/display/TUT/Genomics+Workflows).
 
-* HT_apps (condor)
-* CyVerse APIs
+* **High Throuput Computing**.  Cyverse maintains a Condor cluster at the University of Arizona that supports high throughput workflows that can be initiated either through the [CyVerse DE](https://de.cyverse.org) or through the command line using the DE / Terrain APIs.  Command line tools for the Terrain APIs are available as part of the Cyverse SDK, and full API documentation is available [here](https://cyverse-de.github.io/api/).  Instructions on using the Cyverse SDK as well as an example of running a HTC job are in the [Terrain CLI](./terrain-example.md) page.
+
+* **CyVerse APIs**.  The Cyverse Cyberinfrastructure is almost completely accessible through a set of Science APIs, allowing researchers to write their own scripts for automation and productivity.  The Agave APIs provide access to data management, high performance computing apps and jobs, metadata, and other APIs used to extend the Cyverse cyberinfrastructure.  The [DE APIs](https://cyverse-de.github.io/api/) (mentioned above) are accessible alongside Agave and provide access to Cyverse's HTC app catalogue and job execution.
 
 * **Atmosphere deployment scripts**.  [Atmosphere](http://www.cyverse.org/atmosphere) is Cyverse's cloud-computing platform.  You can automate your workflows through Atmosphere by customizing deployment scripts that run automatically when launching an instance.  Information on this is found under *Step 4* of [Launching a New Instance](https://pods.iplantcollaborative.org/wiki/display/atmman/Launching+a+New+Instance)
 

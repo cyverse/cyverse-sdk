@@ -1,18 +1,20 @@
-# terrain cli
+# Terrain CLI
 
 Python tools for the Terrain API
 
 ## Installation via GitHub
 
+If you don't already have the Cyverse SDK, follow the [installation instructions](./getting-started-install-sdk.md).  Additionally, it is convenient to add the `scripts` directory to your `PATH` variable
+
 ```
-$ git clone https://github.com/jturcino/cyverse-sdk.git
-$ git checkout terrain
+$ export PATH="$PATH:$PWD/cyverse-sdk/src/scripts"
 ```
 
 ## Setup
-Usage of the cli requires a valid access token. The cli defaults to use of a cached token associated with the Agave API. If you do not have a cached Agave access token, tokens may be passed in manually via the -z flag. For more information about creating and caching Agave tokens, and the API generally, please see the repo [here](https://bitbucket.org/agaveapi/cli).
+Usage of the cli requires a valid access token. The cli defaults to use of a cached token associated with the Agave API. If you do not have a cached Agave access token, tokens may be passed in manually via the -z flag. For more information about creating and caching Agave tokens, and the API generally, please see the Getting Started section [here](/getting-started.md).
 
 Once you have a valid access token readily available (cached or to be passed in at the command line), enable bash completion.
+
 ```
 $ source terrain-completion.bash
 ```
@@ -55,6 +57,7 @@ Counts and summarizes the number of lines, words, and bytes in a target file
 ```
 
 If the description matches the desired behavior, generate a job submission template via `jobs-template` by passing in the app ID.
+
 ```
 $ ./terrain jobs template -a c7f05682-23c8-4182-b9a2-e09650a5f49b
 {
@@ -70,11 +73,15 @@ $ ./terrain jobs template -a c7f05682-23c8-4182-b9a2-e09650a5f49b
     "output_dir": ""
 }
 ```
+
 This output must be edited before submission, so it is convientient to send it directly to a file.
-````
+
+```
 $ ./terrain jobs template -a c7f05682-23c8-4182-b9a2-e09650a5f49b > job_file.json
 ```
+
 Once in file form, a name and output directory must be provided. Additionally, the string descriptions given as values for the ID keys in the config block must be replaced by valid input. In the example above, `"Select an input file"` would be replaced by a file path, such as `"/iplant/home/jturcino/word_count.txt"`. If there is a default value for any of these parameters, it will be provided in parentheses. Thus, the final job file for our word count example could look like this:
+
 ```
 {
     "app_id": "c7f05682-23c8-4182-b9a2-e09650a5f49b",
