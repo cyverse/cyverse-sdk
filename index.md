@@ -1,4 +1,4 @@
-<a href="https://www.cyverse.org"><img src="docs/cyverse_develop_logo.png"></a>
+<a href="https://www.cyverse.org"><img src="docs/cyverse_develop_logo2.png"></a>
 
 
 # CyVerse Developer Portal
