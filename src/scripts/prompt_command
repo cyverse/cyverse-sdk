@@ -1,0 +1,20 @@
+#!/bin/bash
+
+CONFIG=/root/.agave/current
+
+AGAVE_TENANT=$(jq -r .tenantid $CONFIG)
+AGAVE_USERNAME=$(jq -r .username $CONFIG)
+if [ -z "$AGAVE_USERNAME" ];
+then
+	AGAVE_USERNAME="UNCONFIGURED"
+fi
+AGAVE_TOKEN_EXPIRES=$(jq -r .expires_in $CONFIG )
+if [ -z "$AGAVE_TOKEN_EXPIRES" ]
+then
+	AGAVE_TOKEN_EXPIRES=0
+fi
+
+export AGAVE_TENANT
+export AGAVE_USERNAME
+
+echo -n "[${AGAVE_USERNAME}@${AGAVE_TENANT}]"
