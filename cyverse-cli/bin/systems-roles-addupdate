@@ -1,0 +1,149 @@
+#!/bin/bash
+#
+# systems-roles-addupdate
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# Provides a mechanism for adding and updating user roles on a system.
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apisecret apikey roleusername role)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]... [SYSTEM_ID]
+
+Provides a mechanism for adding and updating user roles on a system.
+Setting a role to empty or NONE deletes the user's role on the system.
+
+ Options:
+  -z, --access_token    Access token
+  -u, --roleusername    The user whose permissions should be set
+  -r, --role            The role to set for the user. Valid roles are GUEST,
+                        USER, PUBLISHER, ADMIN, and OWNER
+      --filter          Comma separated list of fields to return in the response
+  -H, --hosturl         URL of the service
+  -d, --development     Run in dev mode using default dev server
+  -f, --force           Skip all user interaction
+  -i, --interactive     Prompt for values
+  -q, --quiet           Quiet (no output)
+  -v, --verbose         Verbose output
+  -V, --veryverbose     Very verbose output
+  -h, --help            Display this help and exit
+      --version         Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/systems-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+
+	if [ -z "$args" ]; then
+		err "Please specify a valid system id for which to retrieve the user roles"
+	else
+
+		if [[ -z "$role" ]]; then
+			role=NONE
+		fi
+
+		if [[ -z "$roleusername" ]]; then
+			err "Please specify a valid username to whom the granted role should apply"
+		fi
+
+		cmd="curl -sk -H \"${authheader}\"  -H \"Content-Type: application/json\" -X POST --data-binary '{\"role\":\"$role\"}' '$hosturl$args/roles/$roleusername?pretty=true$(pagination)'"
+
+		if ((veryverbose)); then
+			[ "$piped" -eq 0 ] && log "Calling $cmd"
+		fi
+
+		response=`curl -sk -H "${authheader}" -H "Content-Type: application/json" -X POST --data-binary "{\"role\":\"$role\"}" "$hosturl$args/roles/$roleusername?pretty=true$(pagination)"`
+
+		if [[ $(jsonquery "$response" "status") = 'success' ]]; then
+			result=$(format_api_json "$response")
+			success "$result"
+		else
+			errorresponse=$(jsonquery "$response" "message")
+			err "$errorresponse"
+		fi
+	fi
+}
+
+format_api_json() {
+
+	if ((veryverbose)); then
+		echo "$1"
+	elif [[ $verbose -eq 1 ]]; then
+		result=$(jsonquery "$1" "result" 1)
+		json_prettyify "${result}"
+	else
+		if [ -n "$roleusername" ]; then
+			echo "Successfully updated roles for user $roleusername on $args"
+		else
+			echo "Successfully updated all user roles for $args"
+		fi
+	fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+#[[ $# -eq 0 ]] && set -- "--help"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -z|--access_token) shift; access_token=$1 ;;
+    -u|--roleusername) shift; roleusername=$1 ;;
+    -r|--role) shift; role=$1 ;;
+    --filter) shift; responsefilter=$1;;
+    -H|--hosturl) shift; hosturl=$1 ;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

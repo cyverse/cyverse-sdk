@@ -1,0 +1,213 @@
+#!/bin/bash
+#
+# metadata-pems-list
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It provides a mechanism for discovering share permissions on a
+# metadata object.
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apisecret apikey)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]... [METADATA_ID]
+
+List the current user permissions for this metadata object. Specifying a
+specific username will return the permissions for that user.
+
+ Options:
+  -z, --access_token    Access token
+  -u, --pemusername     The user whose permissions should be listed
+  -l, --limit           Maximum number of results to return
+  -o, --offset          Number of results to skip from the start
+      --filter          Comma separated list of fields to return in the response
+  -H, --hosturl         URL of the service
+  -d, --development     Run in dev mode using default dev server
+  -f, --force           Skip all user interaction
+  -i, --interactive     Prompt for values
+  -q, --quiet           Quiet (no output)
+  -v, --verbose         Verbose output
+  -V, --veryverbose     Very verbose output
+  -h, --help            Display this help and exit
+      --version         Output version information and exit
+      --rich            Provide rich response
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/metadata-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+
+	if [ -z "$args" ]; then
+		err "Please specify a valid metadata id for which to retrieve permissions"
+	else
+		hosturl=${hosturl%/}
+
+		cmd="curl -sk -H \"${authheader}\" '${hosturl}/data/$args/pems/$pemusername?pretty=true$(pagination)'"
+
+		if ((veryverbose)); then
+			[ "$piped" -eq 0 ] && log "Calling $cmd"
+		fi
+
+		response=`curl -sk -H "${authheader}" "${hosturl}/data/$args/pems/$pemusername?pretty=true$(pagination)"`
+
+		if [[ $(jsonquery "$response" "status") = 'success' ]]; then
+			result=$(format_api_json "$response")
+			success "$result"
+		else
+			errorresponse=$(jsonquery "$response" "message")
+			err "$errorresponse"
+		fi
+	fi
+
+}
+
+format_api_json() {
+
+	if ((veryverbose)); then
+		json_prettyify "${1}"
+	elif [[ $verbose -eq 1 ]]; then
+		result=$(jsonquery "$1" "result" 1)
+		json_prettyify "${result}"
+	elif [[ $rich -eq 1 ]]; then
+		result=$(richify "$1")
+		columnize "${result}"
+	else
+		if [[ -z "$pemusername" ]]; then
+			pemusers=( $(jsonquery "$1" "result.[].username") )
+
+			n=0
+			for i in $(jsonquery "$1" "result.[].permission.read")
+			do
+				if [ "$i" == 'rue' ] || [ "$i" == "true" ] || [ "$i" == "True" ]; then
+					canread='READ '
+				else
+					canread=''
+				fi
+				pemusers[$n]="${pemusers[$n]} $canread"
+				n=$[n+1]
+			done
+
+			n=0
+			for i in $(jsonquery "$1" "result.[].permission.write")
+			do
+				if [ "$i" == 'rue' ] || [ "$i" == "true" ] || [ "$i" == "True" ]; then
+					canwrite='WRITE '
+				else
+					canwrite=''
+				fi
+				pemusers[$n]="${pemusers[$n]}$canwrite"
+				n=$[n+1]
+			done
+
+			n=0
+			for i in $(jsonquery "$1" "result.[].permission.execute")
+			do
+				if [ "$i" == 'rue' ] || [ "$i" == "true" ] || [ "$i" == "True" ]; then
+					canexecute='EXECUTE '
+				else
+					canexecute=''
+				fi
+				pemusers[$n]="${pemusers[$n]}$canexecute"
+				n=$[n+1]
+			done
+
+			for i in "${pemusers[@]}"; do
+				echo "$i"
+			done
+
+		else
+			userpem=$(jsonquery "$1" "result.permission.read")
+			if [ "$userpem" = 'rue' ] || [ "$userpem" = 'true' ] || [ "$userpem" = 'True' ]; then
+				canread='READ '
+			else
+				canread=''
+			fi
+
+			userpem=$(jsonquery "$1" "result.permission.write")
+			if [ "$userpem" = 'rue' ] || [ "$userpem" = 'true' ] || [ "$userpem" = 'True' ]; then
+				canwrite='WRITE '
+			else
+				canwrite=''
+			fi
+
+			userpem=$(jsonquery "$1" "result.permission.execute")
+			if [ "$userpem" = 'rue' ] || [ "$userpem" = 'true' ] || [ "$userpem" = 'True' ]; then
+				canexecute='EXECUTE '
+			else
+				canexecute=''
+			fi
+
+			echo "$pemusername $canread$canwrite$canexecute"
+		fi
+	fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+#[[ $# -eq 0 ]] && set -- "--help"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -z|--access_token) shift; access_token=$1 ;;
+    -u|--pemusername) shift; pemusername=$1 ;;
+    -l|--limit) shift; limit=$1;;
+    -o|--offset) shift; offset=$1;;
+    --filter) shift; responsefilter=$1 ;;
+    --filter) shift; responsefilter=$1 ;;
+    -H|--hosturl) shift; hosturl=$1;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --rich) rich=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

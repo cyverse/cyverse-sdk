@@ -1,0 +1,64 @@
+{
+    "description": "Lonestar 5 is a Cray XC40 customized by the TACC staff to provide a unique software environment designed to meet the needs of our diverse user community. Lonestar 5 features 1252 twenty-four core general compute nodes with dual 12-core Xeon E5-2690 v3 (Haswell) CPUs with hyperthreading enabled. Standard compute nodes have 64GB DDR4-2133 RAM and no local disk.",
+    "environment": null,
+    "executionType": "HPC",
+    "id": "tacc-lonestar5-${USERNAME}",
+    "login": {
+        "auth": {
+            "publicKey": "${PUBLIC_KEY}",
+            "privateKey": "${PRIVATE_KEY}",
+			"username": "${USERNAME}",
+            "type": "SSHKEYS"
+        },
+        "host": "gateway.ls5.tacc.utexas.edu",
+        "port": 22,
+        "protocol": "SSH"
+    },
+    "maxSystemJobs": 50,
+    "maxSystemJobsPerUser": 50,
+    "name": "TACC Lonestar5 [${USERNAME}]",
+    "public": false,
+    "queues": [
+        {
+            "name": "development",
+            "default": true,
+            "maxJobs": 1,
+            "maxUserJobs": 1,
+            "maxNodes": 11,
+            "maxProcessorsPerNode": 264,
+            "maxMemoryPerNode": "64GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "02:00:00"
+        },{
+            "name": "normal",
+            "default": false,
+            "maxJobs": 50,
+            "maxUserJobs": 50,
+            "maxNodes": 171,
+            "maxProcessorsPerNode": 4104,
+            "maxMemoryPerNode": "64GB",
+            "customDirectives": "-A ${PROJECT}",
+            "maxRequestedTime": "48:00:00"
+        }
+    ],
+    "scheduler": "SLURM",
+    "scratchDir": "",
+    "site": "tacc.utexas.edu",
+    "startupScript": "./.bashrc",
+    "status": "UP",
+    "storage": {
+        "host": "gateway.ls5.tacc.utexas.edu",
+        "port": 22,
+        "protocol": "SFTP",
+        "homeDir": "/",
+        "rootDir": "${WORKD}",
+        "auth": {
+            "publicKey": "${PUBLIC_KEY}",
+            "privateKey": "${PRIVATE_KEY}",
+			"username": "${USERNAME}",
+            "type": "SSHKEYS"
+        }
+    },
+    "type": "EXECUTION",
+    "workDir": ""
+}

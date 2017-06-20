@@ -1,0 +1,326 @@
+#!/bin/bash
+#
+# jobs-output-get
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It downloads data from a job's output folder. If the job completed
+# normally and archived, the listing will be on the archive directory.
+# Otherwise, it will be on the work folder if it still exists. Either
+# way, the data will be available from this script.
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apisecret apikey)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]... [JOB_ID] [PATH]
+
+Downloads data from a job's output folder. If the job completed normally and
+archived, the listing will be on the archive directory. Otherwise, it will
+be on the work folder if it still exists. Either way, the data will be
+available from this script.
+
+ Options:
+  -z, --access_token    Access token
+  -N, --filename        Name to give the downloaded file/folder
+  -r, --recursive       Recursively download all data from the remote path
+  -R, --range           Byte range to retrieve in <start>-<end> format
+  -P, --print           Print contents to stdout
+  -H, --hosturl         URL of the service
+  -d, --development     Run in dev mode using default dev server
+  -f, --force           Skip all user interaction
+  -i, --interactive     Prompt for values
+  -q, --quiet           Quiet (no output)
+  -v, --verbose         Verbose output
+  -V, --veryverbose     Very verbose output
+  -h, --help            Display this help and exit
+      --version         Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/jobs-common.sh"
+
+main() {
+	#echo -n
+	# set -x
+
+	if [ -z "$args" ]; then
+		err "Please specify a job id for which to view the output"
+	else
+		jobid=${args[0]}
+    #echo $jobid
+    path=$(echo "${args[1]}" | sed 's/^\///')
+
+    if [ -z "$path" -a -z "$recursive" ]; then
+
+      response="Recursive download requires the -r argument"
+      err "$response"
+
+    else
+
+      filesurl="$hosturl${jobid}/outputs/media/${path}"
+
+      if (($print)); then
+        if ((recursive)); then
+          err "Printing to standard out cannot be specified with recursive downloads"
+          exit
+        else
+          outputarg=" "
+        fi
+      elif [ -n "$filename" ]; then
+        outputarg="-o $filename"
+      else
+        outputarg="-O"
+      fi
+
+      if [ -n "$range" ]; then
+        if ((recursive)); then
+          err "Range queries cannot be specified with recursive downloads"
+          exit
+        else
+          filerange="-r ${range} "
+        fi
+      else
+        filerange=""
+      fi
+
+      if ((recursive)); then
+
+        if ((veryverbose)); then
+          out "Retrieving remote directory listing..."
+        fi
+
+        fileslistingurl="$hosturl${jobid}/outputs/listings/${path}"
+
+
+        response=`curl -sk -H "${authheader}" "${fileslistingurl}"`
+
+        if [[ $(jsonquery "$response" "status") = 'success' ]]; then
+
+          if ((development)); then
+            fgrparams=" -d "
+          fi
+
+          if ((veryverbose)); then
+
+            fgrparams="$fgrparams -V "
+
+          elif ((verbose)); then
+
+            fgrparams="$fgrparams -v "
+          fi
+
+          read -a names <<< $(jsonquery "$response" "result.[].name")
+          read -a types <<< $(jsonquery "$response" "result.[].type")
+          read -a formats <<< $(jsonquery "$response" "result.[].format")
+          read -a paths <<< $(jsonquery "$response" "result.[].path")
+          read -a lengths <<< $(jsonquery "$response" "result.[].length")
+          #set -x
+          # current api has a bug where it does not return the . entry
+          # in the directory listing. We workaround by adding the file name explicitly here
+          if [ -z "$filename" ]; then
+            if [ -n "$path" ]; then
+              for i in `echo "${!names[@]}"`; do
+                if [ "${types[i]}" == "dir" ] && [ "${names[i]}" == "." -o "$path" == $(echo "${paths[i]}" | sed 's/^\///') ]; then
+
+                  if [ -z "$filename" ]; then
+                    filename=$(basename "$path")
+                    if [ -z "$filename" ]; then
+                      filename=$(basename "${paths[i]}")
+                    fi
+                  fi
+
+                  if [ -f "$filename" ]; then
+                    err "${filename} is a directory (not copied)"
+                    exit
+                  elif [ ! -d "$filename" ]; then
+                    echo "Creating directory $filename..."
+                  fi
+
+                  mkdir -p "$filename"
+                  break;
+                elif [ "${types[i]}" == "file" ] && [ "${names[i]}" == "." -o "$path" == $(echo "${paths[i]}" | sed 's/^\///') ]; then
+                  filename=$(basename "${paths[i]}")
+                  break;
+                fi
+              done
+
+              if [ -z "$filename" ]; then
+                filename=$(basename $path)
+              fi
+
+            else
+              filename="job-${jobid}"
+              mkdir -p "$filename"
+            fi
+          fi
+
+          targetpath="$filename"
+
+          for i in `echo "${!names[@]}"`; do
+
+            if [ "${type[i]}" == "dir" ] && [ "${names[i]}" == "." -o "$path" == $(echo "${paths[i]}" | sed 's/^\///') ]; then
+
+              if [ -z "$filename" ]; then
+                filename=$(basename "$path")
+                if [ -z "$filename" ]; then
+                  filename=$(basename "${paths[i]}")
+                fi
+              fi
+
+              if [ -f "$filename" ]; then
+                err "${filename} is a directory (not copied)"
+                exit
+              elif [ -d "$filename" ]; then
+                targetpath="$filename"
+              else
+                echo "Creating directory $filename..."
+                targetpath="$filename"
+              fi
+
+              mkdir -p "$targetpath"
+
+            elif [ "${types[i]}" == "file" ] && [ "${names[i]}" == "." -o "$path" == $(echo "${paths[i]}" | sed 's/^\///') ]; then
+
+              # the target was a file, not a folder
+              if [ -n "$filename" ]; then
+                jobs-output-get -${fgrparams} -N $filename $jobid $path
+              else
+                jobs-output-get ${fgrparams} -N $targetpath $jobid $path
+              fi
+
+            else
+
+              if [ -n "$targetpath" ]; then
+                mkdir -p $targetpath
+              fi
+
+              remotechildpath=$(echo "${paths[i]}" | sed 's/^\///')
+              localchildpath="$targetpath/${names[i]}"
+
+              if [ "${types[i]}" == "dir" ]; then
+                mkdir -p $localchildpath
+                jobs-output-get -r ${fgrparams} -N $localchildpath $jobid $remotechildpath
+              elif [ "${lengths[i]}" -gt "0" ]; then
+                jobs-output-get -v ${fgrparams} -N $localchildpath $jobid $remotechildpath
+              else
+                echo "Downloading empty file $remotechildpath..."
+                echo "######################################################################## 100.0%"
+                touch $localchildpath
+              fi
+
+            fi
+          done
+
+        else
+          errorresponse=$(jsonquery "$response" "message")
+          err "$errorresponse"
+        fi
+
+      else
+
+        cmd="curl -k -H \"${authheader}\" ${filerange} ${outputarg} '${filesurl}'"
+
+        if ((veryverbose)); then
+         [ "$piped" -eq 0 ] && log "Calling $cmd"
+        fi
+
+        if [ -z "$filename" ]; then
+          filename=$(basename $path)
+        fi
+
+        if ((verbose)); then
+          [ "$piped" -eq 0 ] && out "Downloading ${path} ..."
+        fi
+
+        curl -# -k -H "${authheader}" ${filerange} ${outputarg} "${filesurl}"
+        #touch $filename
+
+        if [ "$?" -eq 0 ] && [ ! -f "$filename" ]; then
+          if ((verbose)); then
+            echo "Creating empty file $filename..."
+          fi
+          touch $filename
+        else
+          response=$(grep '"status":"error"' $filename)
+          if [ -n "$response" ]; then
+            err "$response"
+          fi
+        fi
+
+      fi
+
+    fi
+
+  fi
+}
+
+format_api_json() {
+  names=$(jsonquery "$1" "result.[].name")
+  types=$(jsonquery "$1" "result.[].type")
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+#[[ $# -eq 0 ]] && set -- "--help"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -z|--access_token) shift; access_token=$1 ;;
+    -R|--range) shift; range=$1 ;;
+    -S|--systemId) shift; systemId=$1 ;;
+    -N|--filename) shift; filename=$1 ;;
+    -r|--recursive) recursive=1 ;;
+    -P|--print) print=1 ;;
+    -H|--hosturl) shift; hosturl=$1;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

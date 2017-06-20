@@ -1,0 +1,143 @@
+#!/bin/bash
+#
+# clients-subscriptions-list
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It retrieves a list of API subscriptions for the named client
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+interactive=1
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apiusername apipassword)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]... [CLIENT_NAME]
+
+List all APIs to which the client is subscribed.
+
+ Options:
+  -u, --apiusername    API apiusername
+  -p, --apipassword    API apipassword
+  -l, --limit          Maximum number of results to return
+  -o, --offset         Number of results to skip from the start
+  -H, --hosturl        URL of the service
+  -d, --development    Run in dev mode using default dev server
+  -f, --force          Skip all user interaction
+  -i, --interactive    Prompt for values
+  -q, --quiet          Quiet (no output)
+  -v, --verbose        Verbose output
+  -V, --veryverbose    Very verbose output
+  -h, --help           Display this help and exit
+      --version        Output version information and exit
+      --rich           Provide rich response
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/clients-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+
+	if [ -z "$args" ]; then
+		err "Please specify a valid client for which to list subscriptions"
+	else
+		cmd="curl -sku \"${apiusername}:${apipassword}\" '${hosturl}${args}/subscriptions?pretty=true$(pagination)'"
+
+		if ((veryverbose)); then
+			[ "$piped" -eq 0 ] && log "Calling $cmd"
+		fi
+
+		response=`curl -sku "${apiusername}:${apipassword}" "${hosturl}${args}/subscriptions?pretty=true$(pagination)"`
+
+		if [[ $(jsonquery "$response" "status") = 'success' ]]; then
+			result=$(format_api_json "$response")
+			success "$result"
+		else
+			errorresponse=$(jsonquery "$response" "message")
+			err "$errorresponse"
+		fi
+
+	fi
+}
+
+format_api_json() {
+
+	if ((veryverbose)); then
+		json_prettyify "${1}"
+	elif [[ $verbose -eq 1 ]]; then
+		result=$(jsonquery "$1" "result" 1)
+		json_prettyify "${result}"
+	elif [[ $rich -eq 1 ]]; then
+		result=$(richify "$1")
+		columnize "${result}"
+	else
+		result=$(jsonquery "$1" "result.[].apiName")
+		echo "${result}"
+	fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+#[[ $# -eq 0 ]] && set -- "--help"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -u|--apiusername) shift; apiusername=$1 ;;
+    -p|--apipassword) shift; apipassword=$1 ;;
+    -l|--limit) shift; limit=$1;;
+    -o|--offset) shift; offset=$1;;
+    --filter) shift; responsefilter=$1 ;;
+    -H|--hosturl) shift; hosturl=$1;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --rich) rich=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

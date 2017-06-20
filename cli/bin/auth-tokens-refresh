@@ -1,0 +1,162 @@
+#!/bin/bash
+#
+# auth-tokens-refresh
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It retrieves a new bearer token using the refresh token obtained
+# from a previous auth-tokens-create call.
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# set to 1 to prevent using cache. token creation requires a valid key
+disable_cache=1
+storetoken=1
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apisecret apikey refresh_token)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]...
+
+Retrieves a new bearer token using the refresh token obtained from a previous
+auth-tokens-create call.
+
+ Options:
+  -r, --refresh_token    Access token
+  -s, --apisecret        Consumer secret
+  -k, --apikey           Consumer Key
+  -S, --storetoken       Store the token for later use so you can work without reauthenticating on
+                         every command. This is the default behavior
+  -D, --displayonly      Display the fetched auth credentials, but do not save. The local auth cache
+                         will not be updated
+  -H, --hosturl          URL of the service
+  -d, --development      Run in dev mode using default dev server
+  -f, --force            Skip all user interaction
+  -i, --interactive      Prompt for values
+  -q, --quiet            Quiet (no output)
+  -v, --verbose          Verbose output
+  -V, --veryverbose      Very verbose output
+  -h, --help             Display this help and exit
+      --version          Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/auth-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+	hosturl=${hosturl}/token
+	local post_options="grant_type=refresh_token&refresh_token=${refresh_token}&scope=PRODUCTION"
+
+	cmd="curl -sku \"$apikey:XXXXXX\" -X POST -d \"${post_options}\" -H \"Content-Type:application/x-www-form-urlencoded\" '$hosturl'"
+
+	if ((veryverbose)); then
+		[ "$piped" -eq 0 ] && log "Calling $cmd"
+	fi
+
+	response=`curl -sku "$apikey:$apisecret" -X POST -d "${post_options}" -H "Content-Type:application/x-www-form-urlencoded" "$hosturl"`
+
+    if [[ $(jsonquery "$response" "token_type") = 'bearer' ]]; then
+		result=$(format_api_json "$response")
+        #format_api_json "$response"
+		success "$result"
+	else
+		err "$response"
+	fi
+}
+
+format_api_json() {
+
+	if ((storetoken)); then
+
+        jsonval username "$(kvget current)" "username"
+		jsonval access_token "$1" "access_token"
+		jsonval refresh_token "$1" "refresh_token"
+        jsonval expires_in "$1" "expires_in"
+        created_at=$(date +%s)
+        if date --version >/dev/null 2>&1 ; then
+          expires_at=`date -d @$(expr $created_at + $expires_in)`
+        else
+          expires_at=`date -r $(expr $created_at + $expires_in)`
+        fi
+
+        kvset current "{\"tenantid\":\"$tenantid\",\"baseurl\":\"$baseurl\",\"devurl\":\"$devurl\",\"apisecret\":\"$apisecret\",\"apikey\":\"$apikey\",\"username\":\"$username\",\"access_token\":\"$access_token\",\"refresh_token\":\"$refresh_token\",\"created_at\":\"$created_at\",\"expires_in\":\"$expires_in\",\"expires_at\":\"$expires_at\"}"
+
+		echo "Token for ${tenantid}:${username} successfully refreshed and cached for ${expires_in} seconds";
+
+	fi
+
+	if ((veryverbose)); then
+		json_prettyify "${1}"
+	elif [[ $verbose -eq 1 ]]; then
+		json_prettyify "${1}"
+	else
+        jsonval result "$1" "access_token"
+		echo "${result}"
+	fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+[[ $# -eq 0 ]] && set -- "-i"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -s|--apisecret) shift; apisecret=$1 ;;
+    -k|--apikey) shift; apikey=$1 ;;
+    -r|--refresh_token) shift; refresh_token=$1 ;;
+    -x|--proxyuser) shift; proxyuser=$1;;
+	-S|--storetoken) storetoken=1 ;;
+    -D|--displayonly) storetoken=0 ;;
+	-H|--hosturl) shift; hosturl=$1;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

@@ -1,0 +1,158 @@
+#!/bin/bash
+#
+# auth-tokens-revoke
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It revokes a token immediately resulting in permission fails everwhere
+# it is used.
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# set to 1 to prevent using cache. token creation requires a valid key
+#disable_cache=1
+storetoken=1
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apisecret apikey)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]...
+
+Revoke an existing, valid OAuth bearer (auth) token. This will invalidate
+any further attempts to use it and result in failed authentication
+attempts anywhere it is used in a request. The refresh token will
+also effectively be invalidated.
+
+For ease of use, the -S option can be specified to remove the revoked
+credential from the local cache.
+
+Note that you must use the same client key and secret that was used
+to obtain the auth token to revoke it.
+
+ Options:
+  -s, --apisecret      Consumer secret
+  -k, --apikey         Consumer Key
+  -S, --storetoken     Removes the revoked credential from the local cache
+  -H, --hosturl        URL of the service
+  -d, --development    Run in dev mode using default dev server
+  -f, --force          Skip all user interaction
+  -i, --interactive    Prompt for values
+  -q, --quiet          Quiet (no output)
+  -v, --verbose        Verbose output
+  -V, --veryverbose    Very verbose output
+  -h, --help           Display this help and exit
+      --version        Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/auth-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+	hosturl=${hosturl%/}/revoke
+
+	# invalidate the access token given as an argument
+	# if present, otherwise use the token from the
+	# user's auth cache.
+	if [[ -z "$1" ]]; then
+		token_to_revoke="$access_token"
+	else
+		token_to_revoke="$1"
+	fi
+
+
+	cmd="curl -sku \"$apikey:$apisecret\" -X POST -d 'token=$token_to_revoke' '$hosturl'"
+
+	if ((veryverbose)); then
+		[ "$piped" -eq 0 ] && log "Calling $cmd"
+	fi
+
+	response=`json_prettyify $(curl -sku "$apikey:$token_to_revoke" -X POST -d "token=$access_token" "$hosturl")`
+
+	if [[ -z "$response" ]]; then
+		response="{\"status\":\"success\",\"message\":\"Token successfully revoked.\",\"result\": null}"
+		result=$(format_api_json "$response")
+		success "$result"
+	else
+		err "{\"status\":\"error\",\"message\":\"$(jsonquery "$response" "error_message")\",\"result\": null}"
+	fi
+}
+
+format_api_json() {
+
+	if ((storetoken)) || [ "$token_to_revoke" == "$access_token" ]; then
+
+		kvset current "{\"tenantid\":\"$tenantid\",\"baseurl\":\"$baseurl\",\"devurl\":\"$devurl\",\"apisecret\":\"$apisecret\",\"apikey\":\"$apikey\",\"username\":\"$username\",\"access_token\":\"\",\"refresh_token\":\"\",\"created_at\":\"\",\"expires_in\":\"\",\"expires_at\":\"\"}"
+
+	fi
+
+	if ((veryverbose)); then
+		echo "${1}"
+	elif [[ $verbose -eq 1 ]]; then
+		json_prettyify "${1}"
+	else
+		echo "Token for ${tenantid}:${username} successfully revoked";
+	fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+[[ $# -eq 0 ]] && set -- "-i"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -s|--apisecret) shift; apisecret=$1 ;;
+    -k|--apikey) shift; apikey=$1 ;;
+    -S|--storetoken) storetoken=1 ;;
+    -H|--hosturl) shift; hosturl=$1;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

@@ -7,7 +7,7 @@
 #
 # This container a Cyverse-branded, customized Agave CLI
 #
-# docker run -it -v $HOME/.agave:/root/.agave iplantc/cyverse-cli bash
+# docker run -it -v $HOME/.agave:/root/.agave cyverse/cyverse-cli bash
 #
 ######################################################
 
@@ -28,15 +28,14 @@ RUN curl -L -sk -o /usr/local/bin/jq "https://github.com/stedolan/jq/releases/do
 ADD cyverse-cli /usr/local/agave-cli
 ENV PATH $PATH:/usr/local/agave-cli/bin
 
-RUN echo export PS1=\""\[\e[32;4m\]cyverse-cli\[\e[0m\]:\u@\h:\w$ "\" >> /root/.bashrc
+# RUN echo export PS1=\""\[\e[32;4m\]agave-cli\[\e[0m\]:$AGAVE_TENANT:$AGAVE_USERNAME@\h:\w$ "\" >> /root/.bashrc
 
-# set user's default env. This won't get sourced, but is helpful
-
-# set user's default env. This won't get sourced, but is helpful
+# Set user's default env. This won't get sourced, but is helpful
 RUN echo HOME=/root >> /root/.bashrc && \
-    echo AGAVE_CACHE_DIR=/root/.agave >> /root/.bashrc
-
-RUN /usr/local/agave-cli/bin/tenants-init -t iplantc.org
+    echo AGAVE_CACHE_DIR=/root/.agave >> /root/.bashrc && \
+    echo PROMPT_COMMAND=/usr/local/agave-cli/bin/prompt_command >> /root/.bashrc && \
+    echo export PS1=\"\\h:\\w\$ \" >> /root/.bashrc && \
+    usr/local/agave-cli/bin/tenants-init -t iplantc.org
 
 # Runtime parameters. Start a shell by default
 VOLUME /root/.agave

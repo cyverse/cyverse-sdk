@@ -1,0 +1,400 @@
+#!/bin/bash
+#
+# jobs-run-this
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It runs the binary contained in the current directory in the cloud
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apisecret apikey)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]...[EXE_FILE] [EXE_ARGUMENTS]
+
+Runs the specified executable file in the cloud by compressing and staging the
+work folder to your default storage system and running the code inside a docker
+container. You may optionally specify the name of your job, work directory, and
+an email address to receive nofications of job completion. By default, the
+generic agave/centos-base image is used. You may specify an alternative image
+from the public Docker Hub index or supply your own Dockerfile.
+
+ Options:
+  -z, --access_token    Access token
+  -w, --workdir         The directory containing your exe and its dependencies
+  -S, --systemid        The system where the data will be staged and archived
+  -n, --name            The name of your job, defaults to <username>-runner
+  -c, --command         This is the actual executable needed to run your program in the
+                        Docker container. ex. Rscript, python, java, mvn, php, sh.
+                        If not specified, a best-guess attempt will be made
+  -e, --email           The email address where a notificiation of job completion will
+                        be sent
+  -I, --dockerimage     The Docker image to use. This must be valid and in the
+                        Docker public index. If not specified, agaveapi/scipyrj will
+                        be used
+  -D, --dockerfile      URL to a Dockerfile that will be used build the Docker
+                        container prior to running. If you include a Dockerfile in
+                        your work directory, that will be used automatically
+  -W, --watch           Watch the job history once it has been submitted, updating
+                        every few seconds until it completes
+  -H, --hosturl         URL of the service
+  -d, --development     Run in dev mode using default dev server
+  -f, --force           Skip all user interaction
+  -i, --interactive     Prompt for values
+  -q, --quiet           Quiet (no output)
+  -v, --verbose         Verbose output
+  -V, --veryverbose     Very verbose output
+  -h, --help            Display this help and exit
+      --version         Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/jobs-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+
+  if [ -z "$args" ]; then
+    err "Please specify an executable to run"
+    exit
+  else
+      for i in "${args[@]}"; do
+        filename=$(basename "$i")
+        extension="${i##*.}"
+        extension=`echo "$extension" | tr '[:upper:]' '[:lower:]'`
+        break
+      done
+
+      if [ "$extension" == 'class' ]; then
+        command="java"
+        flavor="alexeiled/java7-maven-git"
+      elif [ "$extension" == 'pom' ]; then
+        command="mvn"
+        flavor="alexeiled/java7-maven-git"
+      elif [ "$extension" == 'php' ]; then
+        command="php"
+        flavor="sysdia/docker-php-server"
+      elif [ "$extension" == 'py' ]; then
+        command="python"
+        flavor="agaveapi/scipy-matplot-2.7"
+      elif [ "$extension" == 'r' ] || [ "$extension" == 'R' ]; then
+        command="Rscript"
+        flavor="scivm/r-project-3.0"
+      elif [ "$extension" == 'sh' ]; then
+        command="sh"
+        flavor="agaveapi/scipy-matplot-2.7"
+      elif [ "$extension" == 'pl' ]; then
+        command="perl"
+        flavor="scivm/bioperl-1.6.9"
+      elif [ -e "$extension" ]; then
+        err "Unknown file extension for $filename. Please specify the program used to invoke this file using the -c option"
+        exit
+      fi
+  fi
+
+  if [ -z "$workdir" ]; then
+    workdir=`pwd`
+  elif [ ! -e "$workdir" ]; then
+    err "Work directory $workdir does not exist. Please specify an executable within your work directory."
+    exit
+  fi
+
+
+  if [ -n "$args" ] && [ "$args" != " " ] && [ ! -e "$workdir/$args" ]; then
+    err "File $workdir/$args does not exist. Please specify an executable within your work directory."
+    exit
+  fi
+
+  if [ -z $name ]; then
+    name="$username-runner"
+  else
+    name=$(echo -n "${name}" | sed -e 's/[^[:alnum:]]/-/g' | tr -s '-' | tr A-Z a-z)
+  fi
+
+  if [ -n "$email" ]; then
+    email=$(echo "$email" | sed 's/\&/%26/g' )
+    notifications=", \"notifications\": [ { \"url\": \"$email\",\"event\": \"FINISHED\", \"persistent\": false }, { \"url\": \"$email\",\"event\": \"FAILED\", \"persistent\": false } ]"
+    #notifications=", \"notifications\": [ { \"url\": \"http://requestb.in/1k8tjas1?event=${EVENT}&job_id=${JOB_ID}&job_system=${JOB_SYSTEM}\",\"event\": \"*\", \"persistent\": true }, { \"url\": \"$email\",\"event\": \"*\", \"persistent\": true } ]"
+  fi
+
+  SUBMIT_TIMESTAMP=`date +%s%3N`
+  PACKAGE_NAME="${name}-${SUBMIT_TIMESTAMP}.tgz"
+  REMOTE_PATH="${username}/inputs"
+
+  if [ -n "$systemid" ]; then
+    archiveparam=", \"archive\": true, \"archiveSystem\": \"$systemid\""
+    stagingparm=" -S $systemid"
+    appbundleparam="agave://${systemid}/${REMOTE_PATH}/${PACKAGE_NAME}"
+  else
+    appbundleparam="${REMOTE_PATH}/${PACKAGE_NAME}"
+  fi
+
+
+  # If they specified a Dockerfile to pull, retrieve that.
+  if [ -n "$dockerfile" ] && [ -n $(is_valid_url $dockerfile) ]; then
+    out "Retrieving Dockerfile from $dockerfile..."
+    # If they already have one present, give them the option to back it up
+    if [ -e ${workdir}/Dockerfile ]; then
+      if ((force)); then
+        yesno='y'
+      else
+        echo -n "The current Dockerfile in ${workdir}/Dockerfile will be overwritten. Is this ok? (y/n) "
+        read yesno < /dev/tty
+      fi
+
+      if [ "x$yesno" != "xy" ] && [ "x$yesno" != "xY" ]; then
+        out "Moving existing dockerfile to $dockerfile-$SUBMIT_TIMESTAMP..."
+        mv ${workdir}/Dockerfile ${workdir}/Dockerfile-$SUBMIT_TIMESTAMP
+      fi
+    fi
+
+    # Now fetch the file
+    dockerfile_response=$(curl --write-out %{http_code} -sk -o "${workdir}/Dockerfile.download" "$dockerfile")
+
+    if [ "$dockerfile_response" -ne 200 ]; then
+      err "Download failed. Job submission aborted."
+      rm -f ${workdir}/Dockerfile.download
+      exit
+    else
+      mv ${workdir}/Dockerfile.download ${workdir}/Dockerfile
+      out "Successfully downloaded Dockerfile to work directory"
+    fi
+  fi
+
+  # If they have a Dockerfile present, then the $dockerimage value is just a tag
+  # since we will be building the image ourselves at runtime
+  if [ -e ${workdir}/Dockerfile ]; then
+    if [ -n "$dockerimage" ]; then
+      err "Ignoring Docker image argument because a Dockerfile is present in the work directory."
+    fi
+    dockerimage="\${JOB_ID}"
+  else
+    # If they specified a Docker image to use, verify that it exists.
+    if [ -n "$dockerimage" ]; then
+      # verify the docker image exists
+      out "Verifying Docker image $dockerimage exists..."
+      imagecheck_response=$(curl -sk "https://index.docker.io/v1/search?q=${dockerimage}")
+
+      if [ $? ]; then
+        image_results=$(jsonquery "$imagecheck_response" "num_results");
+        if [[ "$image_results" = '0' ]]; then
+          err "No image found in https://index.docker.io matching $dockerimage";
+          exit
+        elif [[ "$image_results" = '1' ]]; then
+          out "Found image $dockerimage in Docker central index"
+          dockerimageparam=", \"dockerImage\": \"${dockerimage}\""
+        else
+          err "More than one image matching $dockerimage is available in the Docker central index. Please specify the respitory, tag, and, if necessary, version and try again."
+          exit
+        fi
+      fi
+    else
+      # Otherwise use the default agave base image
+      dockerimageparam=", \"dockerImage\": \"${flavor}\""
+    fi
+  fi
+
+  # Compress the work directory for staging
+  out "Compressing $workdir..."
+  tar czf $PACKAGE_NAME -C $workdir --exclude $PACKAGE_NAME --exclude .agave.history .
+
+  if ((veryverbose)); then
+    PARAMS=" -V"
+  elif ((verbose)); then
+    PARAMS=" -v"
+  fi
+  #
+  # if [[ ! -n "$hosturl" ]]; then
+  #   PARAMS="${PARAMS} -H \"${hosturl}\""
+  # fi
+  #
+  if ((development)); then
+    PARAMS="${PARAMS} -d"
+  fi
+  #
+  # if ((quiet)); then
+  #   PARAMS="${PARAMS} -q"
+  # fi
+  #
+  # if ((force)); then
+  #   PARAMS="${PARAMS} -f"
+  # fi
+  #
+  # if ((interactive)); then
+  #   PARAMS="${PARAMS} -i"
+  # fi
+
+  # Create the remote staging directory for inputs if it does not already exist
+  out "Creating remote staging directory..."
+
+  mkdir_response=$(files-mkdir ${PARAMS} ${stagingparm} -N $REMOTE_PATH . 1>/dev/null 2>&1)
+  if [[ $mkdir_response == *exists* ]]; then
+    out "Directory already exists"
+  elif [[ -n $mkdir_response ]]; then
+    err "Failed to create remote folder to stage inputs."
+    rm $PACKAGE_NAME
+    exit
+  fi
+
+  # Upload the app package to the user's default storage system
+  out "Uploading compressed work directory..."
+  upload_response=$(files-upload ${PARAMS} ${stagingparm} -F $PACKAGE_NAME $REMOTE_PATH 3>&1 1>&2 2>&3 | tee /dev/stderr)
+
+  if [[ ! $? ]]; then
+    err "$upload_response"
+    rm $PACKAGE_NAME
+    exit
+  fi
+
+  rm $PACKAGE_NAME
+
+  # wait for the upload to get to the remote system
+  echo "Checking upload status while waiting for file to finishing streaming to remote system."
+  while (( true )); do
+
+    # should be quick...check every second
+    sleep 1
+    # check history for a terminal status: TRANSFORMING_COMPLETED, TRANSFORMING_FAILED
+    filehistory=$(files-history -z $REMOTE_PATH $appbundleparam)
+    transferstatus=$(jsonquery "$filehistory" "result.[].status" | tail -n 1)
+    if [ "$transferstatus" == "TRANSFORMING_COMPLETED" -o "$transferstatus" == "STAGING_COMPLETED" ]; then
+      break;
+    elif [ "$transferstatus" == "TRANSFORMING_FAILED" -o "$transferstatus" == "STAGING_FAILED" -o "$transferstatus" == "FAILED" ]; then
+      err "Failed to upload local assets to remote system"
+    else
+      echo -e "."
+    fi
+
+    echo -e "upload complete"
+
+  done
+
+  # Create a job description and submit the job
+  out "Submitting job..."
+  if ((veryverbose)); then
+    log "curl -sk -H \"${authheader}\" -H \"Content-type: application/json\" -X POST --data \"{ \"appId\":\"cloud-runner-0.1.0u1\", \"name\": \"$name\",\"inputs\": { \"appBundle\":\"$appbundleparam\" }, \"parameters\": { \"unpackInputs\": true$dockerimageparam, \"command\":\"$command\", \"commandArgs\":\"${args[@]}\" }${notifications}${archiveparam}}\" $hosturl?pretty=true"
+  fi
+
+  response=`curl -sk -H "${authheader}" -H "Content-type: application/json" -X POST --data "{ \"appId\":\"cloud-runner-0.1.0u1\", \"name\": \"$name\",\"inputs\": { \"appBundle\":\"$appbundleparam\" }, \"parameters\": { \"unpackInputs\": true$dockerimageparam, \"command\":\"$command\", \"commandArgs\":\"${args[@]}\" }${notifications}${archiveparam}}" "$hosturl?pretty=true"`
+
+  if [[ $(jsonquery "$response" "status") = 'success' ]]; then
+
+    # prepend the job id to the local history file
+    jobwatchid=$(jsonquery "$response" "result.id")
+    if [[ ! -e .agave.history ]]; then
+      touch .agave.history
+    fi
+    echo "$jobwatchid" | cat - .agave.history > .agave.tmp && mv .agave.tmp .agave.history
+
+    result=$(format_api_json "$response")
+    success "$result"
+
+    if ((watch)); then
+
+      if ((development)); then
+        jhparams=" -d "
+      fi
+
+      if ((veryverbose)); then
+
+        jhparams="$jhparams -V "
+
+      elif ((verbos)); then
+
+        jhparams="$jhparams -v "
+      fi
+
+      jobs-history $jhparams -W $jobwatchid
+
+    else
+      result=$(format_api_json "$response")
+      success "$result"
+    fi
+
+	else
+		errorresponse=$(jsonquery "$response" "message")
+		err "$errorresponse"
+	fi
+}
+
+format_api_json() {
+
+	if ((veryverbose)); then
+		echo "$1"
+	elif [[ $verbose -eq 1 ]]; then
+		result=$(jsonquery "$1" "result" 1)
+		json_prettyify "${result}"
+	else
+		jobid=$(jsonquery "$1" "result.id")
+		echo "Successfully submitted job $jobid"
+	fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+[[ $# -eq 0 ]] && set -- "-i"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -z|--access_token) shift; access_token=$1 ;;
+    -c|--command) shift; command=$1 ;;
+    -w|--workdir) shift; workdir=$1 ;;
+    -n|--name) shift; name=$1 ;;
+    -e|--email) shift; email=$1 ;;
+    -S|--systemid) shift; systemid=$1 ;;
+    -I|--dockerimage) shift; dockerimage=$1;;
+    -D|--dockerfile) shift; dockerfile=$1;;
+    -W|--watch) watch=1;;
+    -H|--hosturl) shift; hosturl=$1;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

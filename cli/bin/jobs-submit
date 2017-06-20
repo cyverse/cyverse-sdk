@@ -1,0 +1,199 @@
+#!/bin/bash
+#
+# jobs-submit
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It submits a job for execution by the API.
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apisecret apikey filetoupload)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]...
+
+Submit a new job request.
+
+ Options:
+  -z, --access_token    Access token
+  -F, --filetoupload    The file containing the JSON job description to submit.
+                        Use - to read from STDIN and when piping
+  -W, --watch           Watch the job history after it has been submitted, updating
+                        every few seconds until the job reaches a terminal state
+      --filter          Comma separated list of fields to return in the response
+  -H, --hosturl         URL of the service
+  -d, --development     Run in dev mode using default dev server
+  -f, --force           Skip all user interaction
+  -i, --interactive     Prompt for values
+  -q, --quiet           Quiet (no output)
+  -v, --verbose         Verbose output
+  -V, --veryverbose     Very verbose output
+  -h, --help            Display this help and exit
+      --version         Output version information and exit
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/jobs-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+
+  if [[ -z "$filetoupload" ]]; then
+
+    response="Please provide a valid job request with the -F option."
+    err "$response"
+
+  elif [[ -d "$filetoupload" ]]; then
+
+    response="Directory input is not supported"
+    err "$response"
+
+  elif [[ ! -e "$filetoupload" ]] && [[ "$filetoupload" != "-" ]]; then
+
+    response="No job request found at $filetoupload"
+    err "$response"
+
+  else
+
+    # reading from stdin
+    if [[ "$filetoupload" == "-"  ]]; then
+
+      cmd="curl -sk -H \"${authheader}\" -H \"Content-Type: application/json\" -X POST --data-binary @- '$hosturl?pretty=true'"
+
+      if ((veryverbose)); then
+        [ "$piped" -eq 0 ] && log "Calling $cmd"
+      fi
+
+      # make sure we specify content type as application/json
+      response=`curl -sk -H "${authheader}" -H "Content-Type: application/json" -X POST --data-binary @- "$hosturl?pretty=true"`
+
+    # standard file upload
+    else
+
+      cmd="curl -sk -H \"${authheader}\" -X POST -d \"fileToUpload=@$filetoupload\" '$hosturl?pretty=true'"
+
+      if ((veryverbose)); then
+        [ "$piped" -eq 0 ] && log "Calling $cmd"
+      fi
+
+      response=`curl -sk -H "${authheader}" -X POST -F "fileToUpload=@$filetoupload" "$hosturl?pretty=true"`
+
+    fi
+
+  	if [[ $(jsonquery "$response" "status") = 'success' ]]; then
+
+      if ((watch)); then
+
+        jobwatchid=$(jsonquery "$response" "result.id")
+
+        result=$(format_api_json "$response")
+        success "$result"
+
+        if ((development)); then
+          jhparams=" -d "
+        fi
+
+        if ((veryverbose)); then
+
+          jhparams="$jhparams -V "
+
+        elif ((verbose)); then
+
+          jhparams="$jhparams -v "
+        fi
+
+        jobs-history $jhparams -W $jobwatchid
+
+      else
+
+        result=$(format_api_json "$response")
+  		  success "$result"
+
+      fi
+
+    else
+
+      errorresponse=$(jsonquery "$response" "message")
+  		err "$errorresponse"
+
+  	fi
+
+  fi
+}
+
+format_api_json() {
+
+	if ((veryverbose)); then
+		echo "$1"
+	elif [[ $verbose -eq 1 ]]; then
+		result=$(jsonquery "$1" "result" 1)
+		json_prettyify "${result}"
+	else
+		jobid=$(jsonquery "$1" "result.id")
+		echo "Successfully submitted job $jobid"
+	fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+[[ $# -eq 0 ]] && set -- "-i"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) version; copyright; disclaimer; safe_exit ;;
+    -z|--access_token) shift; access_token=$1 ;;
+    -F|--filetoupload) shift; filetoupload=$1 ;;
+    -W| --watch) watch=1;;
+    --filter) shift; responsefilter=$1 ;;
+    -H|--hosturl) shift; hosturl=$1;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"

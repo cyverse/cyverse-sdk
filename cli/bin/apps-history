@@ -1,0 +1,158 @@
+#!/bin/bash
+#
+# apps-history
+#
+# author: dooley@tacc.utexas.edu
+#
+# This script is part of the Agave API command line interface (CLI).
+# It retrieves the history of a named app
+#
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$DIR/common.sh"
+
+# Script logic -- TOUCH THIS {{{
+
+# A list of all variables to prompt in interactive mode. These variables HAVE
+# to be named exactly as the longname option definition in usage().
+interactive_opts=(apisecret apikey)
+
+# Print usage
+usage() {
+  echo -n "$(basename $0) [OPTION]... [APP_ID]
+
+List the history of events for a specific app. This will give more descriptive
+information related to number of retries, reasons for failure, and other hiccups
+that may have occurred in the submission process.
+
+ Options:
+  -z, --access_token    Access token
+  -W, --watch           Watches the app history, updating every few seconds
+                        until the app reaches a terminal state
+  -l, --limit           Maximum number of results to return
+  -o, --offset          Number of results to skip from the start
+  -H, --hosturl         URL of the service
+  -d, --development     Run in dev mode using default dev server
+  -f, --force           Skip all user interaction
+  -i, --interactive     Prompt for values
+  -q, --quiet           Quiet (no output)
+  -v, --verbose         Verbose output
+  -V, --veryverbose     Very verbose output
+  -h, --help            Display this help and exit
+      --version         Output version information and exit
+      --rich            Provide rich response
+"
+}
+
+##################################################################
+##################################################################
+#						Begin Script Logic						 #
+##################################################################
+##################################################################
+
+source "$DIR/apps-common.sh"
+
+main() {
+	#echo -n
+	#set -x
+
+	if [ -z "$args" ]; then
+		err "Please specify the id of an app for which to fetch the history"
+	else
+        appId=${args[0]}
+        eventId=${args[1]}
+
+        hosturl="${hosturl}${appId}/history"
+
+        [[ -n "${eventId}" ]] && hosturl="${hosturl}/${eventId}"
+
+        cmd="curl -sk -H \"${authheader}\" '$hosturl?pretty=true$(pagination)'"
+
+		if ((veryverbose)); then
+			[ "$piped" -eq 0 ] && log "Calling $cmd"
+		fi
+
+		response=`curl -sk -H "${authheader}" "${hosturl}?pretty=true$(pagination)"`
+
+		if [[ $(jsonquery "$response" "status") = 'success' ]]; then
+
+            result=$(format_api_json "$response")
+
+            success "$result"
+		else
+
+			errorresponse=$(jsonquery "$response" "message")
+
+			err "$errorresponse"
+
+        fi
+	fi
+
+}
+
+format_api_json() {
+
+  	if ((veryverbose)); then
+		echo "$1"
+	elif [[ $verbose -eq 1 ]]; then
+		result=$(jsonquery "$1" "result" 1)
+		json_prettyify "${result}"
+	elif [[ $rich -eq 1 ]]; then
+		result=$(richify "$1")
+		columnize "${result}"
+	else
+		result=$(jsonquery "$1" "result.[].description")
+		echo "${result}"
+	fi
+}
+
+##################################################################
+##################################################################
+#						End Script Logic						 #
+##################################################################
+##################################################################
+
+# }}}
+
+# Parse command line options
+source "$DIR/options.sh"
+
+# Main loop {{{
+
+# Print help if no arguments were passed.
+#[[ $# -eq 0 ]] && set -- "--help"
+
+# Read the options and set stuff
+while [[ $1 = -?* ]]; do
+  case $1 in
+    -h|--help) usage >&2; safe_exit ;;
+    --version) out "Agave (cli) v${api_release}.${version}"; safe_exit ;;
+    -z|--access_token) shift; access_token=$1 ;;
+    -W| --watch) watch=1;;
+    -l|--limit) shift; limit=$1;;
+    -o|--offset) shift; offset=$1;;
+    --order) shift; sortOrder=$1;;
+    --orderBy) shift; sortBy=$1;;
+    --filter) shift; responsefilter=$1 ;;
+    -H|--hosturl) shift; hosturl=$1;;
+  	-d|--development) development=1 ;;
+    -v|--verbose) verbose=1 ;;
+    -V|--veryverbose) veryverbose=1; verbose=1 ;;
+    -q|--quiet) quiet=1 ;;
+    -i|--interactive) interactive=1 ;;
+    -f|--force) force=1 ;;
+    --rich) rich=1 ;;
+    --endopts) shift; break ;;
+    *) die "invalid option: $1" ;;
+  esac
+  shift
+done
+
+# Store the remaining part as arguments.
+args+=("$@")
+
+# }}}
+
+# Run the script logic
+source "$DIR/runner.sh"
