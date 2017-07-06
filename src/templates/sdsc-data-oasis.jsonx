@@ -1,0 +1,29 @@
+{
+	"description": "User- and project-specific storage on SDSC Data Oasis",
+	"id": "sdsc-${IDENTIFIER}-${XSEDE_USERNAME}-${PROJECT}",
+	"name": "SDSC Data Oasis [${PROJECT}/${XSEDE_USERNAME}]",
+	"site": "sdsc.xsede.org",
+	"status": "UP",
+	"type": "STORAGE",
+	"storage": {
+		"proxy": null,
+		"protocol": "GRIDFTP",
+		"mirror": false,
+		"port": 2811,
+		"auth": {
+			"username": "${XSEDE_USERNAME}",
+			"password": "${XSEDE_PASSWORD}",
+			"server": {
+				"endpoint": "myproxy.xsede.org",
+				"protocol": "MYPROXY",
+				"port": 7512,
+				"name": "XSEDE MyProxy Server"
+			},
+			"type": "X509",
+			"caCerts": "http://software.xsede.org/security/xsede-certs.tar.gz"
+		},
+		"host": "oasis-dm.sdsc.xsede.org",
+		"rootDir": "${DATADIR}",
+		"homeDir": "/"
+	}
+}

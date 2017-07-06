@@ -1,0 +1,133 @@
+#!/bin/bash
+
+sysname () {
+	echo $(echo -n $(hostname --fqdn | awk -F '.' '{ print $2 }'))
+}
+
+sanitize_id () {
+
+	echo $(echo "$1" | tr -cd '[[:alnum:]]_-')
+
+}
+
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Test for agave cli in $PATH
+AGAVE_CANARY=$(which auth-check)
+if [ -z "${AGAVE_CANARY}" ]; then echo "The Cyverse CLI is not in your PATH. Please ensure that it is and re-run this script."; exit 1; fi
+
+cat << EOF
+ ____  ____  ____   ____ 
+/ ___||  _ \/ ___| / ___|
+\___ \| | | \___ \| |    
+ ___) | |_| |___) | |___ 
+|____/|____/|____/ \____|
+
+*Cyverse API Enrollment*
+
+This script will register a personal instance of SDSC Comet
+and Data Oasis systems for building and validating Agave
+apps. The following steps assume you have created or configured
+an Agave Oauth2 client on this machine.
+
+If you have not, you must exit out of this script. Then, 
+install and configure CyVerse SDK and fetch a token. 
+
+The following 'auth-tokens-create' command will
+create a new Agave access token. To refresh it again
+after it expires, use 'auth-tokens-refresh -S'.
+
+*Create an OAuth2 token*
+EOF
+
+# Verify that Agave config is at least minimally installed before proceeding...
+auth-check -v | grep "iplantc" > /dev/null
+if [ $? -ne 0 ]; then echo "There is an error reading your OAuth2 configuration. Please repeat the client setup instructions and try again."; exit 1; fi
+
+# Pause briefly... race conditions are frustrating
+auth-tokens-refresh -q -S
+
+# Collect TACC info
+cat << EOF
+
+*Connect Agave to the SDSC Comet and Data Oasis*
+
+The following information will be generated or gathered to
+configure this system for access via Agave:
+
+  Your XSEDE username
+  Your XSEDE password
+  A short alphanumeric key to identify this system
+  The SDSC-specific project code for your XSEDE allocation
+  Path to your Comet \$SCRATCH directory
+  Path to your Data Oasis projects directory
+
+EOF
+
+default="Yes"
+read -p "Are you ready to proceed? [$default]: " READY
+READY=${READY:-$default}
+if [ "$READY" != "Yes" ]; then exit 1; fi
+
+default=$USER
+read -p "XSEDE username [$default]: " XUSERNAME
+XUSERNAME=${XUSERNAME:-$default}
+if [ -z "$XUSERNAME" ]; then echo "Error: XSEDE username can't be empty."; exit 1; fi
+echo -e "Confirmed: $XUSERNAME\n" && export XUSERNAME
+
+default=
+read -p "XSEDE password [$default]: " XPASSWORD
+XPASSWORD=${XPASSWORD:-$default}
+if [ -z "$XPASSWORD" ]; then echo "Error: XSEDE password can't be empty."; exit 1; fi
+echo -e "Confirmed: $XPASSWORD\n"
+
+default=""
+read -p "XSEDE allocation/charge code to be used with this system [$default]: " PROJECT
+PROJECT=${PROJECT:-$default}
+if [ -z "$PROJECT" ]; then echo "Error:XSEDE allocation/charge code can't be empty."; exit 1; fi
+echo -e "Confirmed: $PROJECT\n"
+
+default="/oasis/scratch-comet/$XUSERNAME/temp_project"
+read -p "Comet \$SCRATCH directory [$default]: " WORKD
+WORKD=${WORKD:-$default}
+if [ -z "$WORKD" ]; then echo "Error: Comet \$SCRATCH directory can't be left empty."; exit 1; fi
+echo -e "Confirmed: $WORKD"
+
+default="/oasis/projects/nsf/$PROJECT/$XUSERNAME"
+read -p "Data Oasis project directory [$default]: " DATADIR
+DATADIR=${DATADIR:-$default}
+if [ -z "$DATADIR" ]; then echo "Error: Data Oasis directory can't be left empty."; exit 1; fi
+echo -e "Confirmed: $DATADIR"
+
+for SCSC_SYSTEM in comet data-oasis
+do
+
+	SYSNAME=${SCSC_SYSTEM}
+	default=$SYSNAME
+	read -p "Agave system identifier [$default]: " SYSID
+	SYSID=${SYSID:-$default}
+	SYSID=$(sanitize_id $SYSID)
+	if [ -z "$SYSID" ]; then echo "Error: System identifier cannot be empty."; exit 1; fi
+	echo -e "Confirmed: sdsc-$SYSID\n"
+
+	F="${DIR}/../templates/sdsc-${SCSC_SYSTEM}.jsonx"
+	BN=$(basename $F .jsonx)
+	echo "    Template ${BN}..."
+	sdsc-template-write.py ${SYSID} ${XUSERNAME} ${XPASSWORD} ${PROJECT} ${WORKD} ${DATADIR} ${F} ${TMPDIR}
+	systems-addupdate -q -F "${TMPDIR}/${BN}.json"
+
+done
+
+CYVERSE_USERNAME=$(curl -sk -H "Content-Type: application/json" -X POST --data-binary "$(profiles-list -v me)" "https://agaveapi.co/json-mirror?q=username")
+temp="${CYVERSE_USERNAME%\"}"
+temp="${temp#\"}"
+CYVERSE_USERNAME=$temp
+
+echo "Test out private systems you've updated or created today by running a quick files-list operation as illustrated below. You should see the contents of ${WORKD} returned to you after each operation."
+
+for S in $(systems-search "owner=$CYVERSE_USERNAME" "private=true" "lastupdated.on=today" "id.like=*sdsc*")
+do
+	echo "    files-list -S $S /"
+done
+
