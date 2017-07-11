@@ -1,0 +1,106 @@
+#!/bin/bash
+
+sysname () {
+    echo $(echo -n $(hostname --fqdn | awk -F '.' '{ print $2 }'))
+}
+
+sanitize_id () {
+
+    echo $(echo "$1" | tr -cd '[[:alnum:]]_-')
+
+}
+
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Test for agave cli in $PATH
+AGAVE_CANARY=$(which auth-check)
+if [ -z "${AGAVE_CANARY}" ]; then echo "The Cyverse CLI is not in your PATH. Please ensure that it is and re-run this script."; exit 1; fi
+
+_AGAVE_EXEC_SYSTEM=
+_STORE_AGAVE_USERNAME=
+_STORE_AGAVE_TENANT=
+
+function init(){
+    echo ""
+}
+
+function get_agave_uname(){
+    # Retrieve username for current Agave user
+    if [ -z "${_STORE_AGAVE_USERNAME}" ];
+    then
+        local __auth_check=$(auth-check -v)
+        local __tmp=$( _jsonval "${__auth_check}" "username" )
+        export _STORE_AGAVE_USERNAME="${__tmp}"
+    fi
+    echo -n "${_STORE_AGAVE_USERNAME}"
+}
+
+function get_agave_tenant(){
+    # Retrieve tenant ID for current Agave user
+    # Useful for namespacing things
+    if [ -z "${_STORE_AGAVE_TENANT}" ];
+    then
+        local __auth_check=$(auth-check -v)
+        local __tmp=$( _jsonval "${__auth_check}" "tenantid" )
+        export _STORE_AGAVE_TENANT="${__tmp}"
+    fi
+    echo -n "${_STORE_AGAVE_TENANT}"
+}
+
+function _jsonval(){
+    local _json=$1
+    local _query=$2
+    local _stripquotes='-s'
+    # [TODO] Remove hard-coded path
+    local _tmp=$(echo "${_json}" | python /Users/mwvaughn/cyverse-cli/bin/python2/pydotjson.py -q ${_query} ${_stripquotes})
+    echo -n $_tmp
+}
+
+
+function deploy_app(){
+    local _app=$1
+    local _system=$2
+    local APPDIR="${DIR}/../examples/${_app}"
+
+}
+
+function select_system(){
+
+    local _uname=$( get_agave_uname )
+    echo "Hello, $_uname. Please select an execution system."
+    echo "Your choices are:"
+    DEFS=$(systems-search "type=execution" "public=false" "owner=${_uname}" "limit=32")
+    echo "$DEFS"
+    DEF=$(echo -n "$DEFS" | head -n 1)
+    default="${DEF}"
+    read -p "Enter an valid Agave executionSystem [$default]: " AGAVESYS
+    local _system=${AGAVESYS:-$default}
+    local _test=$(systems-search "id=${_system}" "public=false" "owner=${_uname}" "limit=1")
+    if [ -n "${_test}" ]
+    then
+        _AGAVE_EXEC_SYSTEM="${_test}"
+    fi
+
+}
+
+while [ -z "$_AGAVE_EXEC_SYSTEM" ]
+do
+    select_system
+done
+echo "Select application to install on $_AGAVE_EXEC_SYSTEM..."
+echo -e "- 1) hello-agave\n- 2) print-env\n- 3) docker-run\n- 4) word-count"
+
+default="1"
+read -p "Your choice [$default]: " AGAVEAPP
+__selection=${AGAVEAPP:-$default}
+
+case "${__selection}" in
+    1)  echo "Installing hello-agave..."
+        deploy_app "hello-agave" "$_AGAVE_EXEC_SYSTEM"
+        ;;
+    2)  echo "Installing print-env..."
+        deploy_app "print-env" "$_AGAVE_EXEC_SYSTEM"
+        ;;
+    *) echo "Invalid choice"
+        ;;
+esac
