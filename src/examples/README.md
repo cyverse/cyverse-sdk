@@ -1,0 +1,1 @@
+The application assets referenced in thse example apps are world-readable. This makes it easy to enroll a test application on one's new Agave system without mastering the asset staging pipeline. Useful for hello-world, docker-runner, and other types of application!

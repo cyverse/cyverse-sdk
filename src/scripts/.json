@@ -1,0 +1,27 @@
+{
+    "inputs": [], 
+    "deploymentSystem": "data.iplantcollaborative.org", 
+    "ontology": [
+        "http://sswapmeet.sswap.info/agave/apps/Application"
+    ], 
+    "name": "vaughn-hello-agave-EOgmPDB", 
+    "parameters": [], 
+    "tags": [
+        "test", 
+        "hello"
+    ], 
+    "checkpointable": false, 
+    "outputs": [], 
+    "templatePath": "code/linux/hello.sh", 
+    "modules": [], 
+    "executionType": "CLI", 
+    "executionSystem": "sdsc-cli-comet-interactive-vaughn-uot150", 
+    "version": "0.0.1", 
+    "helpURI": "https://cyverse.org/develop/", 
+    "testPath": "code/linux/test.sh", 
+    "longDescription": "", 
+    "label": "Hello AgaveAPI", 
+    "shortDescription": "Get a cheery greeting from a remote computer", 
+    "deploymentPath": "api/v2/applications/hello-agave", 
+    "parallelism": "SERIAL"
+}

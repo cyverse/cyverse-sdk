@@ -1,0 +1,22 @@
+{
+	"checkpointable": false,
+	"name": "${APP_NAME}",
+	"executionSystem": "${APP_EXECUTIONSYSTEM}",
+	"executionType": "CLI",
+	"deploymentPath": "api/v2/applications/hello-agave",
+	"deploymentSystem": "data.iplantcollaborative.org",
+	"helpURI": "https://cyverse.org/develop/",
+	"label": "Hello AgaveAPI",
+	"longDescription": "",
+	"modules": [],
+	"ontology": ["http://sswapmeet.sswap.info/agave/apps/Application"],
+	"parallelism": "SERIAL",
+	"shortDescription": "Get a cheery greeting from a remote computer",
+	"tags": ["test", "hello"],
+	"templatePath": "code/linux/hello.sh",
+	"testPath": "code/linux/test.sh",
+	"version": "${APP_VERSION}",
+	"inputs": [],
+	"parameters": [],
+	"outputs": []
+}

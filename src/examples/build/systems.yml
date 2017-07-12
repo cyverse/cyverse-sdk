@@ -1,0 +1,37 @@
+# Enumeration of sites, systems, types, queues, and other metadata
+# Eventually, this will replace the static templates we're using to
+# populate developer's private systems
+---
+sdsc:
+  - comet:
+    - cli:
+      - scheduler: "FORK"
+      - queues:
+        - default:
+          - maxnodes: 1
+          - maxprocessors: 24
+          - maxruntime: "02:00:00"
+          - maxmemory: "4GB"
+    - hpc:
+      - scheduler: "SLURM"
+      - queues:
+        - debug:
+          - maxnodes: 1
+          - maxprocessors: 24
+          - maxruntime: "00:30:00"
+          - maxmemory: "128GB"
+        - compute:
+          - maxnodes: 72
+          - maxprocessors: 1728
+          - maxruntime: "48:00:00"
+          - maxmemory: "128GB"
+        - gpu:
+          - maxnodes: 4
+          - maxprocessors: 96
+          - maxruntime: "48:00:00"
+          - maxmemory: "128GB"
+        - shared:
+          - maxnodes: 1
+          - maxprocessors: 24
+          - maxruntime: "48:00:00"
+          - maxmemory: "128GB"

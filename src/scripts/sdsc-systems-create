@@ -100,7 +100,7 @@ DATADIR=${DATADIR:-$default}
 if [ -z "$DATADIR" ]; then echo "Error: Data Oasis directory can't be left empty."; exit 1; fi
 echo -e "Confirmed: $DATADIR"
 
-for SCSC_SYSTEM in comet data-oasis
+for SCSC_SYSTEM in comet-interactive comet-hpc data-oasis
 do
 
 	SYSNAME=${SCSC_SYSTEM}

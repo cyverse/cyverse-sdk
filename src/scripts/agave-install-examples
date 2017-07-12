@@ -1,20 +1,7 @@
 #!/bin/bash
 
-sysname () {
-    echo $(echo -n $(hostname --fqdn | awk -F '.' '{ print $2 }'))
-}
-
-sanitize_id () {
-
-    echo $(echo "$1" | tr -cd '[[:alnum:]]_-')
-
-}
-
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# Test for agave cli in $PATH
-AGAVE_CANARY=$(which auth-check)
-if [ -z "${AGAVE_CANARY}" ]; then echo "The Cyverse CLI is not in your PATH. Please ensure that it is and re-run this script."; exit 1; fi
+AI_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "${AI_DIR}/libs/utilities.sh"
 
 _AGAVE_EXEC_SYSTEM=
 _STORE_AGAVE_USERNAME=
@@ -24,43 +11,36 @@ function init(){
     echo ""
 }
 
-function get_agave_uname(){
-    # Retrieve username for current Agave user
-    if [ -z "${_STORE_AGAVE_USERNAME}" ];
-    then
-        local __auth_check=$(auth-check -v)
-        local __tmp=$( _jsonval "${__auth_check}" "username" )
-        export _STORE_AGAVE_USERNAME="${__tmp}"
-    fi
-    echo -n "${_STORE_AGAVE_USERNAME}"
-}
-
-function get_agave_tenant(){
-    # Retrieve tenant ID for current Agave user
-    # Useful for namespacing things
-    if [ -z "${_STORE_AGAVE_TENANT}" ];
-    then
-        local __auth_check=$(auth-check -v)
-        local __tmp=$( _jsonval "${__auth_check}" "tenantid" )
-        export _STORE_AGAVE_TENANT="${__tmp}"
-    fi
-    echo -n "${_STORE_AGAVE_TENANT}"
-}
-
-function _jsonval(){
-    local _json=$1
-    local _query=$2
-    local _stripquotes='-s'
-    # [TODO] Remove hard-coded path
-    local _tmp=$(echo "${_json}" | python /Users/mwvaughn/cyverse-cli/bin/python2/pydotjson.py -q ${_query} ${_stripquotes})
-    echo -n $_tmp
-}
-
-
 function deploy_app(){
     local _app=$1
     local _system=$2
-    local APPDIR="${DIR}/../examples/${_app}"
+    
+    local _EXAMPLES="${AI_DIR}/../examples/"
+    local _APPDIR="${EXAMPLES}/${_app}"
+
+    local _appowner=$(get_agave_uname)
+    local _appname="${_appowner}-$1-$(shortid)"
+    local _appvers="1.0"
+    local _datesec=$(date +%s)
+
+    # Write app template
+    # It assumes that deploymentPath is a public-readable location
+    # provided by the CyVerse SDK maintainers
+    python "${AI_DIR}/template2json.py" -k APP_NAME=${_appname} \
+            APP_EXECUTIONSYSTEM=${_system} APP_VERSION=${_appvers} \
+            -i "${AI_DIR}/../examples/$_app/json/app.jsonx" \
+            -o "app-${_appname}.json"
+
+    local _apps_create=$(apps-addupdate -F "app-${_appname}.json")
+    echo "${_apps_create}"
+
+cat <<EOM> "job-${_appname}.json"
+{
+  "name": "${_appname}-test-${_datesec}",
+  "appId": "${_appname}-${_appvers}",
+  "archive": false
+}
+EOM
 
 }
 
@@ -90,6 +70,7 @@ done
 echo "Select application to install on $_AGAVE_EXEC_SYSTEM..."
 echo -e "- 1) hello-agave\n- 2) print-env\n- 3) docker-run\n- 4) word-count"
 
+# TODO: Wrap in while loop
 default="1"
 read -p "Your choice [$default]: " AGAVEAPP
 __selection=${AGAVEAPP:-$default}
