@@ -210,7 +210,12 @@ $ tree .
 
 Drag some example `.fastqc` data into the `~/Desktop/fastqc_jobs/` folder, then double click the app. (You can find some example `.fastq` data [here](http://darlinglab.org/tutorials/fastqc/)) A Terminal should open and prompt the user to make sure the correct `.fastqc` file was found. Type `y` or `n` as appropriate, and hit `Return`. After several minutes (when submitting to a public resource, queue times may vary), the results should automatically be downloaded to the `~/Desktop/fastqc_jobs/` folder and catalogued by date and time. The original input `.fastq` file will also be moved into the output folder.
 
-
+Here is what it looks like running the app from the perspective of the user:
 <center><img src="gifs/gif5.gif" style="height:375px;"></center>
 
+Here is what it looks like when the job finishes:
 <center><img src="gifs/gif6.gif" style="height:375px;"></center>
+
+If you have any new ideas on how to leverage this Mac OS app development kit within the CyVerse cyberinfrastructure, let us know!
+
+Contact us: <lifesci@consult.tacc.utexas.edu>
