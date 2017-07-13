@@ -42,6 +42,8 @@ EOF
 chmod +x FastQC.app/Contents/MacOS/*
 ```
 
+<center><img src="gifs/gif1.gif" style="height:375px;"></center>
+
 Adding an icon to the Mac app is not necessary, but relatively easy to do. For example:
 
 * [Download](http://www.cyverse.org/sites/default/files/PoweredbyCyverse_LogoSquare_0_0.png) and/or prepare an image in `.png` format (512x512 pixels works best)
@@ -49,6 +51,8 @@ Adding an icon to the Mac app is not necessary, but relatively easy to do. For e
 * Right-click the FastQC.app and choose `Get Info`
 * In the top-left corner of the dialog, single click the current icon to select it, then `Edit => Paste`
 * You may store the image in the ~FastQC.app/Contents/Resources/ directory
+
+<center><img src="gifs/gif2.gif" style="height:375px;"></center>
 
 By now, you should have the following directory architecture:
 
@@ -69,6 +73,8 @@ $ tree .
 ```
 
 To check if everything is working so far, Double click the FastQC.app. A Terminal window should appear with the `Hello, world!` message, then close after 10 seconds.
+
+<center><img src="gifs/gif3.gif" style="height:375px;"></center>
 
 ### Part 2: Automate FastQC Analysis
 
@@ -179,6 +185,7 @@ EOF
 
 There is one line about halfway down this file that performs the `files-upload` operation - you will have to fill in your CyVerse username at the end.
 
+<center><img src="gifs/gif4.gif" style="height:375px;"></center>
 
 ### Part 3: Testing the FastQC App
 
@@ -204,4 +211,6 @@ $ tree .
 Drag some example `.fastqc` data into the `~/Desktop/fastqc_jobs/` folder, then double click the app. (You can find some example `.fastq` data [here](http://darlinglab.org/tutorials/fastqc/)) A Terminal should open and prompt the user to make sure the correct `.fastqc` file was found. Type `y` or `n` as appropriate, and hit `Return`. After several minutes (when submitting to a public resource, queue times may vary), the results should automatically be downloaded to the `~/Desktop/fastqc_jobs/` folder and catalogued by date and time. The original input `.fastq` file will also be moved into the output folder.
 
 
+<center><img src="gifs/gif5.gif" style="height:375px;"></center>
 
+<center><img src="gifs/gif6.gif" style="height:375px;"></center>
