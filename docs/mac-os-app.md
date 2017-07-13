@@ -7,9 +7,9 @@ This tutorial shows how to wrap an existing, public CyVerse app into a clickable
 * You want to easily automate an analysis pipeline
 * You (or someone you support) has no command line experience
 
-Here, we will go through the steps for creating a Mac OS app for `fastq` quality control with FastQC. The end result will be a clickable app on your Mac that will automatically upload your `fastq` data to the iplant data store, submit a job against the public FastQC Agave app, then download and catalogue the results when it is complete. Then, the user will be able to view and analyze the FastQC HTML output without ever leaving their Mac environment or touching the command line.
+Here, we will go through the steps for creating a Mac OS app for `.fastq` quality control with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/). The end result will be a clickable app on your Mac that will automatically upload your `.fastq` data to the iplant data store, submit a job against the public FastQC CyVerse app, then download and catalogue the results when it is complete. The user will be able to view and analyze the FastQC HTML output without ever leaving their Mac environment or touching the command line.
 
-This is a relatively simple example using a public data store, public execution system, and public Agave app. It can be made much more powerful by combining this infrastructure with your own [custom apps](app-dev.md), [private systems](register-your-cluster.md), and more complex run control. Please contact us if you have ideas that you want help developing! (lifesci@consult.tacc.utexas.edu)
+This is a relatively simple example using a public data store, public execution system, and public CyVerse app. It can be made much more powerful by combining this infrastructure with your own [custom apps](app-dev.md), [private systems](register-your-cluster.md), and more complex run control. Please [contact us](email: lifesci@consult.tacc.utexas.edu) if you have ideas that you want help developing!
 
 ### Part 1: Create a Dummy App
 
@@ -68,12 +68,120 @@ $ tree .
 4 directories, 3 files
 ```
 
-Try double clicking the FastQC.app. If all is working so far, a Terminal window should open with the `Hello, world!` message, and close after 10 seconds.
+To check if everything is working so far, Double click the FastQC.app. A Terminal window should appear with the `Hello, world!` message, then close after 10 seconds.
 
-### Part 2: Doing Something Useful
+### Part 2: Automate FastQC Analysis
+
+Only two more things are needed to complete the Mac OS app. First, you need a job template for submitting the CyVerse job. Second, you need to write all run instructions into `run_script.sh`.
+
+__Job Template__
+
+The FastQC app can be found and the job template generated using the Agave CLI ([see here](using-agave/README.md)). In this example, the template job should be:
+
+```
+FastQC.app/Contents/Resources/run_job.template
+```
+
+```
+{
+  "name":"fastqc-app",
+  "appId": "dnasubway-fastqc-singularity-stampede-0.11.4.0u3",
+  "batchQueue": "serial",
+  "executionSystem": "stampede.tacc.utexas.edu",
+  "maxRunTime": "03:00:00",
+  "memoryPerNode": "4GB",
+  "nodeCount": 1,
+  "processorsPerNode": 16,
+  "archive": false,
+  "archivePath": null,
+  "inputs": {
+    "input": "agave://data.iplantcollaborative.org/username/XXXXX"
+  },
+  "parameters": {
+  },
+  "notifications": [
+    {
+      "url":"user@email.edu",
+      "event":"FINISHED",
+          "persistent":false
+    },
+    {
+      "url":"user@email.edu",
+      "event":"FAILED",
+      "persistent":false
+    }
+  ]
+}
+```
+
+On the `input` line, make sure to replace `username` with your CyVerse username. Leave the `XXXXX` alone. Also, in the `notifications` section, add your e-mail address in two locations if you want to receive e-mail alerts when the job has finished or failed.
+
+__Run Script__
+
+This is a simple example of a run script. More advanced control or safety checks are up to the user. To generate a working run script, replace the `Hello, world!` example with the following::
+
+```
+FastQC.app/Contents/MacOS/run_script.sh
+```
+
+```
+#!/bin/bash
+
+echo "##################################################"
+echo "                                                  "
+echo "  Hello, you are trying to run the FastQC app.    "
+echo "  It assumes you have a fastq file in this same   "
+echo "  directory. Zipped or unzipped is okay.          "
+echo "                                                  "
+echo "##################################################"
+
+# Find location of topdir
+APPDIR=$(dirname $0)
+TOPDIR=$(dirname $(dirname $(dirname $APPDIR)))
+cd $TOPDIR
+
+# Find name of fastq file
+FILENAME="$(basename $(find . -not -path '*/\.*' -maxdepth 1 -type f))"
+
+# Check with user to make sure it is the right file
+echo -n "Found the file $FILENAME. Do you want to proceed? [y/n] "
+read ANSWER
+
+if [ $ANSWER != "y" ]; then
+        echo "exiting"; sleep 3; exit
+fi
+
+# Refresh agave token
+auth-tokens-refresh
+
+# Upload fastqc file to storage system
+files-upload -F $FILENAME -S data.iplantcollaborative.org /username/
+
+# Inject file name into job template file
+cat FastQC.app/Contents/Resources/run_job.template | sed s/XXXXX/$FILENAME/ > FastQC.app/Contents/Resources/run_job.json
+
+# Submit the job
+jobs-submit -F FastQC.app/Contents/Resources/run_job.json -W
+
+# Download the results
+JOBID=$(jobs-search 'name.like=fastqc-app' | head -n1 | awk '{print $1}')
+jobs-output-get -r $JOBID fastqc_out/
+
+# archive the results in a directory tagged by date
+#DIR_NAME=` date "+results-%Y.%m.%d-%H.%M.%S" `
+DIR_NAME=$(date "+%Y.%m.%d-%H.%M.%S-results")
+mv fastqc_out/ $DIR_NAME
+mv $FILENAME $DIR_NAME/
+
+echo "Finished"
+sleep 10
+EOF
+```
+
+There is one command that performs the `files-upload` operation - you will have to fill in your CyVerse username at the end.
 
 
-
+### Part 3: Testing the FastQC App
 
 
 
