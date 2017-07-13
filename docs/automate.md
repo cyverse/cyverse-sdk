@@ -19,6 +19,6 @@ CyVerse supports multiple avenues for automating your work.
 
 * **Agave Command Line Interface (CLI)**. Automate your existing DE workflows using Agave APIs via the command line. Learn how to effectively use the Agave CLI to take advantage of the CyVerse cyberinfrastructure [here](using-agave/README.md).
 
-* **Mac OSX App Development Kit**. Automate CyVerse tasks with the click of a button from your Mac. *Coming Soon*.
+* **Mac OSX App Development Kit**. Automate CyVerse tasks with the click of a button from your Mac. Check out the Mac OS App Development kit [here](mac-os-app.md).
 
 | [Back to CyVerse Developer Portal](../index.md) |
