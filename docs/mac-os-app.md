@@ -1,15 +1,15 @@
 ## Mac OS App Development Kit
 
-This tutorial shows how to wrap an existing, public CyVerse app into a clickable application on your Mac. This might be useful for you if:
+This tutorial shows how to wrap an existing, public CyVerse app into a clickable application on your Mac. This might be useful if:
 
-* You want to perform an analysis in as few as possible steps
+* You want to perform an analysis in as few clicks as possible
 * You have repetetive tasks / jobs and lots of data
 * You want to easily automate an analysis pipeline
 * You (or someone you support) has no command line experience
 
-Here, we will go through the steps for creating a Mac OS app for `.fastq` quality control with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/). The end result will be a clickable app on your Mac that will automatically upload your `.fastq` data to the iplant data store, submit a job against the public FastQC CyVerse app, then download and catalogue the results when it is complete. The user will be able to view and analyze the FastQC HTML output without ever leaving their Mac environment or touching the command line.
+Here, we will go through the steps for creating a Mac OS app for `.fastq` data quality control with [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/). The end result will be a clickable app on your Mac that will automatically upload your `.fastq` file to the iplant data store, submit a job against the public FastQC CyVerse app, then download and catalogue the results when it is complete. The user will be able to view and analyze the FastQC HTML output without ever leaving their Mac environment or touching the command line.
 
-This is a relatively simple example using a public data store, public execution system, and public CyVerse app. It can be made much more powerful by combining this infrastructure with your own [custom apps](app-dev.md), [private systems](register-your-cluster.md), and more complex run control. Please [contact us](email: lifesci@consult.tacc.utexas.edu) if you have ideas that you want help developing!
+This is a relatively simple example using a public data store, public execution system, and public CyVerse app. It can be made much more powerful by combining this infrastructure with your own [custom apps](app-dev.md), [private systems](register-your-cluster.md), and more complex run control. Please [contact us](email:lifesci@consult.tacc.utexas.edu) if you have ideas that you want help developing!
 
 ### Part 1: Create a Dummy App
 
