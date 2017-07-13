@@ -76,12 +76,12 @@ Only two more things are needed to complete the Mac OS app. First, you need a jo
 
 __Job Template__
 
-The FastQC app can be found and the job template generated using the Agave CLI ([see here](using-agave/README.md)). In this example, the template job should be:
-
+The FastQC CyVerse app can be found and the job template generated using the Agave CLI ([see here](using-agave/README.md)). In this example, the job template should be named and located here:
 ```
 FastQC.app/Contents/Resources/run_job.template
 ```
 
+And its contents should be:
 ```
 {
   "name":"fastqc-app",
@@ -114,16 +114,16 @@ FastQC.app/Contents/Resources/run_job.template
 }
 ```
 
-On the `input` line, make sure to replace `username` with your CyVerse username. Leave the `XXXXX` alone. Also, in the `notifications` section, add your e-mail address in two locations if you want to receive e-mail alerts when the job has finished or failed.
+On the `"input"` line, replace `username` with your CyVerse username. Leave the `XXXXX` as is - this will automatically be replaced with your `.fastq` file name when you run the job. Also, in the `notifications` section, add your e-mail address in two locations if you want to receive e-mail alerts when the job has finished or failed.
 
 __Run Script__
 
-This is a simple example of a run script. More advanced control or safety checks are up to the user. To generate a working run script, replace the `Hello, world!` example with the following::
-
+This is a simple example of a run script. More advanced control or safety checks are up to the user. To generate a working run script, replace the `Hello, world!` example located here:
 ```
 FastQC.app/Contents/MacOS/run_script.sh
 ```
 
+With the following text:
 ```
 #!/bin/bash
 
@@ -177,7 +177,7 @@ sleep 10
 EOF
 ```
 
-There is one command that performs the `files-upload` operation - you will have to fill in your CyVerse username at the end.
+There is one line about halfway down this file that performs the `files-upload` operation - you will have to fill in your CyVerse username at the end.
 
 
 ### Part 3: Testing the FastQC App
@@ -188,7 +188,6 @@ The final directory tree should appear as:
 $ pwd
 ~/Desktop/fastqc_jobs/
 $ tree .
-TACCs-MacBook-Pro:fastqc_jobs wallen$ tree .
 .
 └── FastQC.app
     └── Contents
@@ -202,7 +201,7 @@ TACCs-MacBook-Pro:fastqc_jobs wallen$ tree .
 4 directories, 4 files
 ```
 
-Drag some example `.fastqc` data into the `~/Desktop/fastqc_jobs/` folder, then double click the app. A terminal should open and prompt the user to make sure the correct `.fastqc` file was found. Type `y` or `n` as appropriate, and hit return. After several minutes (when submitting to a public resource, queue times may vary), the results should automatically be downloaded to the `~/Desktop/fastqc_jobs/` folder and catalogued by date and time. The original input `.fastq` file will also be moved into the output folder.
+Drag some example `.fastqc` data into the `~/Desktop/fastqc_jobs/` folder, then double click the app. (You can find some example `.fastq` data [here](http://darlinglab.org/tutorials/fastqc/)) A Terminal should open and prompt the user to make sure the correct `.fastqc` file was found. Type `y` or `n` as appropriate, and hit `Return`. After several minutes (when submitting to a public resource, queue times may vary), the results should automatically be downloaded to the `~/Desktop/fastqc_jobs/` folder and catalogued by date and time. The original input `.fastq` file will also be moved into the output folder.
 
 
 
