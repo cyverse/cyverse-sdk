@@ -1,12 +1,12 @@
 #!/bin/bash
 
 sysname () {
-	echo $(echo -n $(hostname --fqdn | awk -F '.' '{ print $2 }'))
+    echo $(echo -n $(hostname --fqdn | awk -F '.' '{ print $2 }'))
 }
 
 sanitize_id () {
 
-	echo $(echo "$1" | tr -cd '[[:alnum:]]_-')
+    echo $(echo "$1" | tr -cd '[[:alnum:]]_-')
 
 }
 
@@ -49,9 +49,9 @@ if [ $? -ne 0 ]; then echo "There is an error reading your OAuth2 configuration.
 auth-tokens-refresh -q -S
 
 # Collect TACC info
-cat << EOF
+cat <<"EOF"
 
-*Connect Agave to the PSC systems*
+*Connect Agave to PSC systems*
 
 The following information will be generated or gathered to
 configure this system for access via Agave:
@@ -84,24 +84,25 @@ if [ -z "$XPASSWORD" ]; then echo "Error: XSEDE password can't be empty."; exit 
 echo -e "Confirmed: $XPASSWORD\n"
 
 default=$XUSERNAME
-read -p "PSC username [$default]: " SYSUSERNAME
+read -p "Site-specific username [$default]: " SYSUSERNAME
 SYSUSERNAME=${SYSUSERNAME:-$default}
-if [ -z "$SYSUSERNAME" ]; then echo "Error: PSC username can't be empty."; exit 1; fi
+if [ -z "$SYSUSERNAME" ]; then echo "Error: Site-specific username can't be empty."; exit 1; fi
 echo -e "Confirmed: $SYSUSERNAME\n"
 
 default=""
-read -p "XSEDE allocation/charge code to be used with this system [$default]: " PROJECT
+read -p "Site-specific project/charge code for this system [$default]: " PROJECT
 PROJECT=${PROJECT:-$default}
 if [ -z "$PROJECT" ]; then echo "Error:XSEDE allocation/charge code can't be empty."; exit 1; fi
 echo -e "Confirmed: $PROJECT\n"
 
-#default="/oasis/scratch/comet/$XUSERNAME/temp_project"
+# Customize with variables from above
 default="/pylon5/${PROJECT}/${SYSUSERNAME}"
 read -p "\$SCRATCH directory [$default]: " WORKD
 WORKD=${WORKD:-$default}
 if [ -z "$WORKD" ]; then echo "Error: \$SCRATCH directory can't be left empty."; exit 1; fi
 echo -e "Confirmed: $WORKD"
 
+# Customize with variables from above
 default="/pylon2/${PROJECT}/${SYSUSERNAME}"
 read -p "Project directory [$default]: " DATADIR
 DATADIR=${DATADIR:-$default}
@@ -111,24 +112,24 @@ echo -e "Confirmed: $DATADIR"
 for NEW_SYSTEM in psc-cli-bridges psc-hpc-bridges
 do
 
-	SYSNAME=${NEW_SYSTEM}
-	default=$SYSNAME
-	read -p "Agave system identifier [$default]: " SYSID
-	SYSID=${SYSID:-$default}
-	SYSID=$(sanitize_id $SYSID)
-	if [ -z "$SYSID" ]; then echo "Error: System identifier cannot be empty."; exit 1; fi
-	echo -e "Confirmed: $SYSID\n"
+    SYSNAME=${NEW_SYSTEM}
+    default=$SYSNAME
+    read -p "Agave system identifier [$default]: " SYSID
+    SYSID=${SYSID:-$default}
+    SYSID=$(sanitize_id $SYSID)
+    if [ -z "$SYSID" ]; then echo "Error: System identifier cannot be empty."; exit 1; fi
+    echo -e "Confirmed: $SYSID\n"
 
-	F="${DIR}/../templates/${NEW_SYSTEM}.jsonx"
-	BN=$(basename $F .jsonx)
-	echo "    Template ${BN}..."
+    F="${DIR}/../templates/${NEW_SYSTEM}.jsonx"
+    BN=$(basename $F .jsonx)
     python ${DIR}/template2json.py -k IDENTIFIER=${SYSID} \
         XSEDE_USERNAME=${XUSERNAME} XSEDE_PASSWORD=${XPASSWORD} SYSUSERNAME=${SYSUSERNAME} \
         PROJECT=${PROJECT} WORKDIR=${WORKD} DATADIR=${DATADIR} \
         -i ${F} \
         -o ${TMPDIR}/${BN}.json
-	#sdsc-template-write.py ${SYSID} ${XUSERNAME} ${XPASSWORD} ${PROJECT} ${WORKD} ${DATADIR} ${F} ${TMPDIR}
-	systems-addupdate -q -F "${TMPDIR}/${BN}.json"
+
+    echo "Template: file://${TMPDIR}/${BN}.json"
+    systems-addupdate -q -F "${TMPDIR}/${BN}.json"
 
 done
 
@@ -137,10 +138,17 @@ temp="${CYVERSE_USERNAME%\"}"
 temp="${temp#\"}"
 CYVERSE_USERNAME=$temp
 
-echo "Test out private systems you've updated or created today by running a quick files-list operation as illustrated below. You should see the contents of ${WORKD} returned to you after each operation."
+cat <<MESSAGE
+
+Test out private systems youve updated/created today by running a quick 'files-list'
+on each. You should see the contents of remote directoris as follows:
+ - executionSystem: ${WORKD}
+ - storageSystem: ${DATADIR} 
+
+MESSAGE
 
 for S in $(systems-search "owner=$CYVERSE_USERNAME" "private=true" "lastupdated.on=today" "id.like=*psc*")
 do
-	echo "  files-list -S $S /"
+    echo "files-list -S $S /"
 done
 
