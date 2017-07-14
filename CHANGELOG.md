@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.4.0 - 07/14/2017
+### Added
+* Provisional support for XSEDE systems at SDSC and PSC
+
+### Changed
+* Migrated to `tacc-cic/cli` repository for base CLI
+
+### Removed
+* Nothing
+
 ## Version 1.3.8 - 06/20/2017
 ### Added
 * Customized prompt in Docker container with tenant+username
