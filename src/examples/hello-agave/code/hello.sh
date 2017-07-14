@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo <<EOM
+cat << "EOM" > hello-agave.txt
 
  _   _      _ _             _                            _    ____ ___ 
 | | | | ___| | | ___       / \   __ _  __ ___   _____   / \  |  _ \_ _|

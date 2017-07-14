@@ -1,0 +1,99 @@
+{
+    "description": "Comet is a dedicated XSEDE cluster designed by Dell and SDSC delivering ~2.0 petaflops. It features Intel next-gen processors with AVX2, Mellanox FDR InfiniBand interconnects, and Aeon storage. Standard compute nodes feature Intel Xeon E5-2680v3 processors, 128 GB DDR4 DRAM (64 GB per socket), and 320 GB of SSD local scratch memory. GPU nodes have four NVIDIA GPUs each. Large memory nodes have 1.5 TB of DRAM and four Haswell processors each.",
+    "environment": null,
+    "executionType": "HPC",
+    "id": "${IDENTIFIER}-${XSEDE_USERNAME}-${PROJECT}",
+    "login": {
+    "proxy": null,
+    "protocol": "GSISSH",
+    "port": 22,
+    "auth": {
+        "username": "${XSEDE_USERNAME}",
+        "password": "${XSEDE_PASSWORD}",
+        "server": {
+            "endpoint": "myproxy.xsede.org",
+            "protocol": "MYPROXY",
+            "port": 7512,
+            "name": "XSEDE MyProxy Server"
+        },
+      "type": "X509",
+      "caCerts": "http://software.xsede.org/security/xsede-certs.tar.gz"
+    },
+    "host": "comet.sdsc.edu"
+    },
+    "maxSystemJobs": 50,
+    "maxSystemJobsPerUser": 50,
+    "name": "SDSC Comet | Batch | ${XSEDE_USERNAME}/${PROJECT} |",
+    "public": false,
+    "queues": [
+        {
+            "name": "compute",
+            "default": false,
+            "maxJobs": 12,
+            "maxUserJobs": 12,
+            "maxNodes": 72,
+            "maxProcessorsPerNode": 1728,
+            "maxMemoryPerNode": "128GB",
+            "customDirectives": "-A ${PROJECT}\n#SBATCH --export=ALL",
+            "maxRequestedTime": "48:00:00"
+        },
+        {
+            "name": "gpu",
+            "default": false,
+            "maxJobs": 5,
+            "maxUserJobs": 5,
+            "maxNodes": 4,
+            "maxProcessorsPerNode": 96,
+            "maxMemoryPerNode": "128GB",
+            "customDirectives": "-A ${PROJECT}\n#SBATCH --export=ALL",
+            "maxRequestedTime": "48:00:00"
+        },
+        {
+            "name": "shared",
+            "default": false,
+            "maxJobs": 25,
+            "maxUserJobs": 25,
+            "maxNodes": 1,
+            "maxProcessorsPerNode": 24,
+            "maxMemoryPerNode": "128GB",
+            "customDirectives": "-A ${PROJECT}\n#SBATCH --export=ALL",
+            "maxRequestedTime": "48:00:00"
+        },
+        {
+            "name": "debug",
+            "default": true,
+            "maxJobs": 2,
+            "maxUserJobs": 1,
+            "maxNodes": 1,
+            "maxProcessorsPerNode": 24,
+            "maxMemoryPerNode": "128GB",
+            "customDirectives": "-A ${PROJECT}\n#SBATCH --export=ALL",
+            "maxRequestedTime": "00:30:00"
+        }
+    ],
+    "scheduler": "SLURM",
+    "scratchDir": "",
+    "site": "sdsc.edu",
+    "startupScript": "./.bashrc",
+    "storage": {
+        "protocol": "GRIDFTP",
+        "port": 2811,
+        "auth": {
+            "username": "${XSEDE_USERNAME}",
+            "password": "${XSEDE_PASSWORD}",
+            "server": {
+                "endpoint": "myproxy.xsede.org",
+                "protocol": "MYPROXY",
+                "port": 7512,
+                "name": "XSEDE MyProxy Server"
+            },
+            "type": "X509",
+            "caCerts": "http://software.xsede.org/security/xsede-certs.tar.gz"
+        },
+        "host": "oasis-dm.sdsc.xsede.org",
+        "rootDir": "${WORKDIR}",
+        "homeDir": "/"
+    },
+    "type": "EXECUTION",
+    "workDir": ""
+}

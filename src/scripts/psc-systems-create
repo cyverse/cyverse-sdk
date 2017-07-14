@@ -17,17 +17,17 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 AGAVE_CANARY=$(which auth-check)
 if [ -z "${AGAVE_CANARY}" ]; then echo "The Cyverse CLI is not in your PATH. Please ensure that it is and re-run this script."; exit 1; fi
 
-cat << EOF
- ____  ____  ____   ____ 
-/ ___||  _ \/ ___| / ___|
-\___ \| | | \___ \| |    
- ___) | |_| |___) | |___ 
-|____/|____/|____/ \____|
-
+cat << "EOF"
+ ____  ____   ____ 
+|  _ \/ ___| / ___|
+| |_) \___ \| |    
+|  __/ ___) | |___ 
+|_|   |____/ \____|
+                   
 *Cyverse API Enrollment*
 
-This script will register a personal instance of SDSC Comet
-and Data Oasis systems for building and validating Agave
+This script will register a personal instance of PSC compute
+and storage systems for building and validating Agave
 apps. The following steps assume you have created or configured
 an Agave Oauth2 client on this machine.
 
@@ -51,17 +51,18 @@ auth-tokens-refresh -q -S
 # Collect TACC info
 cat << EOF
 
-*Connect Agave to the SDSC Comet and Data Oasis*
+*Connect Agave to the PSC systems*
 
 The following information will be generated or gathered to
 configure this system for access via Agave:
 
   Your XSEDE username
   Your XSEDE password
+  Your PSC-specific username
+  The PSC-specific project code for your XSEDE allocation
+  Path to your Bridges \$SCRATCH directory
+  Path to your Bridges Projects directory
   A short alphanumeric key to identify this system
-  The SDSC-specific project code for your XSEDE allocation
-  Path to your Comet \$SCRATCH directory
-  Path to your Data Oasis projects directory
 
 EOF
 
@@ -82,6 +83,12 @@ XPASSWORD=${XPASSWORD:-$default}
 if [ -z "$XPASSWORD" ]; then echo "Error: XSEDE password can't be empty."; exit 1; fi
 echo -e "Confirmed: $XPASSWORD\n"
 
+default=$XUSERNAME
+read -p "PSC username [$default]: " SYSUSERNAME
+SYSUSERNAME=${SYSUSERNAME:-$default}
+if [ -z "$SYSUSERNAME" ]; then echo "Error: PSC username can't be empty."; exit 1; fi
+echo -e "Confirmed: $SYSUSERNAME\n"
+
 default=""
 read -p "XSEDE allocation/charge code to be used with this system [$default]: " PROJECT
 PROJECT=${PROJECT:-$default}
@@ -89,33 +96,38 @@ if [ -z "$PROJECT" ]; then echo "Error:XSEDE allocation/charge code can't be emp
 echo -e "Confirmed: $PROJECT\n"
 
 #default="/oasis/scratch/comet/$XUSERNAME/temp_project"
-default="/oasis/scratch-comet/$XUSERNAME/temp_project"
-read -p "Comet \$SCRATCH directory [$default]: " WORKD
+default="/pylon5/${PROJECT}/${SYSUSERNAME}"
+read -p "\$SCRATCH directory [$default]: " WORKD
 WORKD=${WORKD:-$default}
-if [ -z "$WORKD" ]; then echo "Error: Comet \$SCRATCH directory can't be left empty."; exit 1; fi
+if [ -z "$WORKD" ]; then echo "Error: \$SCRATCH directory can't be left empty."; exit 1; fi
 echo -e "Confirmed: $WORKD"
 
-default="/oasis/projects/nsf/$PROJECT/$XUSERNAME"
-read -p "Data Oasis project directory [$default]: " DATADIR
+default="/pylon2/${PROJECT}/${SYSUSERNAME}"
+read -p "Project directory [$default]: " DATADIR
 DATADIR=${DATADIR:-$default}
-if [ -z "$DATADIR" ]; then echo "Error: Data Oasis directory can't be left empty."; exit 1; fi
+if [ -z "$DATADIR" ]; then echo "Error: Project directory can't be left empty."; exit 1; fi
 echo -e "Confirmed: $DATADIR"
 
-for SDSC_SYSTEM in sdsc-hpc-comet sdsc-cli-comet sdsc-storage-data-oasis
+for NEW_SYSTEM in psc-cli-bridges psc-hpc-bridges
 do
 
-	SYSNAME=${SDSC_SYSTEM}
+	SYSNAME=${NEW_SYSTEM}
 	default=$SYSNAME
 	read -p "Agave system identifier [$default]: " SYSID
 	SYSID=${SYSID:-$default}
 	SYSID=$(sanitize_id $SYSID)
 	if [ -z "$SYSID" ]; then echo "Error: System identifier cannot be empty."; exit 1; fi
-	echo -e "Confirmed: sdsc-$SYSID\n"
+	echo -e "Confirmed: $SYSID\n"
 
-	F="${DIR}/../templates/${SDSC_SYSTEM}.jsonx"
+	F="${DIR}/../templates/${NEW_SYSTEM}.jsonx"
 	BN=$(basename $F .jsonx)
 	echo "    Template ${BN}..."
-	sdsc-template-write.py ${SYSID} ${XUSERNAME} ${XPASSWORD} ${PROJECT} ${WORKD} ${DATADIR} ${F} ${TMPDIR}
+    python ${DIR}/template2json.py -k IDENTIFIER=${SYSID} \
+        XSEDE_USERNAME=${XUSERNAME} XSEDE_PASSWORD=${XPASSWORD} SYSUSERNAME=${SYSUSERNAME} \
+        PROJECT=${PROJECT} WORKDIR=${WORKD} DATADIR=${DATADIR} \
+        -i ${F} \
+        -o ${TMPDIR}/${BN}.json
+	#sdsc-template-write.py ${SYSID} ${XUSERNAME} ${XPASSWORD} ${PROJECT} ${WORKD} ${DATADIR} ${F} ${TMPDIR}
 	systems-addupdate -q -F "${TMPDIR}/${BN}.json"
 
 done
@@ -127,8 +139,8 @@ CYVERSE_USERNAME=$temp
 
 echo "Test out private systems you've updated or created today by running a quick files-list operation as illustrated below. You should see the contents of ${WORKD} returned to you after each operation."
 
-for S in $(systems-search "owner=$CYVERSE_USERNAME" "private=true" "lastupdated.on=today" "id.like=*sdsc*")
+for S in $(systems-search "owner=$CYVERSE_USERNAME" "private=true" "lastupdated.on=today" "id.like=*psc*")
 do
-	echo "    files-list -S $S /"
+	echo "  files-list -S $S /"
 done
 

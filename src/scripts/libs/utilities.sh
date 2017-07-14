@@ -56,6 +56,16 @@ function get_agave_access_bearer(){
     echo -n "${_STORE_AGAVE_TOKEN}"
 }
 
+function get_agave_execsystem_type(){
+
+    # Fetch details of default queue on a given execution system
+    local _sysid=$1
+    local _token=$(get_agave_access_bearer)
+    local _description=$(curl -sk -H "Authorization: Bearer ${_token}" "https://agave.iplantc.org/systems/v2/${_sysid}?pretty=true&filter=executionType")
+    local _res=$(echo ${_description} | python ${UTIL_DIR}/pydotjson.py -q .result.executionType -s)
+    echo $_res
+}
+
 function get_default_queue_execsystem(){
 
     # Fetch details of default queue on a given execution system

@@ -19,25 +19,31 @@ function deploy_app(){
     local _APPDIR="${EXAMPLES}/${_app}"
 
     local _appowner=$(get_agave_uname)
-    local _appname="${_appowner}-$1-$(shortid)"
+    local _tempid1=$(shortid)
+    local _tempid2=$(shortid)
+    local _appname="${_appowner}-$1-${_tempid1}"
     local _appvers="1.0"
     local _datesec=$(date +%s)
+    local _appexectype=$(get_agave_execsystem_type $_system)
 
     # Write app template
     # It assumes that deploymentPath is a public-readable location
     # provided by the CyVerse SDK maintainers
     python "${AI_DIR}/template2json.py" -k APP_NAME=${_appname} \
-            APP_EXECUTIONSYSTEM=${_system} APP_VERSION=${_appvers} \
+            APP_EXECUTIONSYSTEM=${_system} \
+            APP_VERSION=${_appvers} \
+            APP_TYPE=${_appexectype} \
             -i "${AI_DIR}/../examples/$_app/json/app.jsonx" \
             -o "app-${_appname}.json"
 
     local _apps_create=$(apps-addupdate -F "app-${_appname}.json")
     echo "${_apps_create}"
 
-cat <<EOM> "job-${_appname}.json"
+cat <<EOM> "job-${_tempid1}.json"
 {
-  "name": "${_appname}-test-${_datesec}",
+  "name": "${_tempid1}-${_tempid2}",
   "appId": "${_appname}-${_appvers}",
+  "defaultMaxRunTime": "00:05:00",
   "archive": false
 }
 EOM

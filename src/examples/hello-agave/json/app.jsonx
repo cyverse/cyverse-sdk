@@ -2,7 +2,7 @@
 	"checkpointable": false,
 	"name": "${APP_NAME}",
 	"executionSystem": "${APP_EXECUTIONSYSTEM}",
-	"executionType": "CLI",
+	"executionType": "${APP_TYPE}",
 	"deploymentPath": "api/v2/applications/hello-agave",
 	"deploymentSystem": "data.iplantcollaborative.org",
 	"helpURI": "https://cyverse.org/develop/",
@@ -13,10 +13,11 @@
 	"parallelism": "SERIAL",
 	"shortDescription": "Get a cheery greeting from a remote computer",
 	"tags": ["test", "hello"],
-	"templatePath": "code/linux/hello.sh",
-	"testPath": "code/linux/test.sh",
+	"templatePath": "code/hello.sh",
+	"testPath": "code/hello.sh",
 	"version": "${APP_VERSION}",
 	"inputs": [],
 	"parameters": [],
-	"outputs": []
+	"outputs": [],
+	"defaultMaxRunTime": "00:05:00"
 }

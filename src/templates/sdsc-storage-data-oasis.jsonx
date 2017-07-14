@@ -1,6 +1,6 @@
 {
 	"description": "User- and project-specific storage on SDSC Data Oasis",
-	"id": "sdsc-gridftp-${IDENTIFIER}-${XSEDE_USERNAME}-${PROJECT}",
+	"id": "${IDENTIFIER}-${XSEDE_USERNAME}-${PROJECT}",
 	"name": "SDSC Data Oasis | gridFTP | ${XSEDE_USERNAME}/${PROJECT} |",
 	"site": "sdsc.xsede.org",
 	"status": "UP",

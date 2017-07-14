@@ -1,0 +1,66 @@
+{
+    "description": "Bridges is a uniquely capable resource for empowering new research communities and bringing together HPC and Big Data. [https://www.psc.edu/bridges/user-guide]",
+    "environment": null,
+    "executionType": "CLI",
+    "id": "${IDENTIFIER}-${XSEDE_USERNAME}-${PROJECT}",
+    "login": {
+    "proxy": null,
+    "protocol": "GSISSH",
+    "port": 2222,
+    "auth": {
+        "username": "${XSEDE_USERNAME}",
+        "password": "${XSEDE_PASSWORD}",
+        "server": {
+            "endpoint": "myproxy.xsede.org",
+            "protocol": "MYPROXY",
+            "port": 7512,
+            "name": "XSEDE MyProxy Server"
+        },
+      "type": "X509",
+      "caCerts": "http://software.xsede.org/security/xsede-certs.tar.gz"
+    },
+    "host": "bridges.psc.edu"
+    },
+    "maxSystemJobs": 50,
+    "maxSystemJobsPerUser": 50,
+    "name": "PSC Bridges | Interactive | ${XSEDE_USERNAME}/${PROJECT} |",
+    "public": false,
+    "queues": [
+        {
+            "name": "default",
+            "maxJobs": 12,
+            "maxUserJobs": 12,
+            "maxNodes": 1,
+            "maxMemoryPerNode": "1GB",
+            "maxProcessorsPerNode": 28,
+            "maxRequestedTime": "01:00:00",
+            "customDirectives": "-A bi560lp",
+            "default":true
+        }        
+    ],
+    "scheduler": "FORK",
+    "scratchDir": "",
+    "site": "psc.edu",
+    "startupScript": "./.bashrc",
+    "storage": {
+        "protocol": "GRIDFTP",
+        "port": 2811,
+        "auth": {
+            "username": "${XSEDE_USERNAME}",
+            "password": "${XSEDE_PASSWORD}",
+            "server": {
+                "endpoint": "myproxy.xsede.org",
+                "protocol": "MYPROXY",
+                "port": 7512,
+                "name": "XSEDE MyProxy Server"
+            },
+            "type": "X509",
+            "caCerts": "http://software.xsede.org/security/xsede-certs.tar.gz"
+        },
+        "host": "bridges-data.ddns.psc.edu",
+        "rootDir": "${WORKDIR}",
+        "homeDir": "/"
+    },
+    "type": "EXECUTION",
+    "workDir": ""
+}
