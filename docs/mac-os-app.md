@@ -11,6 +11,11 @@ Here, we will go through the steps for creating a Mac OS app for `.fastq` data q
 
 This is a relatively simple example using a public data store, public execution system, and public CyVerse app. It can be made much more powerful by combining this infrastructure with your own [custom apps](app-dev.md), [private systems](register-your-cluster.md), and more complex run control. Please contact us: <lifesci@consult.tacc.utexas.edu> if you have ideas that you want help developing!
 
+### Prerequisites
+
+* You have the [Agave CLI](getting-started-install-sdk.md) (part of the CyVerse SDK) downloaded and in your $PATH
+* You are on a Mac. This was tested on Mac OS 10.11.x with GNU bash version 3.2.x, but should work on most Macs.
+
 ### Part 1: Create a Dummy App
 
 An 'app' on a Mac is simply a directory tree with defined organization and content. To create the necessary framework, execute the following commands in your Mac Terminal:
