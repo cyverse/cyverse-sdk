@@ -23,14 +23,14 @@ for FILE in $(cat $1)
 do
 echo "Posting $FILE ..."
 LINK=$(postits-create -l 600 -m 10 https://agave.iplantc.org/files/v2/media/system/data.iplantcollaborative.org/$FILE)
-cat <<EOF >>post_this.html
-<a href="$LINK">$FILE</a>
+cat << EOF >> post_this.html
+<a href="$LINK"> $FILE </a>
 <br>
 EOF
 done
 
 # Finish writing the postit html page
-cat <<EOF >>post_this.html
+cat << EOF >> post_this.html
 </body></html>
 EOF
 

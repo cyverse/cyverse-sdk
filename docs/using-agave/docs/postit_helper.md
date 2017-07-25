@@ -20,7 +20,7 @@ dr--------  wallen  0       11:44  archive
 -r--------  wallen  85060   13:57  sequence12.fasta
 ```
 
-(Replace `wallen` with your CyVerse username). Supposing I wanted to share the three files located in my home directory, I would need to create a text file that contains these three lines:
+(Replace `/wallen/` with your CyVerse username). Supposing I wanted to share the three files located in my home directory, I would need to create a text file that contains these three lines:
 
 ```
 /wallen/my_data.fastqc.zip
@@ -69,14 +69,14 @@ for FILE in $(cat $1)
 do
 echo "Posting $FILE ..."
 LINK=$(postits-create -l 600 -m 10 https://agave.iplantc.org/files/v2/media/system/data.iplantcollaborative.org/$FILE)
-cat <<EOF >>post_this.html
-<a href="$LINK">$FILE</a>
+cat << EOF >> post_this.html
+<a href="$LINK"> $FILE </a>
 <br>
 EOF
 done
 
 # Finish writing the postit html page
-cat <<EOF >>post_this.html
+cat << EOF >> post_this.html
 </body></html>
 EOF
 
@@ -102,6 +102,7 @@ $ bash postit_helper.sh list_of_files.txt
 The final result will return a link to a page where all your files can be downloaded by name in an HTML interface.
 
 
+<center><img src="postit_helper.gif" style="height:375px;"></center>
 
 
 [Back to: README](../README.md)
