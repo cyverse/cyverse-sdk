@@ -41,7 +41,7 @@ EOF
 
 ### Part 2: Run the postit helper script
 
-Next, download the postit helper script [here](postit_helper.sh):
+Next, download the postit helper script [here](postit_helper.sh).
 
 This sample script is not extremely robust in that it does very little error checking. It does not check, for example, for correctness in the `list_of_files.txt` or whether the files actually exist. Further, the number of accesses (10), time available (600s), and storage system (`data.iplantcollaborative.org`) are hard coded into the script. It is left to the user to customize beyond the default settings.
 
