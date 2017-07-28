@@ -49,7 +49,20 @@ chmod +x FastQC.app/Contents/MacOS/*
 
 
 # this gif should play on hover
-<center><img class="myclass" src="gifs/gif1.gif" style="height:375px;"></center>
+
+<center><img id="myimg" src="gifs/gif1.gif" style="height:375px;"></center>
+<script>
+    $(function() {
+        $("#myimg").hover(
+            function() {
+                $(this).attr("src", "gifs/gif1.gif");
+            },
+            function() {
+                $(this).attr("src", "gifs/gif6.gif");
+            }                         
+        );                  
+    });
+</script>
 <center><img src="gifs/gif1.gif" style="height:375px;"></center>
 
 Adding an icon to the Mac app is not necessary, but relatively easy to do. For example:
