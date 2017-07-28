@@ -8,6 +8,10 @@
     <meta name="theme-color" content="#157878">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+
+    <!-- INCLUDED JAVASCRIPT LIBRARIES -->
+    <link rel="stylesheet" href="{{site.baseurl}}/assets/css/freezeframe_styles.min.css">
+
   </head>
   <body>
     <section class="page-header">
@@ -26,15 +30,20 @@
       {{ content }}
 
 
-    <!-- INCLUDED JAVASCRIPT LIBRARIES -->
-  <link rel="stylesheet" href="{{site.baseurl}}/assets/css/freezeframe_styles.min.css">
-  <script src="{{site.baseurl}}/assets/js/freezeframe.min.js"></script>
-<!--    <script src="{{site.baseurl}}/assets/js/jquery.min.js"></script>
-    <script src="{{site.baseurl}}/assets/js/lesson.js"></script> 
-<link rel="stylesheet" href="https://cdn.rawgit.com/ctrl-freaks/freezeframe.js/master/build/css/freezeframe_styles.min.css">
-<script type="text/javascript" src="https://cdn.rawgit.com/ctrl-freaks/freezeframe.js/master/build/js/freezeframe.pkgd.js"></script>
--->
       <footer class="site-footer">
+
+    <!-- INCLUDED JAVASCRIPT LIBRARIES -->
+<!--    <script src="{{site.baseurl}}/assets/js/freezeframe.min.js"></script> -->
+<script src="http://travisbklein.com/freezeframe.js-master/build/js/freezeframe.min.js"></script>
+<script src="https://npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"></script>
+<script src="htp://travisbklein.com/freezeframe.js-master/src/js/vendor/jquery-2.1.4.js"></script>
+<script>
+  var ff = new freezeframe({
+ 'selector': 'myclass',
+ 'non_touch_device_trigger_event': 'hover'
+})
+</script>
+
         {% if site.github.is_project_page %}
           <span class="site-footer-owner"><a href="{{ site.github.repository_url }}">{{ site.github.repository_name }}</a> is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a>.</span>
         {% endif %}

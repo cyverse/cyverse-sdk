@@ -52,7 +52,7 @@ chmod +x FastQC.app/Contents/MacOS/*
 <script type="text/javascript">
   $(function() {
     first = new freezeframe('.my_class_1').freeze();
-  }
+  })
 </script>
 <center><img class="my_class_1" src="gifs/gif1.gif" style="height:375px;"></center>
 
