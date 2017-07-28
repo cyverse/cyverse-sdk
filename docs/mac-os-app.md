@@ -48,10 +48,10 @@ chmod +x FastQC.app/Contents/MacOS/*
 ```
 
 
-# this gif should play on hover
+# this gif should play on hover fda
 
 <center><img id="myimg" src="gifs/gif1.gif" style="height:375px;"></center>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js">
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js">
     $(function() {
         $("#myimg").hover(
             function() {
