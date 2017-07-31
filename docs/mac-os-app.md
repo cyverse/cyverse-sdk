@@ -48,10 +48,10 @@ chmod +x FastQC.app/Contents/MacOS/*
 ```
 
 
-# this gif should play on hover blah
-<div id="w"><div id="content"><ul id="giflist" class="clearfix">
+<center><i>(hover cursor over image to animate)</i></center>
+<div id="content"><ul id="giflist" class="clearfix">
 <li><a href="gifs/gif1.gif" target="_blank"><img src="gifs/gif1_frame1.jpg" data-orig="gifs/gif1_frame1.jpg" height="375"></a></li>
-</ul></div></div>
+</ul></div>
 
 # This gif should appear normal
 <center><img src="gifs/gif1.gif" style="height:375px;"></center>
@@ -64,13 +64,10 @@ Adding an icon to the Mac app is not necessary, but relatively easy to do. For e
 * In the top-left corner of the dialog, single click the current icon to select it, then `Edit => Paste`
 * You may store the image in the ~FastQC.app/Contents/Resources/ directory
 
-# animated
-<div id="w"><div id="content"><ul id="giflist" class="clearfix">
+<div id="content"><ul id="giflist" class="clearfix">
 <li><a href="gifs/gif2.gif" target="_blank"><img src="gifs/gif2_frame1.tiff" data-orig="gifs/gif2_frame1.tiff" height="375"></a></li>
-</ul></div></div>
+</ul></div>
 
-# normal
-<center><img src="gifs/gif2.gif" style="height:375px;"></center>
 
 By now, you should have the following directory architecture:
 
