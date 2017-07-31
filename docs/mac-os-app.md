@@ -47,14 +47,9 @@ EOF
 chmod +x FastQC.app/Contents/MacOS/*
 ```
 
-
 <center><i>(hover cursor over image to animate)</i></center>
-<div id="content"><ul id="giflist" class="clearfix">
-<li><a href="gifs/gif1.gif" target="_blank"><img src="gifs/gif1_frame1.jpg" data-orig="gifs/gif1_frame1.jpg" height="375"></a></li>
-</ul></div>
+<ul id="giflist" class="clearfix"><li><center><a href="gifs/gif1.gif" target="_blank"><img src="gifs/gif1_frame1.jpg" data-orig="gifs/gif1_frame1.jpg" height="375"></a></center></li></ul>
 
-# This gif should appear normal
-<center><img src="gifs/gif1.gif" style="height:375px;"></center>
 
 Adding an icon to the Mac app is not necessary, but relatively easy to do. For example:
 
