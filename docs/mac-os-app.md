@@ -50,7 +50,7 @@ chmod +x FastQC.app/Contents/MacOS/*
 
 # this gif should play on hover blah
 <div id="w"><div id="content"><ul id="giflist" class="clearfix">
-<li><a href="gifs/gif1.gif" target="_blank"><img src="gifs/gif1_frame1.tiff" data-orig="gifs/gif1_frame1.tiff" height="375"></a></li>
+<li><a href="gifs/gif1.gif" target="_blank"><img src="gifs/gif1_frame1.jpg" data-orig="gifs/gif1_frame1.jpg" height="375"></a></li>
 </ul></div></div>
 
 # This gif should appear normal
