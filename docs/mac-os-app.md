@@ -47,7 +47,9 @@ EOF
 chmod +x FastQC.app/Contents/MacOS/*
 ```
 
-<center><img src="gifs/gif1.gif" style="height:375px;"></center>
+<center><i>(hover cursor over image to animate)</i></center>
+<ul id="giflist" class="clearfix"><li><a href="gifs/gif1.gif" target="_blank"><img src="gifs/gif1_frame1.jpg" data-orig="gifs/gif1_frame1.jpg" height="375"></a></li></ul>
+
 
 Adding an icon to the Mac app is not necessary, but relatively easy to do. For example:
 
@@ -57,7 +59,9 @@ Adding an icon to the Mac app is not necessary, but relatively easy to do. For e
 * In the top-left corner of the dialog, single click the current icon to select it, then `Edit => Paste`
 * You may store the image in the ~FastQC.app/Contents/Resources/ directory
 
-<center><img src="gifs/gif2.gif" style="height:375px;"></center>
+
+<ul id="giflist" class="clearfix"><li><a href="gifs/gif2.gif" target="_blank"><img src="gifs/gif2_frame1.jpg" data-orig="gifs/gif2_frame1.jpg" height="375"></a></li></ul>
+
 
 By now, you should have the following directory architecture:
 
@@ -79,7 +83,8 @@ $ tree .
 
 To check if everything is working so far, Double click the FastQC.app. A Terminal window should appear with the `Hello, world!` message, then close after 10 seconds.
 
-<center><img src="gifs/gif3.gif" style="height:375px;"></center>
+<ul id="giflist" class="clearfix"><li><a href="gifs/gif3.gif" target="_blank"><img src="gifs/gif3_frame1.jpg" data-orig="gifs/gif3_frame1.jpg" height="375"></a></li></ul>
+
 
 ### Part 2: Automate FastQC Analysis
 
@@ -190,7 +195,7 @@ EOF
 
 There is one line about halfway down this file that performs the `files-upload` operation - you will have to fill in your CyVerse username at the end.
 
-<center><img src="gifs/gif4.gif" style="height:375px;"></center>
+<ul id="giflist" class="clearfix"><li><a href="gifs/gif4.gif" target="_blank"><img src="gifs/gif4_frame1.jpg" data-orig="gifs/gif4_frame1.jpg" height="375"></a></li></ul>
 
 ### Part 3: Testing the FastQC App
 
@@ -216,10 +221,10 @@ $ tree .
 Drag some example `.fastqc` data into the `~/Desktop/fastqc_jobs/` folder, then double click the app. (You can find some example `.fastq` data [here](http://darlinglab.org/tutorials/fastqc/)) A Terminal should open and prompt the user to make sure the correct `.fastqc` file was found. Type `y` or `n` as appropriate, and hit `Return`. After several minutes (when submitting to a public resource, queue times may vary), the results should automatically be downloaded to the `~/Desktop/fastqc_jobs/` folder and catalogued by date and time. The original input `.fastq` file will also be moved into the output folder.
 
 Here is what it looks like running the app from the perspective of the user:
-<center><img src="gifs/gif5.gif" style="height:375px;"></center>
+<ul id="giflist" class="clearfix"><li><a href="gifs/gif5.gif" target="_blank"><img src="gifs/gif5_frame1.jpg" data-orig="gifs/gif5_frame1.jpg" height="375"></a></li></ul>
 
 Here is what it looks like when the job finishes:
-<center><img src="gifs/gif6.gif" style="height:375px;"></center>
+<ul id="giflist" class="clearfix"><li><a href="gifs/gif6.gif" target="_blank"><img src="gifs/gif6_frame1.jpg" data-orig="gifs/gif6_frame1.jpg" height="375"></a></li></ul>
 
 If you have any new ideas on how to leverage this Mac OS app development kit within the CyVerse cyberinfrastructure, let us know!
 

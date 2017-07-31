@@ -54,7 +54,8 @@ $ bash postit_helper.sh list_of_files.txt
 The final result will return a link to a page where all your files can be downloaded by name in an HTML interface.
 
 
-<center><img src="postit_helper.gif" style="height:375px;"></center>
+<center><i>(hover cursor over image to animate)</i></center>
+<ul id="giflist" class="clearfix"><li><a href="postit_helper.gif" target="_blank"><img src="postit_helper.jpg" data-orig="postit_helper.jpg" height="375"></a></li></ul>
 
 
 [Back to: README](../README.md)
