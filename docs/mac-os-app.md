@@ -60,7 +60,7 @@ Adding an icon to the Mac app is not necessary, but relatively easy to do. For e
 * You may store the image in the ~FastQC.app/Contents/Resources/ directory
 
 
-<ul id="giflist" class="clearfix"><li><a href="gifs/gif21.gif" target="_blank"><img src="gifs/gif2_frame1.jpg" data-orig="gifs/gif2_frame1.jpg" height="375"></a></li></ul>
+<ul id="giflist" class="clearfix"><li><a href="gifs/gif2.gif" target="_blank"><img src="gifs/gif2_frame1.jpg" data-orig="gifs/gif2_frame1.jpg" height="375"></a></li></ul>
 
 
 By now, you should have the following directory architecture:
