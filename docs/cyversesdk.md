@@ -40,6 +40,10 @@ Here are some additional guides currently available:
 * [Cloning a CyVerse application to your own systems](iplant-clone-app.md)
 * [Using the Agave CLI to interact with various aspects of the CyVerse Cyberinfrastructure](https://github.com/wjallen/using-agave)
 
+### Background Information
+
+* [Cyverse API Bestiary](apis/cyverse-api-universe.md)
+
 ---
 
 | [Back to CyVerse Developer Portal](../index.md) |

@@ -24,5 +24,5 @@ Here's a catalog of services available in one form or another via the CyVerse SD
 * [Jetstream APIs](https://iujetstream.atlassian.net/wiki/spaces/JWT/pages/35913730/OpenStack+command+line)
 * [Taxonomic Name Resolution Service](http://www.evoio.org/wiki/Phylotastic/TNRS)
 
-| [Back to CyVerse Developer Portal](../../index.md) |
+| [Back to CyVerse Developer Portal](../../README.md) |
 
