@@ -1,4 +1,4 @@
-<a href="https://www.cyverse.org"><img src="cyverse_develop_logo2.png"></a>
+<a href="https://www.cyverse.org"><img src="../cyverse_develop_logo2.png"></a>
 
 [CyVerse](https://www.cyverse.org) provides fully-scriptable platform access via web service APIs that help users:
 * Develop and run applications on HPC, Cloud, Condor, and container-based computing systems
