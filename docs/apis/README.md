@@ -1,4 +1,4 @@
-<a href="https://www.cyverse.org"><img src="cyverse_develop_logo2.png"></a>
+# CyVerse API Catalog
 
 [CyVerse](https://www.cyverse.org) provides fully-scriptable platform access via web service APIs that help users:
 * Develop and run applications on HPC, Cloud, Condor, and container-based computing systems
@@ -8,8 +8,6 @@
 * Manage data on any cloud storage platform one has access to
 
 Here's a catalog of services available in one form or another via the CyVerse SDKs
-
-# CyVerse API Catalog
 
 * [Agave Science APIs](http://developer.agaveapi.co/live-docs/)
 * [Atmosphere APIs](http://docs.atmospherev2.apiary.io/)
