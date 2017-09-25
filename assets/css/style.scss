@@ -1,0 +1,23 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+/** gif image list **/
+#giflist {
+ 
+}
+ 
+#giflist li {
+  display: block;
+  float: left;
+  margin-right: 35px;
+  margin-bottom: 40px;
+}
+ 
+/** clearfix **/
+.clearfix:after { content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0; }
+.clearfix { display: inline-block; }
+ 
+html[xmlns] .clearfix { display: block; }
+* html .clearfix { height: 1%; }

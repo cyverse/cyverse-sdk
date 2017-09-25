@@ -24,4 +24,6 @@ __Part 2: Intermediate CLI__
 * [Managing Identities](docs/managing_identities.md)
 * [Advanced Job Control](docs/job_control.md)
 
+__Part 3: Helpful Tools__
+* [Postit Helper](docs/postit_helper.md)
 
