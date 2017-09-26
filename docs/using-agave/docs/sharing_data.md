@@ -48,6 +48,41 @@ Now, a user with CyVerse username `my_collaborator` has permissions to access th
 Valid values for setting permission with the `-P` flag are READ, WRITE, EXECUTE, READ_WRITE, READ_EXECUTE, WRITE_EXECUTE, ALL, and NONE.
 This same action can be performed recursively on directories using the `-R` flag.
 
+
+**Note: If you are sharing data from a private storage system, follow the steps below:**
+
+If you are sharing a file from a private storage system, the collaborator needs the correct permissions to access it as well. To see who has access to your storage system, perform:
+
+```
+systems-roles-list my-storage-system
+```
+
+The response should look similar to:
+```
+username OWNER
+```
+
+To add your collaborator to your system, use the `systems-roles-addupdate` command:
+```
+systems-roles-addupdate -u my_collaborator -r GUEST my-storage-system
+```
+
+Listing the roles again, you should now see your collaborator as a GUEST:
+```
+systems-roles-list data-tacc-work-username
+
+my_collaborator GUEST
+username OWNER
+```
+
+Valid values for setting a role with the -r flag are GUEST, USER, PUBLISHER, ADMIN, and OWNER.
+
+Finally, ask your collaborator to download the file with the exact same command you use to download the file:
+
+```
+% files-get -S my-storage-system path_to/my_shared/file.txt
+```
+
 ### Sharing Data using PostIts
 
 Another convenient way to share data is the Agave postits service.
