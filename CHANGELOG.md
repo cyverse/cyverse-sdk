@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## Version 1.4.2 - 09/29/2017
+## Version 1.4.3 - 09/29/2017
 ### Added
 * Stampede 2 system template
 
