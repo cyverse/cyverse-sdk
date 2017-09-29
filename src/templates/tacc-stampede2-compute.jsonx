@@ -1,0 +1,91 @@
+{
+  "maxSystemJobs": 50,
+  "executionType": "HPC",
+  "available": true,
+  "description": "Stampede2 is well suited for highly parallel applications scalable to tens of thousands of cores.",
+  "storage": {
+    "proxy": null,
+    "protocol": "SFTP",
+    "mirror": false,
+    "port": 22,
+    "auth": {
+      "type": "SSHKEYS",
+      "publicKey": "${PUBLIC_KEY}",
+      "privateKey": "${PRIVATE_KEY}",
+      "username": "${USERNAME}"
+    },
+    "host": "login4.stampede2.tacc.utexas.edu",
+    "rootDir": "${WORKD}",
+    "homeDir": "/",
+    "proxyTunnel": "NO"
+  },
+  "type": "EXECUTION",
+  "login": {
+    "proxy": null,
+    "protocol": "SSH",
+    "port": 22,
+    "auth": {
+      "type": "SSHKEYS",
+      "publicKey": "${PUBLIC_KEY}",
+      "privateKey": "${PRIVATE_KEY}",
+      "username": "${USERNAME}"
+    },
+    "host": "login4.stampede2.tacc.utexas.edu",
+    "proxyTunnel": "NO"
+  },
+  "startupScript": "./.bashrc",
+  "scheduler": "SLURM",
+  "default": false,
+  "public": false,
+  "maxSystemJobsPerUser": 50,
+  "id": "tacc-stampede2-${USERNAME}",
+  "workDir": "",
+  "owner": "${USERNAME}",
+  "site": "tacc.utexas.edu",
+  "environment": "",
+  "queues": [
+    {
+      "name": "normal",
+      "maxJobs": 50,
+      "maxMemoryPerNode": "96GB",
+      "default": false,
+      "maxRequestedTime": "48:00:00",
+      "description": null,
+      "maxNodes": 256,
+      "maxProcessorsPerNode": 17408,
+      "mappedName": null,
+      "maxUserJobs": 50,
+      "customDirectives": "-A ${PROJECT}"
+    },
+    {
+      "name": "development",
+      "maxJobs": 1,
+      "maxMemoryPerNode": "96GB",
+      "default": true,
+      "maxRequestedTime": "02:00:00",
+      "description": null,
+      "maxNodes": 8,
+      "maxProcessorsPerNode": 544,
+      "mappedName": null,
+      "maxUserJobs": 1,
+      "customDirectives": "-A ${PROJECT}"
+    },
+    {
+      "name": "large",
+      "maxJobs": 5,
+      "maxMemoryPerNode": "96GB",
+      "default": false,
+      "maxRequestedTime": "48:00:00",
+      "description": null,
+      "maxNodes": 2048,
+      "maxProcessorsPerNode": 139264,
+      "mappedName": null,
+      "maxUserJobs": 5,
+      "customDirectives": "-A ${PROJECT}"
+    }
+  ],
+  "globalDefault": false,
+  "name": "TACC Stampede2 [${USERNAME}]",
+  "status": "UP",
+  "scratchDir": ""
+}
