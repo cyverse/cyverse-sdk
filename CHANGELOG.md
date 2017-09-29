@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.4.2 - 09/29/2017
+### Added
+* Stampede 2 system template
+
+### Changed
+* Nothing 
+
+### Removed
+* Nothing
+
 ## Version 1.4.0 - 07/14/2017
 ### Added
 * Provisional support for XSEDE systems at SDSC and PSC
