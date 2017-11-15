@@ -6,7 +6,7 @@
 	"description": "Storage (1TB quota) on TACC global $WORK filesystem",
 	"site": "tacc.utexas.edu",
 	"storage": {
-		"host": "gateway.stampede.tacc.utexas.edu",
+		"host": "login4.stampede2.tacc.utexas.edu",
 		"port": 22,
 		"protocol": "SFTP",
 		"rootDir": "${WORKD}",
