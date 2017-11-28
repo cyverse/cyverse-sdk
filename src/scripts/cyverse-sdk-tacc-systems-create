@@ -127,7 +127,7 @@ echo -e "Confirmed: $WORKD"
 # Register with Agave API
 echo -e "\n*Registering systems with Agave API*"
 TMPDIR="$HOME/tmp"
-for F in $DIR/../templates/tacc-${SYSNAME}*
+for F in $DIR/../templates/tacc-${SYSNAME}-*
 do
   BN=$(basename $F .jsonx)
   echo "    Processing template ${BN}..."

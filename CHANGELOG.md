@@ -1,12 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## Version 1.4.4 - 11/28/2017
+## Version 1.4.5 - 11/28/2017
 ### Added
 * Nothing
 
 ### Changed
 * Updated Stampede 1 gateway address 
+* Fixed tacc-systems-create to differentiate between Stampede1 and Stampede2
 
 ### Removed
 * Nothing
