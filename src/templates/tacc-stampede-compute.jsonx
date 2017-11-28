@@ -10,7 +10,7 @@
             "username": "${USERNAME}",
             "type": "SSHKEYS"
         },
-        "host": "gateway.stampede.tacc.utexas.edu",
+        "host": "login2.stampede.tacc.utexas.edu",
         "port": 22,
         "protocol": "SSH"
     },
@@ -103,7 +103,7 @@
     "startupScript": "./.bashrc",
     "status": "UP",
     "storage": {
-        "host": "gateway.stampede.tacc.utexas.edu",
+        "host": "stampede.tacc.utexas.edu",
         "port": 22,
         "protocol": "SFTP",
         "homeDir": "/",
