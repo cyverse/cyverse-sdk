@@ -10,7 +10,7 @@
 			"username": "${USERNAME}",
             "type": "SSHKEYS"
         },
-        "host": "gateway.wrangler.tacc.utexas.edu",
+        "host": "wrangler.tacc.utexas.edu",
         "port": 22,
         "protocol": "SSH"
     },
@@ -25,7 +25,7 @@
             "maxJobs": 5,
             "maxUserJobs": 5,
             "maxNodes": 4,
-            "maxProcessorsPerNode": 96,
+            "maxProcessorsPerNode": 48,
             "maxMemoryPerNode": "128GB",
             "customDirectives": "-A ${PROJECT}",
             "maxRequestedTime": "48:00:00"
@@ -35,7 +35,7 @@
             "maxJobs": 5,
             "maxUserJobs": 5,
             "maxNodes": 4,
-            "maxProcessorsPerNode": 96,
+            "maxProcessorsPerNode": 48,
             "maxMemoryPerNode": "128GB",
             "customDirectives": "-A ${PROJECT}",
             "maxRequestedTime": "04:00:00"
@@ -47,11 +47,11 @@
     "startupScript": "./.bashrc",
     "status": "UP",
     "storage": {
-        "host": "gateway.wrangler.tacc.utexas.edu",
+        "host": "wrangler.tacc.utexas.edu",
         "port": 22,
         "protocol": "SFTP",
         "homeDir": "/",
-        "rootDir": "${WORKD}",
+        "rootDir": "${FLASHD}",
         "auth": {
             "publicKey": "${PUBLIC_KEY}",
             "privateKey": "${PRIVATE_KEY}",
