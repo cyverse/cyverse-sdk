@@ -22,7 +22,7 @@ __Part 2: Intermediate CLI__
 * [Sharing Data with Other Users](docs/sharing_data.md)
 * [Using Monitors to Track System Health](docs/using_monitors.md)
 * [Managing Identities](docs/managing_identities.md)
-* [Advanced Job Control](docs/job_control.md)
+* [Automating Workflows](docs/automating_workflows.md)
 
 __Part 3: Helpful Tools__
 * [Postit Helper](docs/postit_helper.md)
