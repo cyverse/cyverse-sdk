@@ -26,4 +26,5 @@ __Part 2: Intermediate CLI__
 
 __Part 3: Helpful Tools__
 * [Postit Helper](docs/postit_helper.md)
+* [Drug Discovery](docs/drug_discovery.md)
 
