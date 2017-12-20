@@ -126,7 +126,7 @@ The execution system, queue, number of nodes, number of cores, and other paramet
 
 Most public CyVerse apps are designed to take one input file or configuration, run an analysis, and return a result.
 With some simple scripting, it is possible to perform parameter sweeps using multiple Agave jobs.
-For example, consider you would like to run FastQC on a series of `fastq` files named: `fastq_01.fq`, `fastq_02.fq`, `fastq_03.fq`, etc:
+For example, imaging you would like to run FastQC on a series of `fastq` files named: `fastq_01.fq`, `fastq_02.fq`, `fastq_03.fq`, etc:
 ```
 # Organize data in one folder:
 ls fastq_data/
@@ -139,7 +139,7 @@ files-upload -F fastq_data/ -S data.iplantcollaborative.org username/
 jobs-template dnasubway-fastqc-singularity-stampede-0.11.4.0u3 > fastqc.json
 ```
 
-The final step is to write a short script that populates the file name into the job `json` file, and submits the job.
+The final step is to write a short script around the `fastqc.json` template that populates the file name into a new job `json` file, and submits the job.
 Here is an example script:
 ```
 #!/bin/bash
@@ -163,6 +163,14 @@ EOF
 	jobs-submit -F fastqc.json
 
 done
+```
+
+Execute the script:
+```
+bash fastqc_parameter_sweep.sh
+Successfully submitted job 7024783153260326425-242ac113-0001-007
+Successfully submitted job 6823392136750886425-242ac113-0001-007
+Successfully submitted job 6633468682921766425-242ac113-0001-007
 ```
 
 This is a simple control script with much room for advanced features and error checking.
