@@ -82,6 +82,45 @@
       "mappedName": null,
       "maxUserJobs": 5,
       "customDirectives": "-A ${PROJECT}"
+    },
+    {
+      "name": "skx-dev",
+      "maxJobs": 1,
+      "maxMemoryPerNode": "192GB",
+      "default": false,
+      "maxRequestedTime": "02:00:00",
+      "description": null,
+      "maxNodes": 4,
+      "maxProcessorsPerNode": 192,
+      "mappedName": null,
+      "maxUserJobs": 1,
+      "customDirectives": "-A ${PROJECT}"
+    },
+    {
+      "name": "skx-normal",
+      "maxJobs": 25,
+      "maxMemoryPerNode": "192GB",
+      "default": false,
+      "maxRequestedTime": "48:00:00",
+      "description": null,
+      "maxNodes": 128,
+      "maxProcessorsPerNode": 6144,
+      "mappedName": null,
+      "maxUserJobs": 25,
+      "customDirectives": "-A ${PROJECT}"
+    },
+    {
+      "name": "skx-large",
+      "maxJobs": 3,
+      "maxMemoryPerNode": "192GB",
+      "default": false,
+      "maxRequestedTime": "48:00:00",
+      "description": null,
+      "maxNodes": 868,
+      "maxProcessorsPerNode": 41664,
+      "mappedName": null,
+      "maxUserJobs": 3,
+      "customDirectives": "-A ${PROJECT}"
     }
   ],
   "globalDefault": false,
