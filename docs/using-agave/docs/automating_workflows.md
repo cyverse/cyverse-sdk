@@ -114,6 +114,7 @@ jobs-template -A dnasubway-fastqc-singularity-stampede-0.11.4.0u3 > fastqc.json
 
 # Submit the job:
 jobs-submit -F fastqc.json
+Successfully submitted job 1207252913474965991-242ac113-0001-007
 ```
 
 In this example, the `maxRunTime` metadata field was automatically placed into the job `json` file by using the `-A` flag with the `jobs-template` command.
@@ -125,12 +126,46 @@ The execution system, queue, number of nodes, number of cores, and other paramet
 
 Most public CyVerse apps are designed to take one input file or configuration, run an analysis, and return a result.
 With some simple scripting, it is possible to perform parameter sweeps using multiple Agave jobs.
-For example:
+For example, consider you would like to run FastQC on a series of `fastq` files named: `fastq_01.fq`, `fastq_02.fq`, `fastq_03.fq`, etc:
+```
+# Organize data in one folder:
+ls fastq_data/
+fastq_01.fq  fastq_02.fq  fastq_03.fq
 
+# Then upload all fastqc files to CyVerse data store:
+files-upload -F fastq_data/ -S data.iplantcollaborative.org username/
 
+# And make a template json file:
+jobs-template dnasubway-fastqc-singularity-stampede-0.11.4.0u3 > fastqc.json
+```
 
+The final step is to write a short script that populates the file name into the job `json` file, and submits the job.
+Here is an example script:
+```
+#!/bin/bash
 
+for FILE in ` ls fastq_data/ `
+do
 
+cat <<EOF >fastqc.json
+{
+  "name":"FastQC $FILE",
+  "appId": "dnasubway-fastqc-singularity-stampede-0.11.4.0u3",
+  "archive": false,
+  "inputs": {
+    "input": "agave://data.iplantcollaborative.org/username/fastq_data/$FILE"
+  },
+  "parameters": {
+  }
+}
+EOF
+
+	jobs-submit -F fastqc.json
+
+done
+```
+
+This is a simple control script with much room for advanced features and error checking.
 
 
 [Back to: README](../README.md)
