@@ -61,12 +61,64 @@ jobs-output-list 5666588050428915225-242ac113-0001-007
 If everything worked correctly, you should now have a `sorted_output.bam` file.
 As long as you remain on the CyVerse tenant, much of the URI to the `input_file` will remain the same:
 ```
-https://agave.iplantc.org/   # base URL
-jobs/v2/                     # refers to jobs API
+https://agave.iplantc.org/   # base URL - DO NOT CHANGE
+jobs/v2/                     # refers to jobs API - DO NOT CHANGE
 68373037840494.../           # previous job ID
-outputs/media/               # location of output data
+outputs/media/               # location of output data - DO NOT CHANGE
 output                       # name of output file
 ```
+
+
+### Customize job parameters
+
+Typically, CyVerse apps are registered to specific execution systems and specific queues.
+To change the max run time, total number of nodes, or queue, you must specify the desired resource in the job `json` file.
+As an example, consider the FastQC app, used in fastq quality control.
+By verbosely querying the app, we find the following metadata:
+```
+apps-list -v dnasubway-fastqc-singularity-stampede-0.11.4.0u3
+{                                                          
+  "id": "dnasubway-fastqc-singularity-stampede-0.11.4.0u3",
+  "name": "dnasubway-fastqc-singularity-stampede",
+  "icon": null,
+  "uuid": "1481285364126454246-242ac117-0001-005",
+  "parallelism": "SERIAL",
+  "defaultProcessorsPerNode": 16,
+  "defaultMemoryPerNode": 4,
+  "defaultNodeCount": 1,
+  "defaultMaxRunTime": "03:00:00",
+  "defaultQueue": "serial",
+... etc
+}
+```
+
+By default, this job will run for a maximum of 3 hours, which should be sufficient for FastQC.
+Let's imagine, however, we would like to change that to 4 hours.
+Create a template for this job using the `-A` flag:
+```
+# Create a job template:
+jobs-template -A dnasubway-fastqc-singularity-stampede-0.11.4.0u3 > fastqc.json
+
+# Modify it to include the following:
+{
+  "name":"dnasubway-fastqc-singularity-stampede test",
+  "appId": "dnasubway-fastqc-singularity-stampede-0.11.4.0u3",
+  "maxRunTime": "04:00:00",
+  "archive": false,
+  "inputs": {
+    "input": "agave://data.iplantcollaborative.org/shared/iplantcollaborative/example_data/fastqc/SRR070572_hy5.fastq"
+  },
+  "parameters": {
+  }
+}
+
+# Submit the job:
+jobs-submit -F fastqc.json
+```
+
+In this example, the `maxRunTime` metadata field was automatically placed into the job `json` file by using the `-A` flag with the `jobs-template` command.
+The execution system, queue, number of nodes, number of cores, and other parameters can be modified in a similar way.
+
 
 
 ### Parameter sweeps
@@ -80,36 +132,5 @@ For example:
 
 
 
-### Customize job parameters
 
-Typically, CyVerse apps are registered to specific execution systems and specific queues.
-To change the max run time, total number of nodes, and queue, perform the following:
-
-
-
-
-
-
-
-
-
-
-
-
-Tools covered in this tutorial:
-
-```
-jobs-delete
-jobs-history
-jobs-kick
-jobs-pems-list
-jobs-pems-update
-jobs-restore
-jobs-resubmit
-jobs-run-this
-jobs-search
-jobs-status
-jobs-stop
-```
-  
 [Back to: README](../README.md)
