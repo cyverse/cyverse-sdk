@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.4.6 - 12/20/2017
+### Added
+* Nothing
+
+### Changed
+* Updated Stampede 2 templates to support Skylake queues
+
+### Removed
+* Nothing
+
 ## Version 1.4.5 - 11/28/2017
 ### Added
 * Nothing
