@@ -52,7 +52,20 @@
       "maxRequestedTime": "48:00:00",
       "description": null,
       "maxNodes": 256,
-      "maxProcessorsPerNode": 17408,
+      "maxProcessorsPerNode": 136,
+      "mappedName": null,
+      "maxUserJobs": 50,
+      "customDirectives": "-A ${PROJECT}"
+    },
+    {
+      "name": "flat-quadrant",
+      "maxJobs": 50,
+      "maxMemoryPerNode": "96GB",
+      "default": false,
+      "maxRequestedTime": "48:00:00",
+      "description": null,
+      "maxNodes": 256,
+      "maxProcessorsPerNode": 136,
       "mappedName": null,
       "maxUserJobs": 50,
       "customDirectives": "-A ${PROJECT}"
@@ -65,7 +78,7 @@
       "maxRequestedTime": "02:00:00",
       "description": null,
       "maxNodes": 8,
-      "maxProcessorsPerNode": 544,
+      "maxProcessorsPerNode": 136,
       "mappedName": null,
       "maxUserJobs": 1,
       "customDirectives": "-A ${PROJECT}"
@@ -78,7 +91,7 @@
       "maxRequestedTime": "48:00:00",
       "description": null,
       "maxNodes": 2048,
-      "maxProcessorsPerNode": 139264,
+      "maxProcessorsPerNode": 68,
       "mappedName": null,
       "maxUserJobs": 5,
       "customDirectives": "-A ${PROJECT}"
