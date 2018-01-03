@@ -124,11 +124,13 @@ WORKD=${WORKD:-$default}
 if [ -z "$WORKD" ]; then echo "Error: TACC work directory can't be left empty."; exit 1; fi
 echo -e "Confirmed: $WORKD"
 
-default=$(echo /gpfs/flash/users/$USERNAME)
-read -p "Wrangler Flash directory [$default]: " FLASHD
-FLASHD=${FLASHD:-$default}
-if [ -z "$FLASHD" ]; then echo "Error: TACC work directory can't be left empty."; exit 1; fi
-echo -e "Confirmed: $FLASHD"
+if [[ "$SYSNAME" -eq "wrangler" ]]; then
+  default=$(echo /gpfs/flash/users/$USERNAME)
+  read -p "Wrangler Flash directory [$default]: " FLASHD
+  FLASHD=${FLASHD:-$default}
+  if [ -z "$FLASHD" ]; then echo "Error: TACC work directory can't be left empty."; exit 1; fi
+  echo -e "Confirmed: $FLASHD"
+fi
 
 # Register with Agave API
 echo -e "\n*Registering systems with Agave API*"
@@ -137,7 +139,11 @@ for F in $DIR/../templates/tacc-${SYSNAME}-*
 do
   BN=$(basename $F .jsonx)
   echo "    Processing template ${BN}..."
-  tacc-template-write.py ${USERNAME} ${PROJECT} ${WORKD} ${PRIVATE_KEY_PATH} ${F} ${TMPDIR}
+  if [[ "$SYSNAME" -eq "wrangler" ]]; then
+    tacc-template-write.py ${USERNAME} ${PROJECT} ${FLASHD} ${PRIVATE_KEY_PATH} ${F} ${TMPDIR}
+  else
+    tacc-template-write.py ${USERNAME} ${PROJECT} ${WORKD} ${PRIVATE_KEY_PATH} ${F} ${TMPDIR}
+  fi
   systems-addupdate -q -F "${TMPDIR}/${BN}.json"
 done
 echo "Done"
