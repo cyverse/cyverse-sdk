@@ -19,7 +19,7 @@ If everything is successful, you will see a message similar to:
 
 ```
 Successfully created client my_client
-key: g1of3MXVsJkk0avI5QrOopoa 
+key: g1of3MXVsJkk0avI5QrOopoa
 secret: JILflDQpSsEIGQyDKWGEe9Ia
 ```
 
@@ -48,5 +48,7 @@ If it is expired, refresh the token using:
 ```auth-tokens-refresh ```
 
 You are now fully configured to interact with CyVerse via the Agave CLI.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Q9__DDVXOyA" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
 
 [Back to: README](../README.md) | [Next: Managing Data](managing_data.md)

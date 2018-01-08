@@ -1,7 +1,7 @@
 Creating a CyVerse Application
 ================================================
 
-We will now go through the process of building and deploying an Agave application to provide 'samtools sort' functionality on TACC's Stampede system. The following tutorial assumes you have properly installed and configured the CyVerse SDK on Stampede. They assume you have defined an environment variable CYVERSEUSERNAME as your CyVerse username. For example:
+We will now go through the process of building and deploying an Agave application to provide 'samtools sort' functionality on TACC's Stampede2 system. The following tutorial assumes you have properly installed and configured the CyVerse SDK on Stampede2. They assume you have defined an environment variable CYVERSEUSERNAME as your CyVerse username. For example:
 ```export CYVERSEUSERNAME=<your_cyverse_username>```
 
 Agave application packaging
@@ -20,7 +20,7 @@ package-name-version.dot.dot
 |----app.json
 ```
 
-Agave runs a job by first transferring a copy of this directory into temporary directory on the target executionSystem. Then, the input data files (we'll show you how to specify those later) are staged into place automatically. Next, Agave writes a scheduler submit script (using a template you provide i.e. script.template) and puts it in the queue on the target system. The Agave service then monitors progress of the job and, assuming it completes, copies all newly-created files to the location specified when the job was submitted. Along the way, critical milestones and metadata are recorded in the job's history. 
+Agave runs a job by first transferring a copy of this directory into temporary directory on the target executionSystem. Then, the input data files (we'll show you how to specify those later) are staged into place automatically. Next, Agave writes a scheduler submit script (using a template you provide i.e. script.template) and puts it in the queue on the target system. The Agave service then monitors progress of the job and, assuming it completes, copies all newly-created files to the location specified when the job was submitted. Along the way, critical milestones and metadata are recorded in the job's history.
 
 *Agave app development proceeds via the following steps:*
 
@@ -36,8 +36,8 @@ Agave runs a job by first transferring a copy of this directory into temporary d
 Build a samtools application bundle
 ------------------------------------
 ```sh
-# Log into Stampede 
-ssh stampede.tacc.utexas.edu
+# Log into Stampede2
+ssh USERNAME@stampede2.tacc.utexas.edu
 
 # Unload system's samtools module if it happens to be loaded by default
 module unload samtools
@@ -48,8 +48,8 @@ cd $WORK
 # Set up a project directory
 mkdir cyverse
 mkdir cyverse/src
-mkdir -p cyverse/samtools-0.1.19/stampede/bin
-mkdir -p cyverse/samtools-0.1.19/stampede/test
+mkdir -p cyverse/samtools-0.1.19/stampede2/bin
+mkdir -p cyverse/samtools-0.1.19/stampede2/test
 
 # Build samtools using the Intel C Compiler
 # If you don't have icc, gcc will work but icc usually gives more efficient binaries
@@ -57,25 +57,25 @@ cd cyverse/src
 wget "http://downloads.sourceforge.net/project/samtools/samtools/0.1.19/samtools-0.1.19.tar.bz2"
 tar -jxvf samtools-0.1.19.tar.bz2
 cd samtools-0.1.19
-make CC=icc
+make CC=icc CFLAGS='-xCORE-AVX2 -axCORE-AVX512,MIC-AVX512 -O3'
 
 # Copy the samtools binary and support scripts to the project bin directory
-cp -R samtools bcftools misc ../../samtools-0.1.19/stampede/bin/
-cd ../../samtools-0.1.19/stampede
+cp -R samtools bcftools misc ../../samtools-0.1.19/stampede2/bin/
+cd ../../samtools-0.1.19/stampede2
 
 # Test that samtools will launch
 bin/samtools
 
 	Program: samtools (Tools for alignments in the SAM format)
 	Version: 0.1.19-44428cd
-	
+
 	Usage:   samtools <command> [options]
-	
+
 	Command: view        SAM<->BAM conversion
 	         sort        sort alignment file
 	         mpileup     multi-way pileup...
 
-# Package up the bin directory as an compressed archive 
+# Package up the bin directory as an compressed archive
 # and remove the original. This preserves the execute bit
 # and other permissions and consolidates movement of all
 # bundled dependencies in bin to a single operation. You
@@ -85,24 +85,26 @@ tar -czf bin.tgz bin && rm -rf bin
 
 Run samtools sort locally
 -------------------------
-Your first objective is to create a script that you know will run to completion under the Stampede scheduler and environment (or whatever executionSystem you're working on). It will serve as a model for the template file you create later. In our case, we need to write a script that can be submitted to the Slurm scheduler. The standard is to use Bash for such scripts. You have five main objectives in your script:
+Your first objective is to create a script that you know will run to completion under the Stampede2 scheduler and environment (or whatever executionSystem you're working on). It will serve as a model for the template file you create later. In our case, we need to write a script that can be submitted to the Slurm scheduler. The standard is to use Bash for such scripts. You have five main objectives in your script:
 * Unpack binaries from bin.tgz
 * Extend your PATH to contain bin
 * Craft some option-handling logic to accept parameters from Agave
 * Craft a command line invocation of the application you will run
 * Clean up when you're done
 
-First, you will need some test data in your current directory (i.e., $WORK/iPlant/samtools-0.1.19/stampede/ ). You can use this test file
+First, you will need some test data in your current directory (i.e., $WORK/cyverse/samtools-0.1.19/stampede2/ ). You can use this test file
 ```sh
 files-get -S data.iplantcollaborative.org /shared/iplantcollaborative/example_data/Samtools_mpileup/ex1.bam
 ```
 or you can any other BAM file for your testing purposes. Make sure if you use another file to change the filename in your test script accordingly!
 
-Now, author your script. You can paste the following code into a file called *test-sort.sh* or you can copy it from $HOME/cyverse-sdk/examples/samtools-0.1.19/stampede/test-sort.sh
+Now, author your script. You can paste the following code into a file called *test-sort.sh* or you can download it here:
+
+```wget "https://cyverse.github.io/cyverse-sdk/examples/samtools-0.1.19/stampede/test-sort.sh```
 
 ```sh
 #!/bin/bash
- 
+
 # Agave automatically writes these scheduler
 # directives when you submit a job but we have to
 # do it by hand when writing our test
@@ -110,7 +112,7 @@ Now, author your script. You can paste the following code into a file called *te
 #SBATCH -p development
 #SBATCH -t 00:30:00
 #SBATCH -n 16
-#SBATCH -A iPlant-Collabs 
+#SBATCH -A iPlant-Collabs
 #SBATCH -J test-samtools
 #SBATCH -o test-samtools.o%j
 
@@ -127,11 +129,11 @@ maxMemSort=500000000
 nameSort=0
 
 # Unpack the bin.tgz file containing samtools binaries
-# If you are relying entirely on system-supplied binaries 
+# If you are relying entirely on system-supplied binaries
 # you don't need this bit
 tar -xvf bin.tgz
 # Extend PATH to include binaries in bin
-# If you need to extend lib, include, etc 
+# If you need to extend lib, include, etc
 # the same approach is applicable
 export PATH=$PATH:"$PWD/bin"
 
@@ -152,44 +154,44 @@ if [ ${maxMemSort} -gt 0 ]; then ARGS="${ARGS} -m $maxMemSort"; fi
 
 # Boolean handler for -named sort
 if [ ${nameSort} -eq 1 ]; then ARGS="${ARGS} -n "; fi
- 
+
 # Run the actual program
 samtools sort ${ARGS} ${inputBam} ${outputPrefix}
 
 # Now, delete the bin/ directory
 rm -rf bin
 ```
-### Submit the job to the queue on Stampede...
+### Submit the job to the queue on Stampede2...
 ```sh
-chmod 700 test-sort.sh 
-sbatch test-sort.sh 
+chmod 700 test-sort.sh
+sbatch test-sort.sh
 ```
-You can monitor your jobs in the queue using 
+You can monitor your jobs in the queue using
 ```sh
 showq -u your_tacc_username
 ```
 Assuming all goes according to plan, you'll end up with a sorted BAM called *sorted.bam*, and your bin directory (but not the bin.tgz file) should be erased. Congratulations, you're in the home stretch: it's time to turn the test script into an Agave app.
 
-Craft an Agave app description 
+Craft an Agave app description
 -------------------------------
 In order for Agave to know how to run an instance of the application, we need to provide quite a bit of metadata about the application. This includes a unique name and version, the location of the application bundle, the identities of the execution system and destination system for results, whether it is an HPC or other kind of job, the default number of processors and memory it needs to run, and of course, all the inputs and parameters for the actual program. It seems a bit over-complicated, but only because you're comfortable with the command line already. Your goal here is to allow your applications to be portable across systems and present a web-enabled, rationalized interface for your code to consumers.
 
 Rather than have you write a description for "samtools sort" from scratch, let's systematically dissect an existing file provided with the SDK. Go ahead and copy the file into place and open it in your text editor of choice. If you don't have the SDK installed, you can [grab it here](../examples/samtools-0.1.19/stampede/samtools-sort.json).
 ```sh
-cd $WORK/cyverse/samtools-0.1.19/stampede/
-cp $HOME/cyverse-sdk/examples/samtools-0.1.19/stampede/samtools-sort.json .
+cd $WORK/cyverse/samtools-0.1.19/stampede2/
+wget "https://cyverse.github.io/cyverse-sdk/examples/samtools-0.1.19/stampede/samtools-sort.json”
 ```
-Open up samtools-sort.json in a text editor or [in your web browser](../examples/samtools-0.1.19/stampede/samtools-sort.json) and follow along below.
+Open up samtools-sort.json in a text editor or [in your web browser](../examples/samtools-0.1.19/stampede2/samtools-sort.json) and follow along below.
 
 ### Overview
 
-Your file *samtools-sort.json* is written in [JSON](http://www.json.org/), and conforms to an Agave-specific data model. You can find fully fleshed out details about all fields under *Parameters -> Data Type -> Model* at the [Agave API live docs on the /apps service](http://agaveapi.co/live-docs/#!/apps/add_post_1). We will dive into key elements here:
+Your file *samtools-sort.json* is written in [JSON](http://www.json.org/), and conforms to an Agave-specific data model. You can find fully fleshed out details about all fields under *Parameters* in the [Agave API documentation](https://tacc.github.io/developer.tacc.cloud/docs/guides/apps/app-inputs-and-parameters-tutorial.html). We will dive into key elements here:
 
 To make this file work for you, you will be, at a minimum, editting:
 
-1. Its *executionSystem* to match your private instance of Stampede.
+1. Its *executionSystem* to match your private instance of Stampede2.
 2. Its *deploymentPath* to match your CyVerse applications path
-3. The *name* of the app to something besides "samtools-sort". We recommend "$CYVERSEUSERNAME-samtools-sort". 
+3. The *name* of the app to something besides "samtools-sort". We recommend "$CYVERSEUSERNAME-samtools-sort".
 
 Instructions for making these changes will follow.
 
@@ -232,7 +234,7 @@ There is a defined list of application metadata fields, some of which are mandat
 | testPath | X | string | Path to the shell test file, relative to deploymentPath |
 | version | X | string | Preferred format: Major.minor.point integer values for app |
 
-* Note *: The combination of *name* and *version* must be unique the entire iPlant API namespace. 
+* Note *: The combination of *name* and *version* must be unique the entire iPlant API namespace.
 
 ### Inputs
 
@@ -247,7 +249,7 @@ To tell Agave what files to stage into place before job execution, you need to d
          "validator":"([^\\s]+(\\.(?i)(bam))$)",
          "visible":true},
      "semantics":
-        {"ontology":["http://sswapmeet.sswap.info/mime/application/X-bam"],
+        {"ontology":["https://www.ebi.ac.uk/ols/ontologies/edam/terms?iri=http%3A%2F%2Fedamontology.org%2Fformat_2572"],
          "minCardinality":1,
          "fileTypes":["raw-0"]},
      "details":
@@ -360,10 +362,10 @@ Obligatory field walk-through:
 | details.argument | | string | The command-line argument associated with specifying this output at run time (not currently used) |
 | details.showArgument | | boolean | Include the argument in the substitution done by Agave when a run script is generated (not currently used) |
 
-*Note*: If the app you are working on doesn't natively produce output with a predictable name, one thing you can do is add extra logic to your script to take the existing output and rename it to something you can control or predict. 
+*Note*: If the app you are working on doesn't natively produce output with a predictable name, one thing you can do is add extra logic to your script to take the existing output and rename it to something you can control or predict.
 
 ### Tools and Utilities
-1. Stumped for ontology terms to apply to your Agave app inputs, outputs, and parameters? SSWAPmeet has many URI-format terms for [MIME](http://sswapmeet.sswap.info/mime/) types, and BioPortal can provide links to [EDAM](http://bioportal.bioontology.org/ontologies/EDAM). 
+1. Stumped for ontology terms to apply to your Agave app inputs, outputs, and parameters? You can search EMBL-EBI for [ontology terms](https://www.ebi.ac.uk/ols/index), and BioPortal can provide links to [EDAM](http://bioportal.bioontology.org/ontologies/EDAM).
 2. Need to validate JSON files? Try [JSONlint](http://jsonlint.com/) or [JSONparser](http://json.parser.online.fr/)
 
 Craft a shell script template
@@ -395,7 +397,7 @@ nameSort=${nameSort}
 tar -xvf bin.tgz
 # Set the PATH to include binaries in bin
 export PATH=$PATH:"$PWD/bin"
- 
+
 # Build up an ARGS string for the program
 # Start with empty ARGS...
 ARGS=""
@@ -404,7 +406,7 @@ if [ ${maxMemSort} -gt 0 ]; then ARGS="${ARGS} -m $maxMemSort"; fi
 
 # Boolean handler for -named sort
 if [ ${nameSort} -eq 1 ]; then ARGS="${ARGS} -n "; fi
- 
+
 # Run the actual program
 samtools sort ${ARGS} $inputBam ${outputPrefix}
 
@@ -413,7 +415,7 @@ rm -rf bin
 ```
 Storing an app bundle on a storageSystem
 ----------------------------------------
-Each time you (or another user) requests an instance of samtools sort, Agave copies data from a "deploymentPath" on a "storageSystem" as part of creating the temporary working directory on an "executionSystem". Now that you've crafted the application bundle's dependencies and script template, it's time to store it somewhere accessible by Agave. 
+Each time you (or another user) requests an instance of samtools sort, Agave copies data from a "deploymentPath" on a "storageSystem" as part of creating the temporary working directory on an "executionSystem". Now that you've crafted the application bundle's dependencies and script template, it's time to store it somewhere accessible by Agave.
 
 *Note* If you've never deployed an Agave-based app, you may not have an applications directory in your home folder. Since this is where we recommend you store the apps, create one.
 ```sh
@@ -436,28 +438,28 @@ Post the app description to Agave
 ---------------------------------
 
 As mentioned in the overview, several personalizations to samtools-sort.json are required.  Specifically, edit the samtools-sort.json file to change:
-* the *executionSystem* to your private Stampede system, 
+* the *executionSystem* to your private Stampede2 system,
 * the *deploymentPath* to your own CyVerse applications directory for samtools
 * the *name* to *$CYVERSEUSERNAME-samtools-sort*
 
 Post the JSON file to Agave's app service.
 ```sh
-apps-addupdate -F samtools-0.1.19/stampede/samtools-sort.json
+apps-addupdate -F samtools-0.1.19/stampede2/samtools-sort.json
 ```
 
-*Note*: If you see this error "Permission denied. An application with this unique id already exists and you do not have permission to update this application. Please either change your application name or update the version number", you forgot to change the name or the name you chose conflicts with another Agave application. Change it again in the JSON file and resubmit. 
+*Note*: If you see this error "Permission denied. An application with this unique id already exists and you do not have permission to update this application. Please either change your application name or update the version number", you forgot to change the name or the name you chose conflicts with another Agave application. Change it again in the JSON file and resubmit.
 
 ### Updating your application metadata or bundle
 
 Any time you need to update the metadata description of your non-public application, you can just make the changes locally to the JSON file and and re-post it. The next time Agave creates a job using this application, it will use the new description.
 
 ```sh
-apps-addupdate -F samtools-0.1.19/stampede/samtools-sort.json $CYVERSEUSERNAME-samtools-sort-0.1.19
+apps-addupdate -F samtools-0.1.19/stampede2/samtools-sort.json $CYVERSEUSERNAME-samtools-sort-0.1.19
 ```
 
-The field *$CYVERSEUSERNAME-samtools-sort-0.1.19* at the end is the appid you're updating. Agave tries to guess from the JSON file but to remove uncertainty, we recommend always specifying it explicitly. 
+The field *$CYVERSEUSERNAME-samtools-sort-0.1.19* at the end is the appid you're updating. Agave tries to guess from the JSON file but to remove uncertainty, we recommend always specifying it explicitly.
 
-Any time you need to update the binaries, libraries, templates, etc. in your non-public application, you can just make the changes locally and re-upload the bundle. The next time Agave creates a job using this application, it will stage the updated version of the application bundle into place on the executionSystem and it to complete your task. It's a little more complicated to deal with fully public apps, and so we'll cover that in a separate document. 
+Any time you need to update the binaries, libraries, templates, etc. in your non-public application, you can just make the changes locally and re-upload the bundle. The next time Agave creates a job using this application, it will stage the updated version of the application bundle into place on the executionSystem and it to complete your task. It's a little more complicated to deal with fully public apps, and so we'll cover that in a separate document.
 
 Verify your new app description
 -------------------------------
@@ -466,7 +468,7 @@ First, you may check to see if your new application shows up in the bulk listing
 
 ```sh
 # Shows all apps that are public, private to you, or shared with you
-apps-list 
+apps-list
 # Show only your private apps
 apps-list --privateonly
 ```

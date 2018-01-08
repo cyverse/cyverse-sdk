@@ -4,13 +4,12 @@ The Agave CLI is a collection of over 100 different bash scripts.
 The purpose of these scripts is to facilitate building cURL commands for interaction with the web API.
 In order to make sure you are using an up-to-date version of the Agave CLI, please clone directly from the source.
 To begin, open up a terminal window and navigate to a directory where you would like to organize this work.
-Then, clone this tutorial:
+Then, create a directory for the Agave CLI
 
-```git clone https://github.com/wjallen/using-agave```
-
-Navigate into the `using-agave/` directory, then into the `src/` directory:
-
-```cd using-agave/src/```
+```
+mkdir agave
+cd agave
+````
 
 Here, clone the Agave CLI:
 
@@ -23,7 +22,7 @@ cd cli/bin/
 export PATH=$PWD:$PATH
 ```
 
-You may also consider adding the whole path to your `~/.bashrc` so that each new terminal session knows the location:
+You may also consider adding the whole path to your `~/.bashrc` or `~/.bash_profile` so that each new terminal session knows the location:
 
 ```echo "PATH=/complete/path/to/using-agave/src/cli/bin:\$PATH" >> ~/.bashrc```
 
@@ -37,5 +36,7 @@ Finally, verify that the Agave CLI has been added to the PATH by executing:
 The path to the Agave CLI should appear, e.g.:
 
 ```/home/username/using-agave/src/cli/bin/tenants-init ```
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/swSQwfqPoG8" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
 
 [Back to: README](../README.md) | [Next: Initializing with CyVerse](initializing.md)

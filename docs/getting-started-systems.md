@@ -1,7 +1,7 @@
 Setting up CyVerse/TACC development systems
 ===========================================
 
-Run the ```tacc-systems-create``` command, which will create a private version of Stampede, Lonestar5, and Wrangler if logged in there. It will also create a private storage system for you on TACC's global shared flesystem."
+Run the ```cyverse-tacc-systems-create``` command, which will create a private version of Stampede2, Lonestar5, and Wrangler if logged in there. It will also create a private storage system for you on TACC's global shared flesystem."
 
 Here is an example of what the script looks like when it runs successfully:
 
@@ -15,13 +15,13 @@ Here is an example of what the script looks like when it runs successfully:
 *Cyverse API Enrollment*
 
 This script will register a personal instance of TACC
-'stampede' that can be used build and validate Agave
+'stampede2' that can be used build and validate Agave
 apps. The following steps assume you have created or configured
 an Agave Oauth2 client on this host.
 
 If you have not, you may exit out of this script and run:
 
-clients-create -S -N "sdk-stampede" -D "OAuth client for TACC system stampede"
+clients-create -S -N "sdk-stampede2" -D "OAuth client for TACC system stampede2"
 
 The following 'auth-tokens-create' command will
 create and store a temporary access token. To refresh
@@ -35,7 +35,7 @@ Enter your CyVerse password.  When prompted in the next steps, you should be abl
 
 ```sh
 
-*Connect Agave to the 'stampede' HPC system*
+*Connect Agave to the 'stampede2' HPC system*
 
 The following information will be generated or gathered to
 configure this system for access via Agave:
@@ -49,21 +49,21 @@ configure this system for access via Agave:
 Are you ready to proceed? [Yes]:
 Ensuring existence of an SSH keypair...
 Done
-Agave system identifier [stampede]: 
-Confirmed: stampede
+Agave system identifier [stampede2]:
+Confirmed: stampede2
 
-TACC user account [vaughn]: 
+TACC user account [vaughn]:
 Confirmed: vaughn
 
-TACC allocation to be used with this system [iPlant-Collabs]: 
+TACC allocation to be used with this system [iPlant-Collabs]:
 Confirmed: iPlant-Collabs
 
-TACC work directory [/work/01374/vaughn]: 
+TACC work directory [/work/01374/vaughn]:
 Confirmed: /work/01374/vaughn
 
 *Registering systems with Agave API*
-    Processing template tacc-stampede-compute...
-    Processing template tacc-stampede-storage...
+    Processing template tacc-stampede2-compute...
+    Processing template tacc-stampede2-storage...
 Done
 Test out private systems you've updated or created today by running a quick files-list operation as illustrated below. You should see the contents of /work/01374/vaughn returned to you after each operation.
     files-list -S tacc-globalfs-vaughn /
