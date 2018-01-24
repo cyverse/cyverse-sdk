@@ -28,28 +28,28 @@ A subset of the output includes:
 
 ```
 {
-    "description": "NCBI 1000 Genomes data catalog", 
-    "id": "ncbi-1000genomes", 
-    "lastModified": "2016-01-10T16:21:24.000-06:00", 
-    "name": "NCBI 1000 Genomes FTP", 
-    "public": true, 
-    "revision": 2, 
-    "site": "ncbi.nih.gov", 
-    "status": "UP", 
+    "description": "NCBI 1000 Genomes data catalog",
+    "id": "ncbi-1000genomes",
+    "lastModified": "2016-01-10T16:21:24.000-06:00",
+    "name": "NCBI 1000 Genomes FTP",
+    "public": true,
+    "revision": 2,
+    "site": "ncbi.nih.gov",
+    "status": "UP",
     "storage": {
         "auth": {
             "type": "ANONYMOUS"
-        }, 
-        "homeDir": "/", 
-        "host": "ftp.ncbi.nih.gov", 
-        "mirror": false, 
-        "port": 21, 
-        "protocol": "FTP", 
-        "proxy": null, 
-        "publicAppsDir": null, 
+        },
+        "homeDir": "/",
+        "host": "ftp.ncbi.nih.gov",
+        "mirror": false,
+        "port": 21,
+        "protocol": "FTP",
+        "proxy": null,
+        "publicAppsDir": null,
         "rootDir": "/1000genomes/ftp/"
-    }, 
-    "type": "STORAGE", 
+    },
+    "type": "STORAGE",
     "uuid": "7184991354511430117-e0bd34dffff8de6-0001-006"
 }
 ```

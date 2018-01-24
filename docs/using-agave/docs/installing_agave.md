@@ -51,6 +51,5 @@ The path to the Agave CLI should appear, e.g.:
 
 ```/home/username/cyverse-sdk/cli/bin/tenants-init ```
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/mRJvdQsOB0M" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 [Back to: README](../README.md) | [Next: Initializing with CyVerse](initializing.md)

@@ -42,4 +42,3 @@ echo ""
 # Create a postit for the postit html page
 postits-create -l 600 -m 10  https://agave.iplantc.org/files/v2/media/system/data.iplantcollaborative.org/wallen/post_this.html
 echo "Finished! Click or share the link above to access your files."
-

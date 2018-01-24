@@ -49,6 +49,5 @@ If it is expired, refresh the token using:
 
 You are now fully configured to interact with CyVerse via the Agave CLI.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Q9__DDVXOyA" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
 
 [Back to: README](../README.md) | [Next: Managing Data](managing_data.md)

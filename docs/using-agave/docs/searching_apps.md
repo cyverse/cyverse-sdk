@@ -152,6 +152,4 @@ GATK_unifiedgenotyper-3.2.2u1
 
 Once the appropriate application has been identified, then the next steps are to stage the necessary data, create a job template, and submit the job. For more information on the syntax of searching, please see the [Agave Documentation](https://tacc.github.io/developer.tacc.cloud/docs/guides/search/introduction.html).
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/0fsA_SYej7s" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-
 [Back to: README](../README.md) | [Next: Creating and Submitting a Job](creating_submitting_jobs.md)

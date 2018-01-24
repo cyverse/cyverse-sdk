@@ -1,10 +1,15 @@
 ## Creating and Submitting a Job
 
-Continuing from the previous example of ClustalW, we know that the only input taken is a single fasta file. An example, non-aligned FASTA file, courtesy of the [ClustalW developers](http://www.ebi.ac.uk/Tools/msa/clustalw2/help/faq.html#11),  has been included with this repository.
-Upload that sample file to the CyVerse data store by first navigating to the `using-agave/` directory, then by issuing:
+Continuing from the previous example of ClustalW, we know that the only input taken is a single fasta file. An example, non-aligned FASTA file, courtesy of the [ClustalW developers](http://www.ebi.ac.uk/Tools/msa/clustalw2/help/faq.html#11), and has been included in our [GitHub repository](https://github.com/cyverse/cyverse-sdk/blob/master/examples/sequence12.fasta).
+You can download that fasta by clicking on the link above or by typing:
 
 ```
-files-upload -F src/sequence12.fasta username/
+wget https://github.com/cyverse/cyverse-sdk/blob/master/examples/sequence12.fasta
+```
+
+To upload the sequence.12 fasta to your CyVerse storage system, type:
+```
+files-upload -F sequence12.fasta username/
 files-list -L username/
 ```
 

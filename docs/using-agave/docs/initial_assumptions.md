@@ -10,7 +10,6 @@ To complete this tutorial, we assume the following:
  * Verify installation by typing `which git`, `which curl`, and `which bash` in a terminal window
 * You are comfortable editing text files and working at the command line
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/bFSaFAgvqa8" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
 
 
 [Back to: README](../README.md) | [Next: Installing the Agave CLI](installing_agave.md)
