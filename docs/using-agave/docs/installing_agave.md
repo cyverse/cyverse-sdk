@@ -1,41 +1,55 @@
 ## Installing the Agave CLI
+The [Agave API](https://agaveapi.co) comes bundled with a set of command line scripts. Using these scripts is generally easier than hand-crafting cURL commands, but if you prefer that route, consult the [Agave API Documentation](http://agaveapi.co/documentation/). We include these scripts in our SDK and supplement them with additional support scripts, example files, and documents.
 
-The Agave CLI is a collection of over 100 different bash scripts.
-The purpose of these scripts is to facilitate building cURL commands for interaction with the web API.
-In order to make sure you are using an up-to-date version of the Agave CLI, please clone directly from the source.
 To begin, open up a terminal window and navigate to a directory where you would like to organize this work.
-Then, clone this tutorial:
 
-```git clone https://github.com/wjallen/using-agave```
+Run the Installer command
+-------------------------
 
-Navigate into the `using-agave/` directory, then into the `src/` directory:
+```curl -L https://cyverse.github.io/cyverse-sdk/install/install.sh | sh```
 
-```cd using-agave/src/```
+Reload your ```.bashrc```
 
-Here, clone the Agave CLI:
+```source ~/.bashrc```
 
-```git clone https://bitbucket.org/agaveapi/cli```
-
-Add the Agave CLI to your PATH, so that you may access the commands from anywhere on the current machine:
+The installer should automatically export the `/cyverse-cli/bin` PATH to your `~/.bashrc`. But if you are using the terminal app on a Mac, you may need to add the PATH to your `~/.bash_profile` so that each new terminal session knows the location. I recommend adding the following line to your `~/.bash_profile`:  
 
 ```
-cd cli/bin/
-export PATH=$PWD:$PATH
+if [ -r ~/.bashrc]; then
+source ~/.bashrc
+fi
 ```
 
-You may also consider adding the whole path to your `~/.bashrc` so that each new terminal session knows the location:
+This will cause your `~/.bash_profile` to source the `~/.bashrc` when you open the Terminal app, and the API commands will be immediately available to you.
 
-```echo "PATH=/complete/path/to/using-agave/src/cli/bin:\$PATH" >> ~/.bashrc```
+Verify that the CLI is available
+---------------------------------
 
-(Replace `/complete/path/to` with the actual path to the `using-agave/` directory.
-You can determine this by navigating to that directory and typing `pwd`.)
-Note that if you move or rename this project directory, the Agave commands will no longer be in your PATH, and the previous steps will need to be repeated.
+Entering ```cyverse-sdk-info``` should return a response resembling this:
+
+```
+Cyverse CLI v1.4.6
+For use with
+    Tenant: iplantc.org
+    Agave API: v2/2.2.0+
+...
+```
+
+Updating the SDK
+----------------
+
+In the future, you can update the CyVerse CLI automatically to the latest version by typing
+
+```cyverse-sdk-info --update```
+
+
 Finally, verify that the Agave CLI has been added to the PATH by executing:
 
 ```which tenants-init```
 
 The path to the Agave CLI should appear, e.g.:
 
-```/home/username/using-agave/src/cli/bin/tenants-init ```
+```/home/username/cyverse-sdk/cli/bin/tenants-init ```
+
 
 [Back to: README](../README.md) | [Next: Initializing with CyVerse](initializing.md)

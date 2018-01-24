@@ -1,7 +1,7 @@
 # CyVerse Software Development Kit
 
-[CyVerse](https://www.cyverse.org) provides full scriptable access 
-to its underlying infrastructure via the [Agave API](https://www.agaveapi.co), 
+[CyVerse](https://www.cyverse.org) provides full scriptable access
+to its underlying infrastructure via the [Agave API](https://www.agaveapi.co),
 a comprehensive set of RESTful web services that make it easy for developers and users to:
 * Develop and run applications on HPC, Cloud, Condor, and container-based computing systems
 * Use MyProxy-based authentication for federated identity
@@ -20,9 +20,9 @@ We're providing this software development kit to help you with
 
 ### Tutorials
 
-[Getting Started with CyVerse SDK](getting-started.md) | 
+[Getting Started with CyVerse SDK](getting-started.md) |
 
-[Develop an Application for CyVerse](app-dev.md) | 
+[Develop an Application for CyVerse](app-dev.md) |
 
 [Use Your Own Cluster on CyVerse](register-your-cluster.md) |
 
@@ -30,15 +30,15 @@ We're providing this software development kit to help you with
 <a href="slackin_agaveapi.html"><img src="join_developer_community.png"></a>
 
 ### Additional Guides
-Over time, we will add tutorials to address more use cases, 
-for example: working with cloud systems including Amazon Web Services, 
+Over time, we will add tutorials to address more use cases,
+for example: working with cloud systems including Amazon Web Services,
 Google Compute Engine, or [NSF Jetstream](https://use.jetstream-cloud.org/); 
-building web applications; and improving reproducible science and analysis with Docker. 
+building web applications; and improving reproducible science and analysis with Docker.
 Here are some additional guides currently available:
 
 * [Using an Atmosphere VM as an Agave Execution System](atmo-system.md)
 * [Cloning a CyVerse application to your own systems](iplant-clone-app.md)
-* [Using the Agave CLI to interact with various aspects of the CyVerse Cyberinfrastructure](https://github.com/wjallen/using-agave)
+* [Using the Agave CLI to interact with various aspects of the CyVerse Cyberinfrastructure](using-agave)
 
 ### Background Information
 

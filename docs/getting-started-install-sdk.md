@@ -5,9 +5,9 @@ The [Agave API](https://agaveapi.co) comes bundled with a set of command line sc
 
 If you are installing and working with the CyVerse SDK on your own personal computer, skip ahead to _Run the Installer command_:
 
-Using your Terminal program, *ssh* into the system you will be working with (e.g. Stampede, Lonestar5, etc)
+Using your Terminal program, *ssh* into the system you will be working with (e.g. Stampede2, Lonestar5, etc)
 
-```ssh stampede.tacc.utexas.edu```
+```ssh USERNAME@stampede2.tacc.utexas.edu```
 
 Now, load the Python module
 
@@ -28,10 +28,10 @@ Verify that the CLI is available
 Entering ```cyverse-sdk-info``` should return a response resembling this:
 
 ```
-Cyverse CLI v1.3.5
+Cyverse CLI v1.4.6
 For use with
     Tenant: iplantc.org
-    Agave API: v2/2.1.8+
+    Agave API: v2/2.2.0+
 ...
 ```
 

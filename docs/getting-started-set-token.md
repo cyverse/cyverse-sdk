@@ -19,9 +19,9 @@ Token successfully refreshed and cached for 14400 seconds
 }
 ```
 
-If you have installed the SDK on a new host and are creating a token for the first time on that host, you will need to also include the key and secret from your Oauth2 client. In the future, the key and secret will cached on the host and you will not need to pass them in the command line. 
+If you have installed the SDK on a new host and are creating a token for the first time on that host, you will need to also include the key and secret from your Oauth2 client. In the future, the key and secret will cached on the host and you will not need to pass them in the command line.
 
-```auth-tokens-create -S -v --apisecret CONSUMER_SECRET --apikey CONSUMER_KEY```
+```auth-tokens-create -S -v --apisecret CONSUMER_SECRET --apikey CONSUMER_KEY -u USERNAME```
 
 ## Refreshing your token
 
@@ -42,7 +42,7 @@ Token for iplantc.org:vaughn successfully refreshed and cached for 3600 seconds
 }
 ```
 
-This topic is covered in great detail at the Agave [Authorization Guide](http://developer.agaveapi.co/#authorization) 
+This topic is covered in great detail at the Agave [Authorization Guide](http://developer.agaveapi.co/#authorization)
 
 *This completes the section on obtaining an OAuth2 authentication token.*
 

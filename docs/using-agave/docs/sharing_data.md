@@ -10,10 +10,10 @@ To list the permissions on an existing file on the remote storage system, issue:
 The output should look similar to:
 
 ```
-dooley READ WRITE EXECUTE 
-ipcservices READ WRITE 
-rodsadmin READ WRITE 
-username READ WRITE EXECUTE 
+dooley READ WRITE EXECUTE
+ipcservices READ WRITE
+rodsadmin READ WRITE
+username READ WRITE EXECUTE
 ```
 
 Where `username` refers to your CyVerse username.
@@ -37,11 +37,11 @@ files-pems-update -U my_collaborator -P ALL username/sequence12.fasta
 files-pems-list username/sequence12.fasta
 ```
 ```
-dooley READ WRITE EXECUTE 
-ipcservices READ WRITE 
-rodsadmin READ WRITE 
+dooley READ WRITE EXECUTE
+ipcservices READ WRITE
+rodsadmin READ WRITE
 my_collaborator READ WRITE EXECUTE
-username READ WRITE EXECUTE 
+username READ WRITE EXECUTE
 ```
 
 Now, a user with CyVerse username `my_collaborator` has permissions to access the file.
@@ -105,5 +105,5 @@ postits-delete 866d55b36a459e8098173655e916fa15
 
 The long alphanumeric string is the postit UUID displayed by the verbose postits-list command.
 
-  
+
 [Back to: README](../README.md) | [Next: Using Monitors to Track System Health](using_monitors.md)
