@@ -10,7 +10,7 @@ TENANT_KEY := iplantc.org
 PREFIX := $(HOME)
 SDK_GIT_REPO := https://github.com/cyverse/cyverse-sdk
 CLI_GIT_REPO := https://bitbucket.org/tacc-cic/cli
-CLI_GIT_BRANCH := develop
+CLI_GIT_BRANCH := master
 
 OBJ = cyverse-cli
 SOURCES = customize

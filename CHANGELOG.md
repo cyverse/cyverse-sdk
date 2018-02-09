@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.4.8 - 02/09/2017
+### Added
+* Nothing
+
+### Changed
+* Replaced auth-switch with multitenant-aware version
+* Enabled automatic token refresh
+
+### Removed
+* Nothing
+
 ## Version 1.4.6 - 12/20/2017
 ### Added
 * Nothing
