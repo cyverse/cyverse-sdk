@@ -124,7 +124,7 @@ WORKD=${WORKD:-$default}
 if [ -z "$WORKD" ]; then echo "Error: TACC work directory can't be left empty."; exit 1; fi
 echo -e "Confirmed: $WORKD"
 
-if [[ "$SYSNAME" -eq "wrangler" ]]; then
+if [ "$SYSNAME" == "wrangler" ]; then
   default=$(echo /gpfs/flash/users/$USERNAME)
   read -p "Wrangler Flash directory [$default]: " FLASHD
   FLASHD=${FLASHD:-$default}
@@ -139,7 +139,7 @@ for F in $DIR/../templates/tacc-${SYSNAME}-*
 do
   BN=$(basename $F .jsonx)
   echo "    Processing template ${BN}..."
-  if [[ "$SYSNAME" -eq "wrangler" ]]; then
+  if [ "$SYSNAME" == "wrangler" ]; then
     tacc-template-write.py ${USERNAME} ${PROJECT} ${FLASHD} ${PRIVATE_KEY_PATH} ${F} ${TMPDIR}
   else
     tacc-template-write.py ${USERNAME} ${PROJECT} ${WORKD} ${PRIVATE_KEY_PATH} ${F} ${TMPDIR}
