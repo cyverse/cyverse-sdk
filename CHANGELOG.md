@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## Version 1.4.9 - 06/13/2018
+### Added
+* Nothing
+
+### Changed
+* Incorporated fix for cyverse-sdk-tacc-systems-create
+
+### Removed
+* Nothing
+
 ## Version 1.4.8 - 02/09/2017
 ### Added
 * Nothing
