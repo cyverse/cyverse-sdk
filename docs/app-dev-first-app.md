@@ -181,7 +181,7 @@ Rather than have you write a description for "samtools sort" from scratch, let's
 cd $WORK/cyverse/samtools-0.1.19/stampede2/
 wget "https://cyverse.github.io/cyverse-sdk/examples/samtools-0.1.19/stampede/samtools-sort.json”
 ```
-Open up samtools-sort.json in a text editor or [in your web browser](../examples/samtools-0.1.19/stampede2/samtools-sort.json) and follow along below.
+Open up samtools-sort.json in a text editor or [in your web browser](../examples/samtools-0.1.19/stampede/samtools-sort.json) and follow along below.
 
 ### Overview
 
